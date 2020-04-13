@@ -33,7 +33,8 @@
     "json-server": "0.16.1",
     "json5": "2.1.3",
     "mocha": "7.1.1",
-    "uglify-js": "3.8.1"
+    "uglify-js": "3.8.1",
+    "xmlhttprequest": "1.8.0"
   },
   "description": "i18next-http-backend is a backend layer for i18next using in node.js, in the browser and for deno.",
   "keywords": [
@@ -60,6 +61,8 @@
     "compile": "rm -rf cjs && mkdir cjs && babel lib -d cjs --presets=@babel/preset-env --plugins=add-module-exports && echo '{\"type\":\"commonjs\"}' > cjs/package.json",
     "browser": "browserify --standalone i18nextHttpBackend cjs/index.js -o i18nextHttpBackend.js && uglifyjs i18nextHttpBackend.js --compress --mangle -o i18nextHttpBackend.min.js",
     "build": "npm run compile && npm run browser",
-    "test": "npm run lint && npm run build && mocha test -R spec --globals i18nextHttpBackend --exit --experimental-modules"
+    "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",
+    "test:fetch": "mocha test -R spec --exit --experimental-modules",
+    "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq"
   }
 }

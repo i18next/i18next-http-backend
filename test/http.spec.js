@@ -6,7 +6,7 @@ import server from './fixtures/server.js'
 
 i18next.init()
 
-describe('http backend', () => {
+describe(`http backend using ${typeof XMLHttpRequest === 'function' ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
 
   describe('#read', () => {
