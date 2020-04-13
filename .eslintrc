@@ -1,0 +1,21 @@
+{
+  "extends": [
+    "standard",
+    "plugin:require-path-exists/recommended"
+  ],
+  "plugins": [
+    "require-path-exists"
+  ],
+  "globals": {
+    "describe": false,
+    "it": false,
+    "before": false,
+    "after": false,
+    "beforeEach": false,
+    "afterEach": false
+  },
+  "rules": {
+    "array-bracket-spacing": 0,
+    "standard/no-callback-literal": 0
+  }
+}

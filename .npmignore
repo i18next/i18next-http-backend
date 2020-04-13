@@ -1,0 +1,13 @@
+.*
+test
+dist
+.gitignore
+.editorconfig
+.eslintignore
+.eslintrc
+.travis.yml
+package-lock.json
+README.md
+i18nextHttpBackend.js
+i18nextHttpBackend.min.js
+tsconfig.json
