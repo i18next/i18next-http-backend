@@ -20,7 +20,7 @@ Wiring up:
 import i18next from 'i18next';
 import HttpApi from 'i18next-http-backend';
 
-i18next.use(v).init(i18nextOptions);
+i18next.use(HttpApi).init(i18nextOptions);
 ```
 
 - As with all modules you can either pass the constructor function (class) to the i18next.use or a concrete instance.
