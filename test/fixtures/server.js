@@ -1,3 +1,4 @@
+import expect from 'expect.js'
 import jsonServer from 'json-server'
 let js
 
@@ -5,6 +6,7 @@ const server = (done) => {
   if (js) return done(null, js)
 
   js = jsonServer.create()
+  js.use(jsonServer.bodyParser)
 
   js.get('/locales/en/test', (req, res) => {
     res.jsonp({
@@ -18,6 +20,10 @@ const server = (done) => {
     res.send(`{ // this is json5, comments is stripped
       key: "passing"  // keys can be without ""
     }`)
+  })
+  js.post('/locales/missing/en/test', (req, res) => {
+    expect(req.body).not.to.eql({})
+    res.jsonp()
   })
 
   js.use(jsonServer.defaults())

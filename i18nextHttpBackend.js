@@ -268,10 +268,13 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
     url = addQueryString(url, options.queryStringParams);
   }
 
+  var headers = _objectSpread({}, options.customHeaders || {});
+
+  headers['Content-Type'] = 'application/json';
   fetchApi(url, _objectSpread({
     method: payload ? 'POST' : 'GET',
     body: payload ? options.stringify(payload) : undefined,
-    headers: options.customHeaders || {}
+    headers: headers
   }, options.srequestOptions)).then(function (response) {
     if (!response.ok) return callback(response.statusText || 'Error', {
       status: response.status
@@ -315,7 +318,7 @@ var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url,
     x.withCredentials = !!options.withCredentials;
 
     if (payload) {
-      x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
 
     if (x.overrideMimeType) {
