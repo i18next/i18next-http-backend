@@ -64,7 +64,6 @@
     "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",
     "test:fetch": "mocha test -R spec --exit --experimental-modules",
     "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq",
-    "prepublish": "npm run build",
     "preversion": "npm run test && npm run build && git push",
     "postversion": "git push && git push --tags"
   }
