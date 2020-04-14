@@ -63,6 +63,7 @@
     "build": "npm run compile && npm run browser",
     "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",
     "test:fetch": "mocha test -R spec --exit --experimental-modules",
-    "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq"
+    "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq",
+    "prepublish": "npm run build"
   }
 }
