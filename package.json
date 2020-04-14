@@ -58,7 +58,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "compile": "rm -rf cjs && mkdir cjs && babel lib -d cjs --presets=@babel/preset-env --plugins=add-module-exports && echo '{\"type\":\"commonjs\"}' > cjs/package.json",
+    "compile": "rm -rf cjs && mkdir cjs && babel lib -d cjs --presets=@babel/preset-env --plugins=add-module-exports && echo '{\"type\":\"commonjs\"}' > cjs/package.json && cp lib/getFetch.cjs cjs/getFetch.cjs",
     "browser": "browserify --standalone i18nextHttpBackend cjs/index.js -o i18nextHttpBackend.js && uglifyjs i18nextHttpBackend.js --compress --mangle -o i18nextHttpBackend.min.js",
     "build": "npm run compile && npm run browser",
     "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",
