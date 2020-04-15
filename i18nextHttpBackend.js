@@ -282,7 +282,7 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
 
   var headers = _objectSpread({}, options.customHeaders || {});
 
-  headers['Content-Type'] = 'application/json';
+  if (payload) headers['Content-Type'] = 'application/json';
   fetchApi(url, _objectSpread({
     method: payload ? 'POST' : 'GET',
     body: payload ? options.stringify(payload) : undefined,
