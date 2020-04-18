@@ -63,6 +63,22 @@ describe(`http backend using ${typeof XMLHttpRequest === 'function' ? 'XMLHttpRe
         done()
       })
     })
+    it('should load custom parser data', (done) => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+          parse: (data, lng, ns) => ({ ...JSON.parse(data), lng, ns })
+        }
+      )
+      backend.read('en', 'test', function (err, data) {
+        expect(err).not.to.be.ok()
+        expect(data).to.eql({ key: 'passing', lng: 'en', ns: 'test' })
+        done()
+      })
+    })
   })
 
   describe('with loadPath function', () => {
