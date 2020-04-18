@@ -33,7 +33,9 @@ var getDefaults = function getDefaults() {
     loadPath: '/locales/{{lng}}/{{ns}}.json',
     addPath: '/locales/add/{{lng}}/{{ns}}',
     allowMultiLoading: false,
-    parse: JSON.parse,
+    parse: function parse(data) {
+      return JSON.parse(data);
+    },
     stringify: JSON.stringify,
     parsePayload: function parsePayload(namespace, key, fallbackValue) {
       return _defineProperty({}, key, fallbackValue || '');
@@ -101,7 +103,7 @@ var Backend = /*#__PURE__*/function () {
         lng: languages.join('+'),
         ns: namespaces.join('+')
       });
-      this.loadUrl(url, callback);
+      this.loadUrl(url, callback, languages, namespaces);
     }
   }, {
     key: "read",
@@ -116,11 +118,11 @@ var Backend = /*#__PURE__*/function () {
         lng: language,
         ns: namespace
       });
-      this.loadUrl(url, callback);
+      this.loadUrl(url, callback, language, namespace);
     }
   }, {
     key: "loadUrl",
-    value: function loadUrl(url, callback) {
+    value: function loadUrl(url, callback, languages, namespaces) {
       var _this2 = this;
 
       this.options.request(this.options, url, function (err, res) {
@@ -134,7 +136,7 @@ var Backend = /*#__PURE__*/function () {
         var ret, parseErr;
 
         try {
-          ret = _this2.options.parse(res.data);
+          ret = _this2.options.parse(res.data, languages, namespaces);
         } catch (e) {
           parseErr = 'failed parsing ' + url + ' to json';
         }

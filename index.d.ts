@@ -25,7 +25,7 @@ interface BackendOptions {
    * in example use https://www.npmjs.com/package/json5
    * here it removes the letter a from the json (bad idea)
    */
-  parse?(data: string): string;
+  parse?(data: string, languages?: string | string[], namespaces?: string | string[]): string;
   /**
    * parse data before it has been sent by addPath
    */
@@ -68,7 +68,7 @@ export default class I18NextHttpBackend implements BackendModule<BackendOptions>
   init(services?: any, options?: BackendOptions): void;
   readMulti(languages: string[], namespaces: string[], callback: ReadCallback): void;
   read(language: string, namespace: string, callback: ReadCallback): void;
-  loadUrl(url: string, callback: ReadCallback): void;
+  loadUrl(url: string, callback: ReadCallback, languages?: string | string[], namespaces?: string | string[]): void;
   create(languages: string | string[], namespace: string, key: string, fallbackValue: string): void;
   type: 'backend';
   services: any;
