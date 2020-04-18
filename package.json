@@ -36,7 +36,7 @@
     "uglify-js": "3.8.1",
     "xmlhttprequest": "1.8.0"
   },
-  "description": "i18next-http-backend is a backend layer for i18next using in node.js, in the browser and for deno.",
+  "description": "i18next-http-backend is a backend layer for i18next using in Node.js, in the browser and for Deno.",
   "keywords": [
     "i18next",
     "i18next-backend",
