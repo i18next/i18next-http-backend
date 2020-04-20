@@ -23,6 +23,15 @@ import HttpApi from 'i18next-http-backend';
 i18next.use(HttpApi).init(i18nextOptions);
 ```
 
+for Deno:
+
+```js
+import i18next from 'https://deno.land/x/i18next/index.js'
+import Backend from 'https://cdn.jsdelivr.net/gh/i18next/i18next-http-backend/index.js'
+
+i18next.use(Backend).init(i18nextOptions);
+```
+
 - As with all modules you can either pass the constructor function (class) to the i18next.use or a concrete instance.
 - If you don't use a module loader it will be added to `window.i18nextHttpBackend`
 
