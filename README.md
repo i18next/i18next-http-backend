@@ -27,7 +27,7 @@ for Deno:
 
 ```js
 import i18next from 'https://deno.land/x/i18next/index.js'
-import Backend from 'https://cdn.jsdelivr.net/gh/i18next/i18next-http-backend/index.js'
+import Backend from 'https://deno.land/x/i18next_http_backend/index.js'
 
 i18next.use(Backend).init(i18nextOptions);
 ```

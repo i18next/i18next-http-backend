@@ -1,7 +1,7 @@
 {
   "type": "commonjs",
   "dependencies": {
-    "i18next": "19.4.2",
+    "i18next": "19.4.3",
     "i18next-http-backend": "1.0.4"
   },
   "devDependencies": {
