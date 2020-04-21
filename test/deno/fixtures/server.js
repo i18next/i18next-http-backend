@@ -1,6 +1,6 @@
 import { assertNotEquals } from 'https://deno.land/std/testing/asserts.ts'
 import { Application } from 'https://deno.land/x/abc/mod.ts'
-
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const server = async () => {
   const app = new Application()
   app.get('/locales/en/test', (c) => {
@@ -21,6 +21,7 @@ const server = async () => {
     return {}
   })
 
+  await wait(100)
   await app.start({ port: 5001 })
   return app
 }
