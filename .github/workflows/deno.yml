@@ -22,4 +22,4 @@ jobs:
           deno-version: ${{ matrix.deno }}
 
       - run: deno --version
-      - run: deno test test/deno/*.js --allow-read --allow-write
+      - run: deno test test/deno/*.js --allow-net
