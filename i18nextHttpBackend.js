@@ -150,6 +150,8 @@ var Backend = /*#__PURE__*/function () {
     value: function create(languages, namespace, key, fallbackValue) {
       var _this3 = this;
 
+      // If there is a falsey addPath, then abort -- this has been disabled.
+      if (!this.options.addPath) return;
       if (typeof languages === 'string') languages = [languages];
       var payload = this.options.parsePayload(namespace, key, fallbackValue);
       languages.forEach(function (lng) {
