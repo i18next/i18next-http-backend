@@ -400,7 +400,6 @@ var request = function request(options, url, payload, callback) {
 var _default = request;
 exports["default"] = _default;
 module.exports = exports.default;
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./getFetch.js":1}],4:[function(require,module,exports){
 "use strict";
