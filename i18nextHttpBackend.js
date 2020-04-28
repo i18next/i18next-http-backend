@@ -302,7 +302,7 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
     method: payload ? 'POST' : 'GET',
     body: payload ? options.stringify(payload) : undefined,
     headers: headers
-  }, options.srequestOptions)).then(function (response) {
+  }, typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions)).then(function (response) {
     if (!response.ok) return callback(response.statusText || 'Error', {
       status: response.status
     });
