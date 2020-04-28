@@ -88,7 +88,7 @@ i18next.use(Backend).init(i18nextOptions);
     // ...
   },
 
-  requestOptions: { // used for fetch
+  requestOptions: { // used for fetch, can also be a function (payload) => ({ method: 'GET' })
     mode: 'cors',
     credentials: 'same-origin',
     cache: 'default'
