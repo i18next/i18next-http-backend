@@ -47,6 +47,14 @@ describe(`http backend using ${typeof XMLHttpRequest === 'function' ? 'XMLHttpRe
       })
     })
 
+    it('should load data on a stringified json file', (done) => {
+      backend.read('en', 'test2', function (err, data) {
+        expect(err).not.to.be.ok()
+        expect(data).to.eql({ key: 'passing' })
+        done()
+      })
+    })
+
     it('should load json5 data', (done) => {
       backend = new Http(
         {

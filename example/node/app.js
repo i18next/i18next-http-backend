@@ -7,6 +7,7 @@ app.listen(8080)
 // i18next in action...
 const i18next = require('i18next')
 const HttpBackend = require('i18next-http-backend')
+// const HttpBackend = require('../../cjs')
 i18next.use(HttpBackend).init({
   lng: 'en',
   fallbackLng: 'en',

@@ -13,6 +13,11 @@ const server = (done) => {
       key: 'passing'
     })
   })
+  js.get('/locales/en/test2', (req, res) => {
+    res.send(JSON.stringify({
+      key: 'passing'
+    }))
+  })
   js.get('/locales/en/nonjson', (req, res) => {
     res.send('<div>sorry no json file</div>')
   })
