@@ -88,11 +88,11 @@ i18next.use(Backend).init(i18nextOptions);
     // ...
   },
 
-  requestOptions: { // used for fetch
+  getRequestOptions: payload => ({ // used for fetch
     mode: 'cors',
     credentials: 'same-origin',
     cache: 'default'
-  }
+  })
 
   // define a custom request function
   // can be used to support XDomainRequest in IE 8 and 9
