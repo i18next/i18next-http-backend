@@ -11,7 +11,7 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 # Getting started
 
-Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpApiBackend.min.js) from this repo.
+Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
 
 ```
 # npm package
