@@ -8,6 +8,9 @@
     ".": {
       "require": "./cjs/index.js",
       "default": "./lib/index.js"
+    },
+    "./cjs": {
+      "default": "./cjs/index.js"
     }
   },
   "module": "./lib/index.js",
