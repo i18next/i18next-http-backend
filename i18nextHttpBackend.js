@@ -136,7 +136,7 @@ var Backend = /*#__PURE__*/function () {
     value: function loadUrl(url, callback, languages, namespaces) {
       var _this2 = this;
 
-      this.options.request(this.options, url, function (err, res) {
+      this.options.request(this.options, url, undefined, function (err, res) {
         if (res && res.status >= 500 && res.status < 600) return callback('failed loading ' + url, true
         /* retry */
         );
