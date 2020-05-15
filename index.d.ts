@@ -45,8 +45,8 @@ interface BackendOptions {
   request?(
     options: BackendOptions,
     url: string,
-    callback: RequestCallback,
     payload: {} | string,
+    callback: RequestCallback,
   ): void;
   /**
    * adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
