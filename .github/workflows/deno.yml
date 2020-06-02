@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        deno: [ '1' ]
+        deno: [ '1.x' ]
         # os: [ubuntu-latest, windows-latest, macOS-latest]
         os: [ubuntu-latest]
     steps:
@@ -20,6 +20,5 @@ jobs:
         uses: denolib/setup-deno@master
         with:
           deno-version: ${{ matrix.deno }}
-
       - run: deno --version
       - run: deno test test/deno/*.js --allow-net
