@@ -268,7 +268,7 @@ if (typeof ActiveXObject === 'function') {
   }
 }
 
-if (!fetchApi && fetchNode) fetchApi = fetchNode["default"] || fetchNode; // because of strange export
+if (!fetchApi && fetchNode && !XmlHttpRequestApi && !ActiveXObjectApi) fetchApi = fetchNode["default"] || fetchNode; // because of strange export
 
 if (typeof fetchApi !== 'function') fetchApi = undefined;
 
@@ -359,7 +359,7 @@ var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url,
     }
 
     x.onreadystatechange = function () {
-      x.readyState > 3 && callback(x.statusText, {
+      x.readyState > 3 && callback(x.status >= 400 ? x.statusText : null, {
         status: x.status,
         data: x.responseText
       });
@@ -387,11 +387,7 @@ var request = function request(options, url, payload, callback) {
   if (typeof XMLHttpRequest === 'function' || typeof ActiveXObject === 'function') {
     // use xml http request
     return requestWithXmlHttpRequest(options, url, payload, callback);
-  } // import('node-fetch').then((fetch) => {
-  //   fetchApi = fetch.default || fetch // because of strange export of node-fetch
-  //   requestWithFetch(options, url, payload, callback)
-  // }).catch(callback)
-
+  }
 };
 
 var _default = request;
