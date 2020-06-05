@@ -97,13 +97,13 @@ i18next.use(Backend).init(i18nextOptions);
   // define a custom request function
   // can be used to support XDomainRequest in IE 8 and 9
   //
-  // 'url' will be passed the value of 'loadPath'
   // 'options' will be this entire options object
+  // 'url' will be passed the value of 'loadPath'
+  // 'payload' will be a key:value object used when saving missing translations
   // 'callback' is a function that takes two parameters, 'err' and 'res'.
   //            'err' should be an error
   //            'res' should be an object with a 'status' property and a 'data' property the key:value translation pairs for the
   //            requested language and namespace, or null in case of an error.
-  // 'payload' will be a key:value object used when saving missing translations
   request: function (options, url, payload, callback) {},
 
   // adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
