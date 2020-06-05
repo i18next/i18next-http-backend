@@ -99,10 +99,10 @@ i18next.use(Backend).init(i18nextOptions);
   //
   // 'url' will be passed the value of 'loadPath'
   // 'options' will be this entire options object
-  // 'callback' is a function that takes two parameters, 'data' and 'HttpApi'.
-  //            'data' should be the key:value translation pairs for the
+  // 'callback' is a function that takes two parameters, 'err' and 'res'.
+  //            'err' should be an error
+  //            'res' should be an object with a 'status' property and a 'data' property the key:value translation pairs for the
   //            requested language and namespace, or null in case of an error.
-  //            'HttpApi' should be a status object, e.g. { status: 200 }
   // 'payload' will be a key:value object used when saving missing translations
   request: function (options, url, payload, callback) {},
 
