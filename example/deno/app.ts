@@ -20,7 +20,7 @@ i18next.use(HttpBackend).init({
   backend: {
     loadPath: 'http://localhost:8080/locales/{{lng}}/{{ns}}.json'
   }
-}, (err, t) => {
+}, (err: Error, t: (...params: any[]) => string) => {
   if (err) return console.error(err)
   console.log(t('welcome'))
   console.log(t('welcome', { lng: 'de' }))
