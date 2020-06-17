@@ -1,6 +1,6 @@
 # just like usual...
 
-```js
+```ts
 import i18next from 'https://deno.land/x/i18next/index.js'
 
 i18next.init({
@@ -17,7 +17,7 @@ i18next.init({
       }
     }
   }
-}, (err, t) => {
+}, (err: Error, t: (...params: any[]) => string) => {
   if (err) return console.error(err)
   console.log(t('welcome')) // hello world
   console.log(t('welcome', { lng: 'de' })) // hallo welt
@@ -26,7 +26,7 @@ i18next.init({
 
 ## example with http backend
 
-```js
+```ts
 // serve translations
 import { Application } from 'https://deno.land/x/abc/mod.ts'
 (new Application())
@@ -46,7 +46,7 @@ i18next.use(HttpBackend).init({
   backend: {
     loadPath: 'http://localhost:8080/locales/{{lng}}/{{ns}}.json'
   }
-}, (err, t) => {
+}, (err: Error, t: (...params: any[]) => string) => {
   if (err) return console.error(err)
   console.log(t('welcome')) // hello world
   console.log(t('welcome', { lng: 'de' })) // hallo welt
@@ -56,5 +56,5 @@ i18next.use(HttpBackend).init({
 ### run the example (app.js) with:
 
 ```sh
-deno --allow-net --allow-env --allow-read app.js
+deno run --allow-net --allow-env --allow-read app.ts
 ```
