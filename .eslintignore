@@ -1,6 +1,7 @@
 /build
 /node_modules
 /cjs
+/esm
 /dist
 /i18nextHttpBackend.js
 /i18nextHttpBackend.min.js

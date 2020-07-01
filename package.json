@@ -8,36 +8,39 @@
     "./package.json": "./package.json",
     ".": {
       "require": "./cjs/index.js",
-      "default": "./lib/index.js"
+      "default": "./esm/index.js"
     },
     "./cjs": {
       "default": "./cjs/index.js"
+    },
+    "./esm": {
+      "default": "./esm/index.js"
     }
   },
-  "module": "./lib/index.js",
+  "module": "./esm/index.js",
   "dependencies": {
     "node-fetch": "2.6.0"
   },
   "types": "./index.d.ts",
   "devDependencies": {
-    "@babel/cli": "7.8.4",
-    "@babel/core": "7.9.6",
-    "@babel/preset-env": "7.9.6",
+    "@babel/cli": "7.10.4",
+    "@babel/core": "7.10.4",
+    "@babel/preset-env": "7.10.4",
     "babel-plugin-add-module-exports": "1.0.2",
     "browserify": "16.5.1",
-    "eslint": "7.0.0",
+    "eslint": "7.3.1",
     "eslint-config-standard": "14.1.1",
-    "eslint-plugin-import": "2.20.2",
+    "eslint-plugin-import": "2.22.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-require-path-exists": "1.1.9",
     "eslint-plugin-standard": "4.0.1",
     "expect.js": "0.3.1",
-    "i18next": "19.4.4",
+    "i18next": "19.5.2",
     "json-server": "0.16.1",
     "json5": "2.1.3",
-    "mocha": "7.1.2",
-    "uglify-js": "3.9.2",
+    "mocha": "8.0.1",
+    "uglify-js": "3.10.0",
     "xmlhttprequest": "1.8.0"
   },
   "description": "i18next-http-backend is a backend layer for i18next using in Node.js, in the browser and for Deno.",
@@ -62,7 +65,9 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "compile": "rm -rf cjs && mkdir cjs && babel lib -d cjs --presets=@babel/preset-env --plugins=add-module-exports && echo '{\"type\":\"commonjs\"}' > cjs/package.json && cp lib/getFetch.cjs cjs/getFetch.js && node -e \"fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace('getFetch.cjs', 'getFetch.js'))\"",
+    "compile:esm": "rm -rf esm && mkdir esm && BABEL_ENV=esm babel lib -d esm && cp lib/getFetch.cjs esm/getFetch.cjs",
+    "compile:cjs": "rm -rf cjs && mkdir cjs && BABEL_ENV=cjs babel lib -d cjs && echo '{\"type\":\"commonjs\"}' > cjs/package.json && cp lib/getFetch.cjs cjs/getFetch.js && node -e \"fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace('getFetch.cjs', 'getFetch.js'))\"",
+    "compile": "npm run compile:esm && npm run compile:cjs",
     "browser": "browserify --ignore node-fetch --standalone i18nextHttpBackend cjs/index.js -o i18nextHttpBackend.js && uglifyjs i18nextHttpBackend.js --compress --mangle -o i18nextHttpBackend.min.js",
     "build": "npm run compile && npm run browser",
     "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",

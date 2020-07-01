@@ -23,13 +23,13 @@ if (typeof require !== 'undefined' && (typeof window === 'undefined' || typeof w
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _utils = require("./utils.js");
 
 var _request = _interopRequireDefault(require("./request.js"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -51,18 +51,14 @@ var getDefaults = function getDefaults() {
     parsePayload: function parsePayload(namespace, key, fallbackValue) {
       return _defineProperty({}, key, fallbackValue || '');
     },
-    request: _request["default"],
+    request: _request.default,
     reloadInterval: false,
     customHeaders: {},
     queryStringParams: {},
     crossDomain: false,
-    // used for XmlHttpRequest
     withCredentials: false,
-    // used for XmlHttpRequest
     overrideMimeType: false,
-    // used for XmlHttpRequest
     requestOptions: {
-      // used for fetch
       mode: 'cors',
       credentials: 'same-origin',
       cache: 'default'
@@ -70,7 +66,7 @@ var getDefaults = function getDefaults() {
   };
 };
 
-var Backend = /*#__PURE__*/function () {
+var Backend = function () {
   function Backend(services) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var allOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -137,12 +133,8 @@ var Backend = /*#__PURE__*/function () {
       var _this2 = this;
 
       this.options.request(this.options, url, undefined, function (err, res) {
-        if (res && res.status >= 500 && res.status < 600) return callback('failed loading ' + url, true
-        /* retry */
-        );
-        if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url, false
-        /* no retry */
-        );
+        if (res && res.status >= 500 && res.status < 600) return callback('failed loading ' + url, true);
+        if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url, false);
         if (err) return callback(err, false);
         var ret, parseErr;
 
@@ -161,7 +153,6 @@ var Backend = /*#__PURE__*/function () {
     value: function create(languages, namespace, key, fallbackValue) {
       var _this3 = this;
 
-      // If there is a falsey addPath, then abort -- this has been disabled.
       if (!this.options.addPath) return;
       if (typeof languages === 'string') languages = [languages];
       var payload = this.options.parsePayload(namespace, key, fallbackValue);
@@ -171,8 +162,7 @@ var Backend = /*#__PURE__*/function () {
           ns: namespace
         });
 
-        _this3.options.request(_this3.options, url, payload, function (data, res) {// TODO: if res.status === 4xx do log
-        });
+        _this3.options.request(_this3.options, url, payload, function (data, res) {});
       });
     }
   }, {
@@ -185,8 +175,7 @@ var Backend = /*#__PURE__*/function () {
           languageUtils = _this$services.languageUtils,
           logger = _this$services.logger;
       var currentLanguage = backendConnector.language;
-      if (currentLanguage && currentLanguage.toLowerCase() === 'cimode') return; // avoid loading resources for cimode
-
+      if (currentLanguage && currentLanguage.toLowerCase() === 'cimode') return;
       var toLoad = [];
 
       var append = function append(lng) {
@@ -217,7 +206,7 @@ var Backend = /*#__PURE__*/function () {
 
 Backend.type = 'backend';
 var _default = Backend;
-exports["default"] = _default;
+exports.default = _default;
 module.exports = exports.default;
 },{"./request.js":3,"./utils.js":4}],3:[function(require,module,exports){
 (function (global){
@@ -226,7 +215,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _utils = require("./utils.js");
 
@@ -234,7 +223,7 @@ var fetchNode = _interopRequireWildcard(require("./getFetch.js"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -268,13 +257,12 @@ if (typeof ActiveXObject === 'function') {
   }
 }
 
-if (!fetchApi && fetchNode && !XmlHttpRequestApi && !ActiveXObjectApi) fetchApi = fetchNode["default"] || fetchNode; // because of strange export
-
+if (!fetchApi && fetchNode && !XmlHttpRequestApi && !ActiveXObjectApi) fetchApi = fetchNode.default || fetchNode;
 if (typeof fetchApi !== 'function') fetchApi = undefined;
 
 var addQueryString = function addQueryString(url, params) {
   if (params && _typeof(params) === 'object') {
-    var queryString = ''; // Must encode data
+    var queryString = '';
 
     for (var paramName in params) {
       queryString += '&' + encodeURIComponent(paramName) + '=' + encodeURIComponent(params[paramName]);
@@ -285,8 +273,7 @@ var addQueryString = function addQueryString(url, params) {
   }
 
   return url;
-}; // fetch api stuff
-
+};
 
 var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
   if (options.queryStringParams) {
@@ -308,15 +295,12 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
         status: response.status,
         data: data
       });
-    })["catch"](callback);
-  })["catch"](callback);
-}; // xml http request stuff
-
+    }).catch(callback);
+  }).catch(callback);
+};
 
 var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url, payload, callback) {
   if (payload && _typeof(payload) === 'object') {
-    // if (!cache) payload._t = Date.now()
-    // URL encoded form payload must be in querystring format
     payload = addQueryString('', payload).slice(1);
   }
 
@@ -380,18 +364,16 @@ var request = function request(options, url, payload, callback) {
   callback = callback || function () {};
 
   if (fetchApi) {
-    // use fetch api
     return requestWithFetch(options, url, payload, callback);
   }
 
   if (typeof XMLHttpRequest === 'function' || typeof ActiveXObject === 'function') {
-    // use xml http request
     return requestWithXmlHttpRequest(options, url, payload, callback);
   }
 };
 
 var _default = request;
-exports["default"] = _default;
+exports.default = _default;
 module.exports = exports.default;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./getFetch.js":1,"./utils.js":4}],4:[function(require,module,exports){
