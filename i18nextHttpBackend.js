@@ -139,7 +139,11 @@ var Backend = function () {
         var ret, parseErr;
 
         try {
-          ret = _this2.options.parse(res.data, languages, namespaces);
+          if (typeof res.data === 'string') {
+            ret = _this2.options.parse(res.data, languages, namespaces);
+          } else {
+            ret = res.data;
+          }
         } catch (e) {
           parseErr = 'failed parsing ' + url + ' to json';
         }

@@ -102,7 +102,7 @@ i18next.use(Backend).init(i18nextOptions);
   // 'payload' will be a key:value object used when saving missing translations
   // 'callback' is a function that takes two parameters, 'err' and 'res'.
   //            'err' should be an error
-  //            'res' should be an object with a 'status' property and a 'data' property the key:value translation pairs for the
+  //            'res' should be an object with a 'status' property and a 'data' property containing a stringified object instance beeing the key:value translation pairs for the
   //            requested language and namespace, or null in case of an error.
   request: function (options, url, payload, callback) {},
 
