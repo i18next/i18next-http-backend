@@ -9,6 +9,8 @@ This is a simple i18next backend to be used in Node.js, in the browser and for D
 
 It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i18next-xhr-backend) and can mostly be used as a drop-in replacement.
 
+*[Why i18next-xhr-backend was deprecated?](https://github.com/i18next/i18next-xhr-backend/issues/348#issuecomment-663060275)*
+
 # Getting started
 
 Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
