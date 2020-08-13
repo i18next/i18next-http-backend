@@ -133,8 +133,9 @@ var Backend = function () {
       var _this2 = this;
 
       this.options.request(this.options, url, undefined, function (err, res) {
-        if (res && res.status >= 500 && res.status < 600) return callback('failed loading ' + url, true);
+        if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + url, true);
         if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url, false);
+        if (!res && err && err.message && err.message.indexOf('Failed to fetch') > -1) return callback('failed loading ' + url, true);
         if (err) return callback(err, false);
         var ret, parseErr;
 
