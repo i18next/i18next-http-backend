@@ -1,4 +1,5 @@
 import { BackendModule, ReadCallback } from "i18next";
+import "i18next";
 
 /// <reference lib="dom" />
 
@@ -132,4 +133,14 @@ export default class I18NextHttpBackend
   type: "backend";
   services: any;
   options: BackendOptions;
+}
+
+declare module "i18next" {
+  interface InitOptions {
+    /**
+     * Options for backend
+     * @default undefined
+     */
+    backend?: BackendOptions;
+  }
 }
