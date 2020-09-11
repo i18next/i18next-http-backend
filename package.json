@@ -19,7 +19,7 @@
   },
   "module": "./esm/index.js",
   "dependencies": {
-    "node-fetch": "2.6.0"
+    "node-fetch": "~2.6.1"
   },
   "types": "./index.d.ts",
   "devDependencies": {
