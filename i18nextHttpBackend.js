@@ -52,7 +52,7 @@ var getDefaults = function getDefaults() {
       return _defineProperty({}, key, fallbackValue || '');
     },
     request: _request.default,
-    reloadInterval: false,
+    reloadInterval: typeof window !== 'undefined' ? false : 60 * 60 * 1000,
     customHeaders: {},
     queryStringParams: {},
     crossDomain: false,
