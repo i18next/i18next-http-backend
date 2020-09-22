@@ -285,7 +285,7 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
     url = addQueryString(url, options.queryStringParams);
   }
 
-  var headers = (0, _utils.defaults)({}, options.customHeaders);
+  var headers = (0, _utils.defaults)({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
   if (payload) headers['Content-Type'] = 'application/json';
   fetchApi(url, (0, _utils.defaults)({
     method: payload ? 'POST' : 'GET',
