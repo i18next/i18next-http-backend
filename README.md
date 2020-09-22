@@ -89,6 +89,11 @@ i18next.use(Backend).init(i18nextOptions);
     authorization: 'foo',
     // ...
   },
+  // can also be a function, that returns the headers
+  customHeaders: () => ({
+    authorization: 'foo',
+    // ...
+  }),
 
   requestOptions: { // used for fetch, can also be a function (payload) => ({ method: 'GET' })
     mode: 'cors',
