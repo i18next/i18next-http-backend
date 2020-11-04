@@ -73,7 +73,7 @@
     "test:xmlhttpreq": "mocha test -R spec --require test/fixtures/xmlHttpRequest.cjs --exit --experimental-modules",
     "test:fetch": "mocha test -R spec --exit --experimental-modules",
     "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq",
-    "test:deno": "deno test test/deno/*.js --allow-net --no-check",
+    "test:deno": "deno test --allow-net test/deno/*.js",
     "preversion": "npm run test && npm run build && git push",
     "postversion": "git push && git push --tags"
   }
