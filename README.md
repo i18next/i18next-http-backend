@@ -165,7 +165,7 @@ HttpApi.init(null, options);
 
 **localization as a service - locize.com**
 
-Needing a translation management? Want to edit your translations with an InContext Editor? Use the orginal provided to you by the maintainers of i18next!
+A translation management system built around the i18next ecosystem - [locize.com](https://locize.com).
 
 ![locize](https://locize.com/img/ads/github_locize.png)
 
