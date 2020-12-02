@@ -163,12 +163,12 @@ HttpApi.init(null, options);
 
 ---
 
-**localization as a service - locize.com**
+**From the creators of i18next: localization as a service - locize.com**
 
 A translation management system built around the i18next ecosystem - [locize.com](https://locize.com).
 
 ![locize](https://locize.com/img/ads/github_locize.png)
 
-With using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_medium=github) you directly support the future of i18next and react-i18next.
+With using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_medium=github) you directly support the future of i18next.
 
 ---
