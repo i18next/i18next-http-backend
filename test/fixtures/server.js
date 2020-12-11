@@ -8,6 +8,10 @@ const server = (done) => {
   js = jsonServer.create()
   js.use(jsonServer.bodyParser)
 
+  js.get('/locales/en/testqs', (req, res) => {
+    res.jsonp(req.query)
+  })
+
   js.get('/locales/en/test', (req, res) => {
     res.jsonp({
       key: 'passing'
