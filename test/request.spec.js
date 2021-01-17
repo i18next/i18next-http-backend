@@ -1,8 +1,9 @@
 import expect from 'expect.js'
 import request from '../lib/request.js'
 import server from './fixtures/server.js'
+import { hasXMLHttpRequest } from '../lib/utils.js'
 
-describe(`request ${typeof XMLHttpRequest === 'function' ? 'XMLHttpRequest' : 'fetch'}`, () => {
+describe(`request ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
 
   describe('#missing', () => {
