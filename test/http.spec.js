@@ -3,10 +3,11 @@ import Http from '../index.js'
 import i18next from 'i18next'
 import JSON5 from 'json5'
 import server from './fixtures/server.js'
+import { hasXMLHttpRequest } from '../lib/utils.js'
 
 i18next.init()
 
-describe(`http backend using ${typeof XMLHttpRequest === 'function' ? 'XMLHttpRequest' : 'fetch'}`, () => {
+describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
 
   describe('#read', () => {
