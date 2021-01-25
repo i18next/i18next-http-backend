@@ -91,7 +91,7 @@ var Backend = function () {
       this.options = (0, _utils.defaults)(options, this.options || {}, getDefaults());
       this.allOptions = allOptions;
 
-      if (this.options.reloadInterval) {
+      if (this.services && this.options.reloadInterval) {
         setInterval(function () {
           return _this.reload();
         }, this.options.reloadInterval);
