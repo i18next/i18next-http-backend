@@ -34,8 +34,12 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
 
     it('should throw error on not existing file', (done) => {
       backend.read('en', 'notexisting', (err, data) => {
-        expect(err).to.equal('failed loading http://localhost:5001/locales/en/notexisting')
-        done()
+        try {
+          expect(err).to.equal('failed loading http://localhost:5001/locales/en/notexisting; status code: 404')
+          done()
+        } catch (e) {
+          done(e)
+        }
       })
     })
 
