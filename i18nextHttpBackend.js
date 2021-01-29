@@ -182,7 +182,7 @@ var Backend = function () {
           resArray.push(res);
 
           if (finished === languages.length) {
-            callback(dataArray, resArray);
+            if (callback) callback(dataArray, resArray);
           }
         });
       });
