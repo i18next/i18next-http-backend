@@ -34,6 +34,10 @@ const server = (done) => {
     expect(req.body).not.to.eql({})
     res.jsonp()
   })
+  js.post('/locales/addCustom/en/test', (req, res) => {
+    expect(req.body).not.to.eql({})
+    res.jsonp()
+  })
 
   js.use(jsonServer.defaults())
   js.listen(5001, () => {

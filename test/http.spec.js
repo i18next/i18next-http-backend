@@ -127,4 +127,42 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
       })
     })
   })
+
+  describe('with addPath function', () => {
+    let backend
+    const calledLanguages = []
+    const calledNamespaces = []
+    const addPathSpy = (language, namespace) => {
+      calledLanguages.push(language)
+      calledNamespaces.push(namespace)
+      return 'http://localhost:5001/locales/addCustom/' + language + '/' + namespace
+    }
+
+    before(() => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          addPath: addPathSpy
+        }
+      )
+    })
+
+    describe('#create', () => {
+      it('should write data', (done) => {
+        backend.create('en', 'test', 'key', 'value', (dataArray, resArray) => {
+          try {
+            expect(calledLanguages).to.eql(['en'])
+            expect(calledNamespaces).to.eql(['test'])
+            expect(dataArray).to.eql([null])
+            expect(resArray).to.eql([ { status: 200, data: '' } ])
+            done()
+          } catch (e) {
+            done(e)
+          }
+        })
+      })
+    })
+  })
 })
