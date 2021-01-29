@@ -155,19 +155,36 @@ var Backend = function () {
     }
   }, {
     key: "create",
-    value: function create(languages, namespace, key, fallbackValue) {
+    value: function create(languages, namespace, key, fallbackValue, callback) {
       var _this3 = this;
 
       if (!this.options.addPath) return;
       if (typeof languages === 'string') languages = [languages];
       var payload = this.options.parsePayload(namespace, key, fallbackValue);
+      var finished = 0;
+      var dataArray = [];
+      var resArray = [];
       languages.forEach(function (lng) {
-        var url = _this3.services.interpolator.interpolate(_this3.options.addPath, {
+        var addPath = _this3.options.addPath;
+
+        if (typeof _this3.options.addPath === 'function') {
+          addPath = _this3.options.addPath(lng, namespace);
+        }
+
+        var url = _this3.services.interpolator.interpolate(addPath, {
           lng: lng,
           ns: namespace
         });
 
-        _this3.options.request(_this3.options, url, payload, function (data, res) {});
+        _this3.options.request(_this3.options, url, payload, function (data, res) {
+          finished += 1;
+          dataArray.push(data);
+          resArray.push(res);
+
+          if (finished === languages.length) {
+            callback(dataArray, resArray);
+          }
+        });
       });
     }
   }, {
