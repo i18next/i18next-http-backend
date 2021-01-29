@@ -54,7 +54,9 @@ i18next.use(Backend).init(i18nextOptions);
   // If allowMultiLoading is true, lngs and namespaces can have multiple elements
   loadPath: '/locales/{{lng}}/{{ns}}.json',
 
-  // path to post missing resources
+  // path to post missing resources, or a function
+  // function(lng, namespace) { return customPath; }
+  // the returned path will interpolate lng, ns if provided like giving a static path
   addPath: '/locales/add/{{lng}}/{{ns}}',
 
   // your backend server supports multiloading
