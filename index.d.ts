@@ -1,4 +1,4 @@
-import { BackendModule, ReadCallback } from 'i18next';
+import { BackendModule, MultiReadCallback, ReadCallback } from 'i18next';
 
 type LoadPathOption = string | ((lngs: string[], namespaces: string[]) => string);
 
@@ -66,10 +66,10 @@ interface RequestResponse {
 export default class I18NextHttpBackend implements BackendModule<BackendOptions> {
   constructor(services?: any, options?: BackendOptions);
   init(services?: any, options?: BackendOptions): void;
-  readMulti(languages: string[], namespaces: string[], callback: ReadCallback): void;
+  readMulti?(languages: string[], namespaces: string[], callback: MultiReadCallback): void;
   read(language: string, namespace: string, callback: ReadCallback): void;
   loadUrl(url: string, callback: ReadCallback, languages?: string | string[], namespaces?: string | string[]): void;
-  create(languages: string | string[], namespace: string, key: string, fallbackValue: string): void;
+  create?(languages: string | string[], namespace: string, key: string, fallbackValue: string): void;
   type: 'backend';
   services: any;
   options: BackendOptions;
