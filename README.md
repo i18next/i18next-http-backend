@@ -11,7 +11,9 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 *[Why i18next-xhr-backend was deprecated?](https://github.com/i18next/i18next-xhr-backend/issues/348#issuecomment-663060275)*
 
-## If you don't want to manage your translation json files manually or are simply looking for a better management solution, take a look at i18next-locize-backend
+## Advice:
+
+If you don't want to manage your translation json files manually or are simply looking for a better management solution, take a look at i18next-locize-backend
 
 # Getting started
 
@@ -43,7 +45,7 @@ i18next.use(Backend).init(i18nextOptions);
 - As with all modules you can either pass the constructor function (class) to the i18next.use or a concrete instance.
 - If you don't use a module loader it will be added to `window.i18nextHttpBackend`
 
-## Advice:
+## Backend Options
 If you don't want to manage your translation files manually or are simply looking for a better management solution, take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend).
 
 ```js
