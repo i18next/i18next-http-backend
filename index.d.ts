@@ -99,3 +99,9 @@ export default class I18NextHttpBackend
   services: any;
   options: BackendOptions;
 }
+
+declare module "i18next" {
+  interface PluginOptions {
+    backend?: BackendOptions;
+  }
+}
