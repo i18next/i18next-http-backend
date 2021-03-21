@@ -1,6 +1,8 @@
-import { BackendModule, MultiReadCallback, ReadCallback } from 'i18next';
+import { BackendModule, MultiReadCallback, ReadCallback } from "i18next";
 
-type LoadPathOption = string | ((lngs: string[], namespaces: string[]) => string);
+type LoadPathOption =
+  | string
+  | ((lngs: string[], namespaces: string[]) => string);
 
 interface BackendOptions {
   /**
@@ -25,11 +27,19 @@ interface BackendOptions {
    * in example use https://www.npmjs.com/package/json5
    * here it removes the letter a from the json (bad idea)
    */
-  parse?(data: string, languages?: string | string[], namespaces?: string | string[]): string;
+  parse?(
+    data: string,
+    languages?: string | string[],
+    namespaces?: string | string[]
+  ): string;
   /**
    * parse data before it has been sent by addPath
    */
-  parsePayload?(namespace: string, key: string, fallbackValue?: string): { [key: string]: any };
+  parsePayload?(
+    namespace: string,
+    key: string,
+    fallbackValue?: string
+  ): { [key: string]: any };
   /**
    * allow cross domain requests
    */
@@ -46,7 +56,7 @@ interface BackendOptions {
     options: BackendOptions,
     url: string,
     payload: {} | string,
-    callback: RequestCallback,
+    callback: RequestCallback
   ): void;
   /**
    * adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
@@ -59,18 +69,33 @@ interface BackendOptions {
 type RequestCallback = (error: any, response: RequestResponse) => void;
 
 interface RequestResponse {
-  status: number,
-  data: string
+  status: number;
+  data: string;
 }
 
-export default class I18NextHttpBackend implements BackendModule<BackendOptions> {
+export default class I18NextHttpBackend
+  implements BackendModule<BackendOptions> {
   constructor(services?: any, options?: BackendOptions);
   init(services?: any, options?: BackendOptions): void;
-  readMulti?(languages: string[], namespaces: string[], callback: MultiReadCallback): void;
+  readMulti?(
+    languages: string[],
+    namespaces: string[],
+    callback: MultiReadCallback
+  ): void;
   read(language: string, namespace: string, callback: ReadCallback): void;
-  loadUrl(url: string, callback: ReadCallback, languages?: string | string[], namespaces?: string | string[]): void;
-  create?(languages: string | string[], namespace: string, key: string, fallbackValue: string): void;
-  type: 'backend';
+  loadUrl(
+    url: string,
+    callback: ReadCallback,
+    languages?: string | string[],
+    namespaces?: string | string[]
+  ): void;
+  create?(
+    languages: string | string[],
+    namespace: string,
+    key: string,
+    fallbackValue: string
+  ): void;
+  type: "backend";
   services: any;
   options: BackendOptions;
 }
