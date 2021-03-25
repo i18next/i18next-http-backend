@@ -35,9 +35,9 @@ const customLocalBackend = {
 
 // i18next in action...
 const i18next = require('i18next')
+const ChainedBackend = require('i18next-chained-backend')
 const HttpBackend = require('i18next-http-backend')
 // const HttpBackend = require('../../cjs')
-const ChainedBackend = require('i18next-chained-backend')
 i18next.use(ChainedBackend).init({
   debug: true,
   lng: 'en',
