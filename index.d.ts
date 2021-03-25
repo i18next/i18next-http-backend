@@ -64,6 +64,12 @@ interface BackendOptions {
   queryStringParams?: { [key: string]: string };
 
   customHeaders?: { [key: string]: string };
+
+  /**
+   * can be used to reload resources in a specific
+   * interval (useful in server environments)
+   */
+  reloadInterval?: false | number;
 }
 
 type RequestCallback = (error: any, response: RequestResponse) => void;
