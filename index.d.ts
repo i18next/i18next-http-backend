@@ -69,7 +69,7 @@ interface BackendOptions {
    * can be used to reload resources in a specific
    * interval (useful in server environments)
    */
-  reloadInterval?: boolean;
+  reloadInterval?: false | number;
 }
 
 type RequestCallback = (error: any, response: RequestResponse) => void;
