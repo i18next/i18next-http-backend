@@ -65,7 +65,7 @@ interface BackendOptions {
 
   /**
    * allows an object containing custom headers or a function that when called returns 
-   * custom headers
+   * an object of custom headers
    */
   customHeaders?: { [key: string]: string } | (() => { [key: string]: string });
 
