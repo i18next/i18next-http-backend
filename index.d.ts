@@ -63,7 +63,11 @@ interface BackendOptions {
    */
   queryStringParams?: { [key: string]: string };
 
-  customHeaders?: { [key: string]: string };
+  /**
+   * allows an object containing custom headers or a function that when called returns 
+   * custom headers
+   */
+  customHeaders?: { [key: string]: string } | (() => { [key: string]: string });
 
   /**
    * can be used to reload resources in a specific
