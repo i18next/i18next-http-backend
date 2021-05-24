@@ -1,9 +1,10 @@
 {
   "type": "commonjs",
   "dependencies": {
-    "i18next": "20.1.0",
-    "i18next-chained-backend": "2.1.0",
-    "i18next-http-backend": "1.2.1"
+    "i18next": "20.3.0",
+    "i18next-chained-backend": "3.0.2",
+    "i18next-http-backend": "1.2.4",
+    "i18next-resources-to-backend": "1.0.0"
   },
   "devDependencies": {
     "express": "4.17.1"
