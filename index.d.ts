@@ -64,7 +64,7 @@ interface BackendOptions {
   queryStringParams?: { [key: string]: string };
 
   /**
-   * allows an object containing custom headers or a function that when called returns 
+   * allows an object containing custom headers or a function that when called returns
    * an object of custom headers
    */
   customHeaders?: { [key: string]: string } | (() => { [key: string]: string });
@@ -74,6 +74,11 @@ interface BackendOptions {
    * interval (useful in server environments)
    */
   reloadInterval?: false | number;
+
+  /**
+   * fetch api request options, can be a function
+   */
+  requestOptions: RequestInit | ((payload: {} | string) => RequestInit);
 }
 
 type RequestCallback = (error: any, response: RequestResponse) => void;
@@ -84,7 +89,8 @@ interface RequestResponse {
 }
 
 export default class I18NextHttpBackend
-  implements BackendModule<BackendOptions> {
+  implements BackendModule<BackendOptions>
+{
   constructor(services?: any, options?: BackendOptions);
   init(services?: any, options?: BackendOptions): void;
   readMulti?(
