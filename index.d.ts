@@ -78,7 +78,7 @@ interface BackendOptions {
   /**
    * fetch api request options, can be a function
    */
-  requestOptions: RequestInit | ((payload: {} | string) => RequestInit);
+  requestOptions?: RequestInit | ((payload: {} | string) => RequestInit);
 }
 
 type RequestCallback = (error: any, response: RequestResponse) => void;
