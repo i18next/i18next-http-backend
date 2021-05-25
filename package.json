@@ -57,12 +57,7 @@
   "bugs": {
     "url": "https://github.com/i18next/i18next-http-backend/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://raw.github.com/i18next/i18next-http-backend/master/licence"
-    }
-  ],
+  "license": "MIT",
   "scripts": {
     "lint": "eslint .",
     "compile:esm": "rm -rf esm && mkdir esm && BABEL_ENV=esm babel lib -d esm && cp lib/getFetch.cjs esm/getFetch.cjs && rm -f esm/getFetch.js",
