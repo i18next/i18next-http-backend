@@ -35,9 +35,6 @@
 <script>
 export default {
   name: 'TranslationShowCase',
-  props: {
-    msg: String
-  },
   methods: {
     changeLanguage(lang) {
       this.$i18n.changeLanguage(lang);
