@@ -106,7 +106,7 @@ export default class I18NextHttpBackend
     namespaces?: string | string[]
   ): void;
   create?(
-    languages: string | string[],
+    languages: string[],
     namespace: string,
     key: string,
     fallbackValue: string
