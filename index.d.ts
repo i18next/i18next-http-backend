@@ -31,7 +31,7 @@ interface BackendOptions {
     data: string,
     languages?: string | string[],
     namespaces?: string | string[]
-  ): string;
+  ): { [key: string]: any };
   /**
    * parse data before it has been sent by addPath
    */
