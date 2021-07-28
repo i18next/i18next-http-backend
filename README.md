@@ -53,6 +53,7 @@ i18next.use(Backend).init(i18nextOptions);
   // returning a path:
   // function(lngs, namespaces) { return customPath; }
   // the returned path will interpolate lng, ns if provided like giving a static path
+  // the function might return a promise
   //
   // If allowMultiLoading is false, lngs and namespaces will have only one element each,
   // If allowMultiLoading is true, lngs and namespaces can have multiple elements

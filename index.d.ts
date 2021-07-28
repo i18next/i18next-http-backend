@@ -2,7 +2,8 @@ import { BackendModule, MultiReadCallback, ReadCallback } from "i18next";
 
 type LoadPathOption =
   | string
-  | ((lngs: string[], namespaces: string[]) => string);
+  | ((lngs: string[], namespaces: string[]) => string)
+  | ((lngs: string[], namespaces: string[]) => Promise<string>);
 
 interface BackendOptions {
   /**
