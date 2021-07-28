@@ -100,37 +100,38 @@ var Backend = function () {
   }, {
     key: "readMulti",
     value: function readMulti(languages, namespaces, callback) {
+      this._readAny(languages, languages, namespaces, namespaces, callback);
+    }
+  }, {
+    key: "read",
+    value: function read(language, namespace, callback) {
+      this._readAny([language], language, [namespace], namespace, callback);
+    }
+  }, {
+    key: "_readAny",
+    value: function _readAny(languages, loadUrlLanguages, namespaces, loadUrlNamespaces, callback) {
+      var _this2 = this;
+
       var loadPath = this.options.loadPath;
 
       if (typeof this.options.loadPath === 'function') {
         loadPath = this.options.loadPath(languages, namespaces);
       }
 
-      var url = this.services.interpolator.interpolate(loadPath, {
-        lng: languages.join('+'),
-        ns: namespaces.join('+')
-      });
-      this.loadUrl(url, callback, languages, namespaces);
-    }
-  }, {
-    key: "read",
-    value: function read(language, namespace, callback) {
-      var loadPath = this.options.loadPath;
+      loadPath = (0, _utils.makePromise)(loadPath);
+      loadPath.then(function (resolvedLoadPath) {
+        var url = _this2.services.interpolator.interpolate(resolvedLoadPath, {
+          lng: languages.join('+'),
+          ns: namespaces.join('+')
+        });
 
-      if (typeof this.options.loadPath === 'function') {
-        loadPath = this.options.loadPath([language], [namespace]);
-      }
-
-      var url = this.services.interpolator.interpolate(loadPath, {
-        lng: language,
-        ns: namespace
+        _this2.loadUrl(url, callback, loadUrlLanguages, loadUrlNamespaces);
       });
-      this.loadUrl(url, callback, language, namespace);
     }
   }, {
     key: "loadUrl",
     value: function loadUrl(url, callback, languages, namespaces) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.options.request(this.options, url, undefined, function (err, res) {
         if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + url + '; status code: ' + res.status, true);
@@ -141,7 +142,7 @@ var Backend = function () {
 
         try {
           if (typeof res.data === 'string') {
-            ret = _this2.options.parse(res.data, languages, namespaces);
+            ret = _this3.options.parse(res.data, languages, namespaces);
           } else {
             ret = res.data;
           }
@@ -156,7 +157,7 @@ var Backend = function () {
   }, {
     key: "create",
     value: function create(languages, namespace, key, fallbackValue, callback) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (!this.options.addPath) return;
       if (typeof languages === 'string') languages = [languages];
@@ -165,18 +166,18 @@ var Backend = function () {
       var dataArray = [];
       var resArray = [];
       languages.forEach(function (lng) {
-        var addPath = _this3.options.addPath;
+        var addPath = _this4.options.addPath;
 
-        if (typeof _this3.options.addPath === 'function') {
-          addPath = _this3.options.addPath(lng, namespace);
+        if (typeof _this4.options.addPath === 'function') {
+          addPath = _this4.options.addPath(lng, namespace);
         }
 
-        var url = _this3.services.interpolator.interpolate(addPath, {
+        var url = _this4.services.interpolator.interpolate(addPath, {
           lng: lng,
           ns: namespace
         });
 
-        _this3.options.request(_this3.options, url, payload, function (data, res) {
+        _this4.options.request(_this4.options, url, payload, function (data, res) {
           finished += 1;
           dataArray.push(data);
           resArray.push(res);
@@ -190,7 +191,7 @@ var Backend = function () {
   }, {
     key: "reload",
     value: function reload() {
-      var _this4 = this;
+      var _this5 = this;
 
       var _this$services = this.services,
           backendConnector = _this$services.backendConnector,
@@ -212,7 +213,7 @@ var Backend = function () {
         return append(l);
       });
       toLoad.forEach(function (lng) {
-        _this4.allOptions.ns.forEach(function (ns) {
+        _this5.allOptions.ns.forEach(function (ns) {
           backendConnector.read(lng, ns, 'read', null, null, function (err, data) {
             if (err) logger.warn("loading namespace ".concat(ns, " for language ").concat(lng, " failed"), err);
             if (!err && data) logger.log("loaded namespace ".concat(ns, " for language ").concat(lng), data);
@@ -406,6 +407,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.defaults = defaults;
 exports.hasXMLHttpRequest = hasXMLHttpRequest;
+exports.makePromise = makePromise;
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -426,6 +428,18 @@ function defaults(obj) {
 
 function hasXMLHttpRequest() {
   return typeof XMLHttpRequest === 'function' || (typeof XMLHttpRequest === "undefined" ? "undefined" : _typeof(XMLHttpRequest)) === 'object';
+}
+
+function isPromise(maybePromise) {
+  return !!maybePromise && typeof maybePromise.then === 'function';
+}
+
+function makePromise(maybePromise) {
+  if (isPromise(maybePromise)) {
+    return maybePromise;
+  }
+
+  return Promise.resolve(maybePromise);
 }
 },{}],5:[function(require,module,exports){
 
