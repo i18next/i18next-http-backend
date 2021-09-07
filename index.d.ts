@@ -5,6 +5,10 @@ type LoadPathOption =
   | ((lngs: string[], namespaces: string[]) => string)
   | ((lngs: string[], namespaces: string[]) => Promise<string>);
 
+type AddPathOption =
+  | string
+  | ((lng: string, namespace: string) => string)
+
 interface BackendOptions {
   /**
    * path where resources get loaded from, or a function
@@ -14,9 +18,10 @@ interface BackendOptions {
    */
   loadPath?: LoadPathOption;
   /**
-   * path to post missing resources
+   * path to post missing resources, must be `string` or a `function` returning a path:
+   * function(lng, namespace) { return customPath; }
    */
-  addPath?: string;
+  addPath?: AddPathOption;
   /**
    * your backend server supports multiLoading
    * locales/resources.json?lng=de+en&ns=ns1+ns2
