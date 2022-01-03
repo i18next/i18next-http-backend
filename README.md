@@ -19,6 +19,8 @@ If you don't want to manage your translation files manually or are simply lookin
 
 Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
 
+There's also the possibility to directly import it via a CDN like [jsdelivr](https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js) or [unpkg](https://unpkg.com/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js) or similar.
+
 ```bash
 # npm package
 $ npm install i18next-http-backend
@@ -40,6 +42,13 @@ import i18next from 'https://deno.land/x/i18next/index.js'
 import Backend from 'https://deno.land/x/i18next_http_backend/index.js'
 
 i18next.use(Backend).init(i18nextOptions);
+```
+
+for plain browser:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js"></script>
+<!-- an example can be found in example/jquery/index.html -->
 ```
 
 - As with all modules you can either pass the constructor function (class) to the i18next.use or a concrete instance.
