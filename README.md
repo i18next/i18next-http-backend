@@ -15,6 +15,13 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 If you don't want to manage your translation files manually or are simply looking for a better management solution, take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend).
 
+*To see i18next-locize-backend in a working app example, check out:*
+
+- *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*
+- *[this guide](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb#how-look)*
+- *[this Angular blog post](https://dev.to/adrai/unleash-the-full-power-of-angular-i18next-4b7o) [introducing i18next-locize-backend](https://dev.to/adrai/unleash-the-full-power-of-angular-i18next-4b7o#how-look)*
+- *[the code integration part](https://www.youtube.com/watch?v=ds-yEEYP1Ks&t=423s) in this [YouTube video](https://www.youtube.com/watch?v=ds-yEEYP1Ks)*
+
 # Getting started
 
 Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
