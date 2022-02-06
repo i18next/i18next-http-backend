@@ -2,9 +2,9 @@
   <div class="hello">
     <h1>{{ $t("welcome") }}</h1>
     <p>
-      <Trans i18nKey="descr">
+      <TransComponent i18nKey="descr">
         <a href="https://cli.vuejs.org" target="_blank" rel="noopener" /><i>👋</i>
-      </Trans>
+      </TransComponent>
     </p>
     <div>
       <div>

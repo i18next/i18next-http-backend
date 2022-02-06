@@ -13,7 +13,7 @@
 import App from './App.vue'
 
 export default {
-  name: 'Suspenser',
+  name: 'SuspenserComponent',
   components: {
     App
   }

@@ -70,7 +70,7 @@ export const createI18n = (i18next) => ({
     })
 
     // install component
-    app.component('Trans', { // Try to make this as similar as possible to: https://react.i18next.com/latest/trans-component
+    app.component('TransComponent', { // Try to make this as similar as possible to: https://react.i18next.com/latest/trans-component
       props: {
         tag: {
           type: String,
