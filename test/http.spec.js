@@ -192,7 +192,7 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
           expect(err).not.to.be.ok()
           expect(calledLanguages).to.eql(['en'])
           expect(calledNamespaces).to.eql(['test'])
-          expect(data).to.eql(false)
+          expect(data).to.eql({})
           done()
         })
       })
