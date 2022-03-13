@@ -120,6 +120,8 @@ var Backend = function () {
 
       loadPath = (0, _utils.makePromise)(loadPath);
       loadPath.then(function (resolvedLoadPath) {
+        if (!resolvedLoadPath) return callback(null, {});
+
         var url = _this2.services.interpolator.interpolate(resolvedLoadPath, {
           lng: languages.join('+'),
           ns: namespaces.join('+')
