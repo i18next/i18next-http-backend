@@ -165,6 +165,40 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
     })
   })
 
+  describe('with loadPath function returning falsy', () => {
+    let backend
+    let calledLanguages = []
+    let calledNamespaces = []
+    const loadPathSpy = (languages, namespaces) => {
+      calledLanguages = calledLanguages.concat(languages)
+      calledNamespaces = calledNamespaces.concat(namespaces)
+      return ''
+    }
+
+    before(() => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          loadPath: loadPathSpy
+        }
+      )
+    })
+
+    describe('#read', () => {
+      it('should not load data', (done) => {
+        backend.read('en', 'test', (err, data) => {
+          expect(err).not.to.be.ok()
+          expect(calledLanguages).to.eql(['en'])
+          expect(calledNamespaces).to.eql(['test'])
+          expect(data).to.eql({})
+          done()
+        })
+      })
+    })
+  })
+
   describe('with addPath function', () => {
     let backend
     const calledLanguages = []
