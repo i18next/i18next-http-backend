@@ -165,6 +165,58 @@ describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`,
     })
   })
 
+  describe('with custom request option', () => {
+    let backend, requestCall
+
+    before(() => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          loadPath: '/some/crazy/{{lng}}/{{ns}}/path',
+          request: (options, url, payload, callback) => {
+            requestCall = {
+              options, url, payload
+            }
+            if (payload) { // is POST...
+              return callback(null, { status: 200, data: '' })
+            }
+            callback(null, { status: 200, data: { myTranslationKey: 'my translation value' } })
+            // callback(null, { status: 200, data: JSON.stringify({ myTranslationKey: 'my translation value' }) })
+          }
+        }
+      )
+    })
+
+    describe('#read', () => {
+      it('should read data', (done) => {
+        backend.read('de', 'testns', function (err, data) {
+          expect(err).not.to.be.ok()
+          expect(data).to.eql({ myTranslationKey: 'my translation value' })
+          expect(requestCall.options.loadPath).to.eql('/some/crazy/{{lng}}/{{ns}}/path')
+          expect(requestCall.url).to.eql('/some/crazy/de/testns/path')
+          expect(requestCall.payload).to.eql(undefined)
+          done()
+        })
+      })
+    })
+
+    describe('#create', () => {
+      it('should write data', (done) => {
+        backend.create('en', 'test', 'new.key', 'new value', (dataArray, resArray) => {
+          expect(requestCall.options.addPath).to.eql('/locales/add/{{lng}}/{{ns}}')
+          expect(requestCall.url).to.eql('/locales/add/en/test')
+          expect(requestCall.payload).to.eql({ 'new.key': 'new value' })
+
+          expect(dataArray).to.eql([null])
+          expect(resArray).to.eql([ { status: 200, data: '' } ])
+          done()
+        })
+      })
+    })
+  })
+
   describe('with loadPath function returning falsy', () => {
     let backend
     let calledLanguages = []
