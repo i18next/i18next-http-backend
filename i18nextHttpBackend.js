@@ -264,7 +264,7 @@ if (typeof fetch === 'function') {
 
 var XmlHttpRequestApi;
 
-if (_utils.hasXMLHttpRequest) {
+if ((0, _utils.hasXMLHttpRequest)()) {
   if (typeof global !== 'undefined' && global.XMLHttpRequest) {
     XmlHttpRequestApi = global.XMLHttpRequest;
   } else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
@@ -392,7 +392,7 @@ var request = function request(options, url, payload, callback) {
     return requestWithFetch(options, url, payload, callback);
   }
 
-  if (_utils.hasXMLHttpRequest || typeof ActiveXObject === 'function') {
+  if ((0, _utils.hasXMLHttpRequest)() || typeof ActiveXObject === 'function') {
     return requestWithXmlHttpRequest(options, url, payload, callback);
   }
 };
