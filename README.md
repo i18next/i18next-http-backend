@@ -15,7 +15,7 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 ## Advice:
 
-If you don't like to manage your translation files manually or are simply looking for a [better management solution](https://locize.com), take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) The i18next [backed plugin](https://www.i18next.com/overview/plugins-and-utils#backends) for 🌐 [locize](https://locize.com) ☁️.
+If you don't like to manage your translation files manually or are simply looking for a [better management solution](https://locize.com), take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend). The i18next [backed plugin](https://www.i18next.com/overview/plugins-and-utils#backends) for 🌐 [locize](https://locize.com) ☁️.
 
 *To see [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) in a working app example, check out:*
 
