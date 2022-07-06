@@ -7,7 +7,7 @@ import { hasXMLHttpRequest } from '../lib/utils.js'
 
 i18next.init()
 
-describe(`http backend using ${hasXMLHttpRequest ? 'XMLHttpRequest' : 'fetch'}`, () => {
+describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
 
   describe('#read', () => {
