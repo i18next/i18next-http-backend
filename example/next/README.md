@@ -58,7 +58,7 @@ npm i --save next-i18next i18next-chained-backend i18next-http-backend i18next-l
 
 ### 2. Setup next-i18next
 
-Setup `next-i18next` as described in the [README](https://github.com/isaachinman/next-i18next/blob/master/README.md#2-translation-content)
+Setup `next-i18next` as described in the [README](https://github.com/i18next/next-i18next/blob/master/README.md#2-translation-content)
 
 ### 3. Pass your config as an override config to the appWithTranslation HOC
 
