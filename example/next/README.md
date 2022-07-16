@@ -96,3 +96,50 @@ const ClientPage = () => {
 
 export default ClientPage
 ```
+
+### Alternative usage
+
+Because of the ready condition, you may see a warning like this: `Expected server HTML to contain a matching text node for...`
+
+The server rendered the correct translation text, but the client still needs to lazy load the translations and will show a different UI. This means there's hydration mismatch.
+
+This can be prevented by keeping the `getServerSideProps` or `getStaticProps` function but making use of the [`reloadResources`](https://www.i18next.com/overview/api#reloadresources) functionality of i18next.
+
+
+```javascript
+const LazyReloadPage = () => {
+
+  const { t, i18n } = useTranslation(['lazy-reload-page', 'footer'], { bindI18n: 'languageChanged loaded' })
+  // bindI18n: loaded is needed because of the reloadResources call
+  // if all pages use the reloadResources mechanism, the bindI18n option can also be defined in next-i18next.config.js
+  useEffect(() => {
+    i18n.reloadResources(i18n.resolvedLanguage, ['lazy-reload-page', 'footer'])
+  }, [])
+
+  return (
+    <>
+      <main>
+        <Header heading={t('h1')} title={t('title')} />
+        <Link href='/'>
+          <button
+            type='button'
+          >
+            {t('back-to-home')}
+          </button>
+        </Link>
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...await serverSideTranslations(locale, ['lazy-reload-page', 'footer']),
+  },
+})
+
+export default LazyReloadPage
+```
+
+This way the ready check is also not necessary anymore, because the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.
