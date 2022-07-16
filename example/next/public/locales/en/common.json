@@ -3,6 +3,7 @@
   "change-locale": "Change locale",
   "to-second-page": "To second page",
   "to-client-page": "To client page",
+  "to-lazy-reload-page": "To lazy reload page",
   "error-with-status": "A {{statusCode}} error occurred on server",
   "error-without-status": "An error occurred on the server",
   "title": "Home | next-i18next",

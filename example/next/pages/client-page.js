@@ -9,6 +9,7 @@ import { Footer } from '../components/Footer'
 const ClientPage = () => {
   const { t, ready } = useTranslation(['client-page', 'footer'])
   if (!ready) return 'loading translations...'
+  // but because of this ready return, you may see a warning like this: "Expected server HTML to contain a matching text node for..."
 
   return (
     <>

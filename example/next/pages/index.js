@@ -51,6 +51,13 @@ const Homepage = () => {
               {t('to-client-page')}
             </button>
           </Link>
+          <Link href='/lazy-reload-page'>
+            <button
+              type='button'
+            >
+              {t('to-lazy-reload-page')}
+            </button>
+          </Link>
           <button
             type='button'
             onClick={updateShallowRoute}

@@ -2,16 +2,22 @@ const HttpBackend = require('i18next-http-backend/cjs')
 const ChainedBackend= require('i18next-chained-backend').default
 const LocalStorageBackend = require('i18next-localstorage-backend').default
 
+const isBrowser = typeof window !== 'undefined'
+
 module.exports = {
+  debug: process.env.NODE_ENV === 'development',
   backend: {
     backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
-    backends: typeof window !== 'undefined' ? [LocalStorageBackend, HttpBackend]: [],
+    backends: isBrowser ? [LocalStorageBackend, HttpBackend]: [],
   },
-  debug: process.env.NODE_ENV === 'development',
+  // react: { // used only for the lazy reload
+  //   bindI18n: 'languageChanged loaded',
+  //   useSuspense: false
+  // },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de'],
   },
   serializeConfig: false,
-  use: typeof window !== 'undefined' ? [ChainedBackend] : [],
+  use: isBrowser ? [ChainedBackend] : [],
 }
