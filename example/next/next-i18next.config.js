@@ -7,7 +7,7 @@ module.exports = {
     backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
     backends: typeof window !== 'undefined' ? [LocalStorageBackend, HttpBackend]: [],
   },
-  // debug: true,
+  debug: process.env.NODE_ENV === 'development',
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de'],
