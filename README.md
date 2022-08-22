@@ -20,8 +20,8 @@ If you don't like to manage your translation files manually or are simply lookin
 *To see [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) in a working app example, check out:*
 
 - *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*
-- *[this guide](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://dev.to/adrai/how-to-properly-internationalize-a-react-application-using-i18next-3hdb#how-look)*
-- *[this Angular blog post](https://dev.to/adrai/unleash-the-full-power-of-angular-i18next-4b7o) [introducing i18next-locize-backend](https://dev.to/adrai/unleash-the-full-power-of-angular-i18next-4b7o#how-look)*
+- *[this guide](https://locize.com/blog/react-i18next/) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://locize.com/blog/react-i18next/#how-look)*
+- *[this Angular blog post](https://locize.com/blog/angular-i18next/) [introducing i18next-locize-backend](https://locize.com/blog/angular-i18next/#how-look)*
 - *[the code integration part](https://www.youtube.com/watch?v=ds-yEEYP1Ks&t=423s) in this [YouTube video](https://www.youtube.com/watch?v=ds-yEEYP1Ks)*
 
 ## Troubleshooting
