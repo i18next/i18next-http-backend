@@ -6,6 +6,8 @@ if (typeof fetch === 'function') {
     fetchApi = global.fetch
   } else if (typeof window !== 'undefined' && window.fetch) {
     fetchApi = window.fetch
+  } else {
+    fetchApi = fetch
   }
 }
 
@@ -395,6 +397,8 @@ var request = function request(options, url, payload, callback) {
   if ((0, _utils.hasXMLHttpRequest)() || typeof ActiveXObject === 'function') {
     return requestWithXmlHttpRequest(options, url, payload, callback);
   }
+
+  callback(new Error('No fetch and no xhr implementation found!'));
 };
 
 var _default = request;
