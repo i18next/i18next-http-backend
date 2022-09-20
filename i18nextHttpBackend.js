@@ -318,7 +318,7 @@ var fetchIt = function fetchIt(url, fetchOptions, callback) {
   }).catch(callback);
 };
 
-var omitFetchMode = false;
+var omitFetchOptions = false;
 
 var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
   if (options.queryStringParams) {
@@ -327,24 +327,26 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
 
   var headers = (0, _utils.defaults)({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
   if (payload) headers['Content-Type'] = 'application/json';
+  var reqOptions = typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions;
   var fetchOptions = (0, _utils.defaults)({
     method: payload ? 'POST' : 'GET',
     body: payload ? options.stringify(payload) : undefined,
     headers: headers
-  }, typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions);
-  if (omitFetchMode) delete fetchOptions.mode;
+  }, omitFetchOptions ? {} : reqOptions);
 
   try {
     fetchIt(url, fetchOptions, callback);
   } catch (e) {
-    if (!fetchOptions.mode || !e.message || e.message.indexOf('mode') < 0 || e.message.indexOf('not implemented') < 0) {
+    if (!reqOptions || Object.keys(reqOptions).length === 0 || !e.message || e.message.indexOf('not implemented') < 0) {
       return callback(e);
     }
 
     try {
-      delete fetchOptions.mode;
+      Object.keys(reqOptions).forEach(function (opt) {
+        delete fetchOptions[opt];
+      });
       fetchIt(url, fetchOptions, callback);
-      omitFetchMode = true;
+      omitFetchOptions = true;
     } catch (err) {
       callback(err);
     }
