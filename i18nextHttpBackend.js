@@ -261,6 +261,8 @@ if (typeof fetch === 'function') {
     fetchApi = global.fetch;
   } else if (typeof window !== 'undefined' && window.fetch) {
     fetchApi = window.fetch;
+  } else {
+    fetchApi = fetch;
   }
 }
 
@@ -302,18 +304,8 @@ var addQueryString = function addQueryString(url, params) {
   return url;
 };
 
-var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
-  if (options.queryStringParams) {
-    url = addQueryString(url, options.queryStringParams);
-  }
-
-  var headers = (0, _utils.defaults)({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
-  if (payload) headers['Content-Type'] = 'application/json';
-  fetchApi(url, (0, _utils.defaults)({
-    method: payload ? 'POST' : 'GET',
-    body: payload ? options.stringify(payload) : undefined,
-    headers: headers
-  }, typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions)).then(function (response) {
+var fetchIt = function fetchIt(url, fetchOptions, callback) {
+  fetchApi(url, fetchOptions).then(function (response) {
     if (!response.ok) return callback(response.statusText || 'Error', {
       status: response.status
     });
@@ -324,6 +316,39 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
       });
     }).catch(callback);
   }).catch(callback);
+};
+
+var omitFetchMode = false;
+
+var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
+  if (options.queryStringParams) {
+    url = addQueryString(url, options.queryStringParams);
+  }
+
+  var headers = (0, _utils.defaults)({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
+  if (payload) headers['Content-Type'] = 'application/json';
+  var fetchOptions = (0, _utils.defaults)({
+    method: payload ? 'POST' : 'GET',
+    body: payload ? options.stringify(payload) : undefined,
+    headers: headers
+  }, typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions);
+  if (omitFetchMode) delete fetchOptions.mode;
+
+  try {
+    fetchIt(url, fetchOptions, callback);
+  } catch (e) {
+    if (!fetchOptions.mode || !e.message || e.message.indexOf('mode') < 0 || e.message.indexOf('not implemented') < 0) {
+      return callback(e);
+    }
+
+    try {
+      delete fetchOptions.mode;
+      fetchIt(url, fetchOptions, callback);
+      omitFetchMode = true;
+    } catch (err) {
+      callback(err);
+    }
+  }
 };
 
 var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url, payload, callback) {
