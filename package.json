@@ -7,13 +7,16 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
+      "types": "./index.d.ts",
       "require": "./cjs/index.js",
       "default": "./esm/index.js"
     },
     "./cjs": {
+      "types": "./index.d.ts",
       "default": "./cjs/index.js"
     },
     "./esm": {
+      "types": "./index.d.ts",
       "default": "./esm/index.js"
     }
   },
@@ -23,24 +26,24 @@
   },
   "types": "./index.d.ts",
   "devDependencies": {
-    "@babel/cli": "7.18.10",
-    "@babel/core": "7.19.1",
-    "@babel/preset-env": "7.19.1",
+    "@babel/cli": "7.19.3",
+    "@babel/core": "7.19.6",
+    "@babel/preset-env": "7.19.4",
     "babel-plugin-add-module-exports": "1.0.4",
     "browserify": "17.0.0",
-    "eslint": "8.23.1",
+    "eslint": "8.26.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-n": "15.2.5",
-    "eslint-plugin-promise": "6.0.1",
+    "eslint-plugin-n": "15.3.0",
+    "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-require-path-exists": "1.1.9",
     "eslint-plugin-standard": "5.0.0",
     "expect.js": "0.3.1",
-    "i18next": "21.9.2",
+    "i18next": "22.0.2",
     "json-server": "0.17.0",
     "json5": "2.2.1",
-    "mocha": "10.0.0",
-    "uglify-js": "3.17.0",
+    "mocha": "10.1.0",
+    "uglify-js": "3.17.4",
     "xmlhttprequest": "1.8.0"
   },
   "description": "i18next-http-backend is a backend layer for i18next using in Node.js, in the browser and for Deno.",

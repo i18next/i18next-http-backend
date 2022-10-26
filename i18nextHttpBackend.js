@@ -26,21 +26,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _utils = require("./utils.js");
-
 var _request = _interopRequireDefault(require("./request.js"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var getDefaults = function getDefaults() {
   return {
     loadPath: '/locales/{{lng}}/{{ns}}.json',
@@ -67,32 +59,26 @@ var getDefaults = function getDefaults() {
     }
   };
 };
-
 var Backend = function () {
   function Backend(services) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var allOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
     _classCallCheck(this, Backend);
-
     this.services = services;
     this.options = options;
     this.allOptions = allOptions;
     this.type = 'backend';
     this.init(services, options, allOptions);
   }
-
   _createClass(Backend, [{
     key: "init",
     value: function init(services) {
       var _this = this;
-
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var allOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       this.services = services;
       this.options = (0, _utils.defaults)(options, this.options || {}, getDefaults());
       this.allOptions = allOptions;
-
       if (this.services && this.options.reloadInterval) {
         setInterval(function () {
           return _this.reload();
@@ -113,22 +99,17 @@ var Backend = function () {
     key: "_readAny",
     value: function _readAny(languages, loadUrlLanguages, namespaces, loadUrlNamespaces, callback) {
       var _this2 = this;
-
       var loadPath = this.options.loadPath;
-
       if (typeof this.options.loadPath === 'function') {
         loadPath = this.options.loadPath(languages, namespaces);
       }
-
       loadPath = (0, _utils.makePromise)(loadPath);
       loadPath.then(function (resolvedLoadPath) {
         if (!resolvedLoadPath) return callback(null, {});
-
         var url = _this2.services.interpolator.interpolate(resolvedLoadPath, {
           lng: languages.join('+'),
           ns: namespaces.join('+')
         });
-
         _this2.loadUrl(url, callback, loadUrlLanguages, loadUrlNamespaces);
       });
     }
@@ -136,14 +117,12 @@ var Backend = function () {
     key: "loadUrl",
     value: function loadUrl(url, callback, languages, namespaces) {
       var _this3 = this;
-
       this.options.request(this.options, url, undefined, function (err, res) {
         if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + url + '; status code: ' + res.status, true);
         if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url + '; status code: ' + res.status, false);
         if (!res && err && err.message && err.message.indexOf('Failed to fetch') > -1) return callback('failed loading ' + url + ': ' + err.message, true);
         if (err) return callback(err, false);
         var ret, parseErr;
-
         try {
           if (typeof res.data === 'string') {
             ret = _this3.options.parse(res.data, languages, namespaces);
@@ -153,7 +132,6 @@ var Backend = function () {
         } catch (e) {
           parseErr = 'failed parsing ' + url + ' to json';
         }
-
         if (parseErr) return callback(parseErr, false);
         callback(null, ret);
       });
@@ -162,7 +140,6 @@ var Backend = function () {
     key: "create",
     value: function create(languages, namespace, key, fallbackValue, callback) {
       var _this4 = this;
-
       if (!this.options.addPath) return;
       if (typeof languages === 'string') languages = [languages];
       var payload = this.options.parsePayload(namespace, key, fallbackValue);
@@ -171,21 +148,17 @@ var Backend = function () {
       var resArray = [];
       languages.forEach(function (lng) {
         var addPath = _this4.options.addPath;
-
         if (typeof _this4.options.addPath === 'function') {
           addPath = _this4.options.addPath(lng, namespace);
         }
-
         var url = _this4.services.interpolator.interpolate(addPath, {
           lng: lng,
           ns: namespace
         });
-
         _this4.options.request(_this4.options, url, payload, function (data, res) {
           finished += 1;
           dataArray.push(data);
           resArray.push(res);
-
           if (finished === languages.length) {
             if (callback) callback(dataArray, resArray);
           }
@@ -196,22 +169,20 @@ var Backend = function () {
     key: "reload",
     value: function reload() {
       var _this5 = this;
-
       var _this$services = this.services,
-          backendConnector = _this$services.backendConnector,
-          languageUtils = _this$services.languageUtils,
-          logger = _this$services.logger;
+        backendConnector = _this$services.backendConnector,
+        languageUtils = _this$services.languageUtils,
+        logger = _this$services.logger;
       var currentLanguage = backendConnector.language;
       if (currentLanguage && currentLanguage.toLowerCase() === 'cimode') return;
-      var toLoad = [];
 
+      var toLoad = [];
       var append = function append(lng) {
         var lngs = languageUtils.toResolveHierarchy(lng);
         lngs.forEach(function (l) {
           if (toLoad.indexOf(l) < 0) toLoad.push(l);
         });
       };
-
       append(currentLanguage);
       if (this.allOptions.preload) this.allOptions.preload.forEach(function (l) {
         return append(l);
@@ -227,10 +198,8 @@ var Backend = function () {
       });
     }
   }]);
-
   return Backend;
 }();
-
 Backend.type = 'backend';
 var _default = Backend;
 exports.default = _default;
@@ -243,19 +212,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _utils = require("./utils.js");
-
 var fetchNode = _interopRequireWildcard(require("./getFetch.js"));
-
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 var fetchApi;
-
 if (typeof fetch === 'function') {
   if (typeof global !== 'undefined' && global.fetch) {
     fetchApi = global.fetch;
@@ -265,9 +227,7 @@ if (typeof fetch === 'function') {
     fetchApi = fetch;
   }
 }
-
 var XmlHttpRequestApi;
-
 if ((0, _utils.hasXMLHttpRequest)()) {
   if (typeof global !== 'undefined' && global.XMLHttpRequest) {
     XmlHttpRequestApi = global.XMLHttpRequest;
@@ -275,9 +235,7 @@ if ((0, _utils.hasXMLHttpRequest)()) {
     XmlHttpRequestApi = window.XMLHttpRequest;
   }
 }
-
 var ActiveXObjectApi;
-
 if (typeof ActiveXObject === 'function') {
   if (typeof global !== 'undefined' && global.ActiveXObject) {
     ActiveXObjectApi = global.ActiveXObject;
@@ -285,25 +243,19 @@ if (typeof ActiveXObject === 'function') {
     ActiveXObjectApi = window.ActiveXObject;
   }
 }
-
 if (!fetchApi && fetchNode && !XmlHttpRequestApi && !ActiveXObjectApi) fetchApi = fetchNode.default || fetchNode;
 if (typeof fetchApi !== 'function') fetchApi = undefined;
-
 var addQueryString = function addQueryString(url, params) {
   if (params && _typeof(params) === 'object') {
     var queryString = '';
-
     for (var paramName in params) {
       queryString += '&' + encodeURIComponent(paramName) + '=' + encodeURIComponent(params[paramName]);
     }
-
     if (!queryString) return url;
     url = url + (url.indexOf('?') !== -1 ? '&' : '?') + queryString.slice(1);
   }
-
   return url;
 };
-
 var fetchIt = function fetchIt(url, fetchOptions, callback) {
   fetchApi(url, fetchOptions).then(function (response) {
     if (!response.ok) return callback(response.statusText || 'Error', {
@@ -317,14 +269,12 @@ var fetchIt = function fetchIt(url, fetchOptions, callback) {
     }).catch(callback);
   }).catch(callback);
 };
-
 var omitFetchOptions = false;
 
 var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
   if (options.queryStringParams) {
     url = addQueryString(url, options.queryStringParams);
   }
-
   var headers = (0, _utils.defaults)({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
   if (payload) headers['Content-Type'] = 'application/json';
   var reqOptions = typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions;
@@ -333,14 +283,12 @@ var requestWithFetch = function requestWithFetch(options, url, payload, callback
     body: payload ? options.stringify(payload) : undefined,
     headers: headers
   }, omitFetchOptions ? {} : reqOptions);
-
   try {
     fetchIt(url, fetchOptions, callback);
   } catch (e) {
     if (!reqOptions || Object.keys(reqOptions).length === 0 || !e.message || e.message.indexOf('not implemented') < 0) {
       return callback(e);
     }
-
     try {
       Object.keys(reqOptions).forEach(function (opt) {
         delete fetchOptions[opt];
@@ -357,77 +305,59 @@ var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url,
   if (payload && _typeof(payload) === 'object') {
     payload = addQueryString('', payload).slice(1);
   }
-
   if (options.queryStringParams) {
     url = addQueryString(url, options.queryStringParams);
   }
-
   try {
     var x;
-
     if (XmlHttpRequestApi) {
       x = new XmlHttpRequestApi();
     } else {
       x = new ActiveXObjectApi('MSXML2.XMLHTTP.3.0');
     }
-
     x.open(payload ? 'POST' : 'GET', url, 1);
-
     if (!options.crossDomain) {
       x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     }
-
     x.withCredentials = !!options.withCredentials;
-
     if (payload) {
       x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
-
     if (x.overrideMimeType) {
       x.overrideMimeType('application/json');
     }
-
     var h = options.customHeaders;
     h = typeof h === 'function' ? h() : h;
-
     if (h) {
       for (var i in h) {
         x.setRequestHeader(i, h[i]);
       }
     }
-
     x.onreadystatechange = function () {
       x.readyState > 3 && callback(x.status >= 400 ? x.statusText : null, {
         status: x.status,
         data: x.responseText
       });
     };
-
     x.send(payload);
   } catch (e) {
     console && console.log(e);
   }
 };
-
 var request = function request(options, url, payload, callback) {
   if (typeof payload === 'function') {
     callback = payload;
     payload = undefined;
   }
-
   callback = callback || function () {};
-
   if (fetchApi) {
     return requestWithFetch(options, url, payload, callback);
   }
-
   if ((0, _utils.hasXMLHttpRequest)() || typeof ActiveXObject === 'function') {
     return requestWithXmlHttpRequest(options, url, payload, callback);
   }
-
   callback(new Error('No fetch and no xhr implementation found!'));
 };
-
 var _default = request;
 exports.default = _default;
 module.exports = exports.default;
@@ -441,13 +371,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.defaults = defaults;
 exports.hasXMLHttpRequest = hasXMLHttpRequest;
 exports.makePromise = makePromise;
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 var arr = [];
 var each = arr.forEach;
 var slice = arr.slice;
-
 function defaults(obj) {
   each.call(slice.call(arguments, 1), function (source) {
     if (source) {
@@ -458,7 +385,6 @@ function defaults(obj) {
   });
   return obj;
 }
-
 function hasXMLHttpRequest() {
   return typeof XMLHttpRequest === 'function' || (typeof XMLHttpRequest === "undefined" ? "undefined" : _typeof(XMLHttpRequest)) === 'object';
 }
@@ -471,7 +397,6 @@ function makePromise(maybePromise) {
   if (isPromise(maybePromise)) {
     return maybePromise;
   }
-
   return Promise.resolve(maybePromise);
 }
 },{}],5:[function(require,module,exports){
