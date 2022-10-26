@@ -123,7 +123,7 @@ export default class I18NextHttpBackend
 }
 
 declare module "i18next" {
-  interface PluginOptions {
+  interface CustomPluginOptions {
     backend?: BackendOptions;
   }
 }
