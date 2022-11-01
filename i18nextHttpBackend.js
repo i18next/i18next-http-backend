@@ -350,7 +350,7 @@ var request = function request(options, url, payload, callback) {
     payload = undefined;
   }
   callback = callback || function () {};
-  if (fetchApi) {
+  if (fetchApi && url.indexOf('file:') !== 0) {
     return requestWithFetch(options, url, payload, callback);
   }
   if ((0, _utils.hasXMLHttpRequest)() || typeof ActiveXObject === 'function') {
