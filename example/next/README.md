@@ -48,12 +48,12 @@ The config specifies that on the server we use the default load methods specifie
 
 Yarn
 ```
-yarn add next-i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
+yarn add next-i18next react-i18next i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
 ```
 
 npm
 ```
-npm i --save next-i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
+npm i --save next-i18next react-i18next i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
 ```
 
 ### 2. Setup next-i18next
