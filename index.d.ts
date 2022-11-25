@@ -97,6 +97,7 @@ interface RequestResponse {
 export default class I18NextHttpBackend
   implements BackendModule<BackendOptions>
 {
+  static type: "backend";
   constructor(services?: any, options?: BackendOptions);
   init(services?: any, options?: BackendOptions): void;
   readMulti?(
