@@ -196,6 +196,25 @@ const HttpApi = new HttpApi();
 HttpApi.init(null, options);
 ```
 
+## TypeScript
+
+To properly type the backend options, you can import the `HttpBackendOptions` interface and use it as a generic type parameter to the i18next's `init` method, e.g.:
+
+```ts
+import i18n from 'i18next'
+import HttpBackend, { HttpBackendOptions } from 'i18next-http-backend'
+
+i18n
+  .use(HttpBackend)
+  .init<HttpBackendOptions>({
+    backend: {
+      // http backend options
+    },
+
+    // other i18next options
+  })
+```
+
 ---
 
 <h3 align="center">Gold Sponsors</h3>
