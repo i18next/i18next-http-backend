@@ -9,7 +9,7 @@ type AddPathOption =
   | string
   | ((lng: string, namespace: string) => string)
 
-interface BackendOptions {
+export interface HttpBackendOptions {
   /**
    * path where resources get loaded from, or a function
    * returning a path:
@@ -59,7 +59,7 @@ interface BackendOptions {
    * can be used to support XDomainRequest in IE 8 and 9
    */
   request?(
-    options: BackendOptions,
+    options: HttpBackendOptions,
     url: string,
     payload: {} | string,
     callback: RequestCallback
@@ -95,11 +95,11 @@ interface RequestResponse {
 }
 
 export default class I18NextHttpBackend
-  implements BackendModule<BackendOptions>
+  implements BackendModule<HttpBackendOptions>
 {
   static type: "backend";
-  constructor(services?: any, options?: BackendOptions);
-  init(services?: any, options?: BackendOptions): void;
+  constructor(services?: any, options?: HttpBackendOptions);
+  init(services?: any, options?: HttpBackendOptions): void;
   readMulti?(
     languages: string[],
     namespaces: string[],
@@ -120,11 +120,5 @@ export default class I18NextHttpBackend
   ): void;
   type: "backend";
   services: any;
-  options: BackendOptions;
-}
-
-declare module "i18next" {
-  interface CustomPluginOptions {
-    backend?: BackendOptions;
-  }
+  options: HttpBackendOptions;
 }
