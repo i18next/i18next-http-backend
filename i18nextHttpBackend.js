@@ -163,7 +163,7 @@ var Backend = function () {
           dataArray.push(data);
           resArray.push(res);
           if (finished === languages.length) {
-            if (callback) callback(dataArray, resArray);
+            if (typeof callback === 'function') callback(dataArray, resArray);
           }
         });
       });
