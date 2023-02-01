@@ -21,7 +21,12 @@
     <script>
       i18next.use(i18nextHttpBackend).init({
         debug: true,
-        fallbackLng: 'en' // evtl. use language-detector https://github.com/i18next/i18next-browser-languageDetector
+        fallbackLng: 'en', // evtl. use language-detector https://github.com/i18next/i18next-browser-languageDetector
+        // if you want to customize a different translation path,
+        // use the loadPath option:
+        backend: {
+          loadPath: '/locales/{{lng}}/{{ns}}.json'
+        }
       }, function(err, t) {
         // for options see
         // https://github.com/i18next/jquery-i18next#initialize-the-plugin
