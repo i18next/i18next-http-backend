@@ -1,4 +1,4 @@
-import { BackendModule, MultiReadCallback, ReadCallback } from "i18next";
+import { BackendModule, MultiReadCallback, ReadCallback, ResourceKey } from "i18next";
 
 type LoadPathOption =
   | string
@@ -91,7 +91,7 @@ type RequestCallback = (error: any, response: RequestResponse) => void;
 
 interface RequestResponse {
   status: number;
-  data: string;
+  data: ResourceKey;
 }
 
 export default class I18NextHttpBackend
