@@ -79,6 +79,8 @@ export default appWithTranslation(MyApp, nextI18nConfig);
 
 Use the `ready` property from `useTranslation` to ensure the i18next instance is ready and that your translations are loaded to avoid the user seeing bare translation keys, below is a very simplistic example of this.
 
+ADVICE: I suggest you don't use this client-side only approach, but use the lazy-reload approach (below) instead!
+
 ```jsx
 // getServerSideProps and getStaticProps are not used (no serverSideTranslations method)
 const ClientPage = () => {
@@ -97,11 +99,19 @@ const ClientPage = () => {
 export default ClientPage
 ```
 
-### Alternative usage
+This will work, but the server side rendered part will probably not include the translated texts (not really SEO friendly).
+<br />
+To fix this, use the lazy-reload approach.
 
-Because of the ready condition, you may see a warning like this: `Expected server HTML to contain a matching text node for...`
+### Alternative usage (the preferred way)
 
-The server rendered the correct translation text, but the client still needs to lazy load the translations and will show a different UI. This means there's hydration mismatch.
+You might see a warning like this: `Expected server HTML to contain a matching text node for...`
+<br />
+Or your delivered server side rendered page, might not include the translated texts.
+
+This can be optimized by keeping the `getServerSideProps` or `getStaticProps` function and making use of the `reloadResources` functionality of i18next.
+
+This way the ready check is also not necessary, because the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.
 
 This can be prevented by keeping the `getServerSideProps` or `getStaticProps` function but making use of the [`reloadResources`](https://www.i18next.com/overview/api#reloadresources) functionality of i18next.
 
@@ -142,4 +152,4 @@ export const getStaticProps = async ({ locale }) => ({
 export default LazyReloadPage
 ```
 
-This way the ready check is also not necessary anymore, because the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.
+This way the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.

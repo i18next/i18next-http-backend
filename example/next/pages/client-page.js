@@ -28,6 +28,7 @@ const ClientPage = () => {
   )
 }
 
+// ADVICE: I suggest you don't use this client-side only approach, but use the lazy-reload approach instead!
 //
 // Without the getStaticProps or getServerSideProps function,
 // the translsations are loaded via configured i18next backend.

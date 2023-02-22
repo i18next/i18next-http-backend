@@ -3,11 +3,12 @@ const ChainedBackend= require('i18next-chained-backend').default
 const LocalStorageBackend = require('i18next-localstorage-backend').default
 
 const isBrowser = typeof window !== 'undefined'
+const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
-  debug: process.env.NODE_ENV === 'development',
+  debug: isDev,
   backend: {
-    backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
+    backendOptions: [{ expirationTime: isDev ? 0 : 60 * 60 * 1000 }, {}], // 1 hour
     backends: isBrowser ? [LocalStorageBackend, HttpBackend]: [],
   },
   // react: { // used only for the lazy reload
