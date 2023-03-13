@@ -47,6 +47,14 @@ export interface HttpBackendOptions {
     fallbackValue?: string
   ): { [key: string]: any };
   /**
+   * parse data before it has been sent by loadPath
+   * if value return it will send a POST request
+   */
+  parseLoadPayload?(
+    languages: string[],
+    namespaces: string[]
+  ): { [key: string]: any } | undefined;
+  /**
    * allow cross domain requests
    */
   crossDomain?: boolean;
