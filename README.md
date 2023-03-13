@@ -124,7 +124,7 @@ for plain browser:
   parsePayload: function(namespace, key, fallbackValue) { return { key: fallbackValue || "" } },
 
   // parse data before it has been sent by loadPath
-  // if value return it will send a POST request
+  // if value returned it will send a POST request
   parseLoadPayload: function(languages, namespaces) { return undefined },
 
   // allow cross domain requests
