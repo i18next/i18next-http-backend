@@ -48,6 +48,9 @@ var getDefaults = function getDefaults() {
     parsePayload: function parsePayload(namespace, key, fallbackValue) {
       return _defineProperty({}, key, fallbackValue || '');
     },
+    parseLoadPayload: function parseLoadPayload(languages, namespaces) {
+      return undefined;
+    },
     request: _request.default,
     reloadInterval: typeof window !== 'undefined' ? false : 60 * 60 * 1000,
     customHeaders: {},
@@ -120,7 +123,10 @@ var Backend = function () {
     key: "loadUrl",
     value: function loadUrl(url, callback, languages, namespaces) {
       var _this3 = this;
-      this.options.request(this.options, url, undefined, function (err, res) {
+      var lng = typeof languages === 'string' ? [languages] : languages;
+      var ns = typeof namespaces === 'string' ? [namespaces] : namespaces;
+      var payload = this.options.parseLoadPayload(lng, ns);
+      this.options.request(this.options, url, payload, function (err, res) {
         if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + url + '; status code: ' + res.status, true);
         if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url + '; status code: ' + res.status, false);
         if (!res && err && err.message && err.message.indexOf('Failed to fetch') > -1) return callback('failed loading ' + url + ': ' + err.message, true);

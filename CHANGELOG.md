@@ -1,6 +1,10 @@
+### 2.2.0
+
+- parseLoadPayload for POST request [110](https://github.com/i18next/i18next/pull/110)
+
 ### 2.1.1
 
-- regression fix for saveMissing [signature](https://github.com/i18next/i18next/issues/1890)
+- regression fix for saveMissing signature [1890](https://github.com/i18next/i18next/issues/1890)
 
 ### 2.1.0
 
