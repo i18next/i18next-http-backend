@@ -120,8 +120,12 @@ for plain browser:
   // here it removes the letter a from the json (bad idea)
   parse: function(data) { return data.replace(/a/g, ''); },
 
-  //parse data before it has been sent by addPath
-  parsePayload: function(namespace, key, fallbackValue) { return { key } },
+  // parse data before it has been sent by addPath
+  parsePayload: function(namespace, key, fallbackValue) { return { key: fallbackValue || "" } },
+
+  // parse data before it has been sent by loadPath
+  // if value returned it will send a POST request
+  parseLoadPayload: function(languages, namespaces) { return undefined },
 
   // allow cross domain requests
   crossDomain: false,
