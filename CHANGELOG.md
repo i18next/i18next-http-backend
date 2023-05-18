@@ -1,3 +1,7 @@
+### 2.2.1
+
+- fix for types moduleResolution "node16"
+
 ### 2.2.0
 
 - parseLoadPayload for POST request [110](https://github.com/i18next/i18next-http-backend/pull/110)

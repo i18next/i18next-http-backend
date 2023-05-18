@@ -7,32 +7,37 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./index.d.ts",
+      "types": {
+        "require": "./cjs/index.d.ts",
+        "import": "./esm/index.d.ts"
+      },
+      "module": "./esm/index.js",
+      "import": "./esm/index.js",
       "require": "./cjs/index.js",
       "default": "./esm/index.js"
     },
     "./cjs": {
-      "types": "./index.d.ts",
+      "types": "./cjs/index.d.ts",
       "default": "./cjs/index.js"
     },
     "./esm": {
-      "types": "./index.d.ts",
+      "types": "./esm/index.d.ts",
       "default": "./esm/index.js"
     }
   },
   "module": "./esm/index.js",
   "dependencies": {
-    "cross-fetch": "3.1.5"
+    "cross-fetch": "3.1.6"
   },
   "types": "./index.d.ts",
   "devDependencies": {
-    "@babel/cli": "7.21.0",
-    "@babel/core": "7.21.0",
-    "@babel/preset-env": "7.20.2",
+    "@babel/cli": "7.21.5",
+    "@babel/core": "7.21.8",
+    "@babel/preset-env": "7.21.5",
     "babel-plugin-add-module-exports": "1.0.4",
     "browserify": "17.0.0",
     "dtslint": "4.2.1",
-    "eslint": "8.36.0",
+    "eslint": "8.40.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-n": "15.6.1",
@@ -40,13 +45,13 @@
     "eslint-plugin-require-path-exists": "1.1.9",
     "eslint-plugin-standard": "5.0.0",
     "expect.js": "0.3.1",
-    "i18next": "22.4.11",
-    "json-server": "0.17.2",
+    "i18next": "22.4.15",
+    "json-server": "0.17.3",
     "json5": "2.2.3",
     "mocha": "10.2.0",
     "tslint": "5.20.1",
-    "tsd": "0.27.0",
-    "typescript": "4.9.5",
+    "tsd": "0.28.1",
+    "typescript": "5.0.4",
     "uglify-js": "3.17.4",
     "xmlhttprequest": "1.8.0"
   },
@@ -67,8 +72,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
-    "compile:esm": "rm -rf esm && mkdir esm && BABEL_ENV=esm babel lib -d esm && cp lib/getFetch.cjs esm/getFetch.cjs && rm -f esm/getFetch.js && node -e \"fs.writeFileSync('esm/getFetch.cjs', fs.readFileSync('esm/getFetch.cjs').toString().replace('/* eslint-disable no-var, no-undef */\\n', ''))\"",
-    "compile:cjs": "rm -rf cjs && mkdir cjs && BABEL_ENV=cjs babel lib -d cjs && echo '{\"type\":\"commonjs\"}' > cjs/package.json && cp lib/getFetch.cjs cjs/getFetch.js && node -e \"fs.writeFileSync('cjs/getFetch.js', fs.readFileSync('cjs/getFetch.js').toString().replace('/* eslint-disable no-var, no-undef */\\n', ''))\" && node -e \"fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace('getFetch.cjs', 'getFetch.js'))\"",
+    "compile:esm": "rm -rf esm && mkdir esm && BABEL_ENV=esm babel lib -d esm && cp index.d.ts esm/index.d.ts && cp lib/getFetch.cjs esm/getFetch.cjs && rm -f esm/getFetch.js && node -e \"fs.writeFileSync('esm/getFetch.cjs', fs.readFileSync('esm/getFetch.cjs').toString().replace('/* eslint-disable no-var, no-undef */\\n', ''))\"",
+    "compile:cjs": "rm -rf cjs && mkdir cjs && BABEL_ENV=cjs babel lib -d cjs && cp index.d.ts cjs/index.d.ts && echo '{\"type\":\"commonjs\"}' > cjs/package.json && cp lib/getFetch.cjs cjs/getFetch.js && node -e \"fs.writeFileSync('cjs/getFetch.js', fs.readFileSync('cjs/getFetch.js').toString().replace('/* eslint-disable no-var, no-undef */\\n', ''))\" && node -e \"fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace('getFetch.cjs', 'getFetch.js'))\"",
     "compile": "npm run compile:esm && npm run compile:cjs",
     "browser": "browserify --ignore cross-fetch --standalone i18nextHttpBackend cjs/index.js -o i18nextHttpBackend.js && uglifyjs i18nextHttpBackend.js --compress --mangle -o i18nextHttpBackend.min.js",
     "build": "npm run compile && npm run browser",
