@@ -23,12 +23,6 @@ export interface HttpBackendOptions {
    */
   addPath?: AddPathOption;
   /**
-   * your backend server supports multiLoading
-   * locales/resources.json?lng=de+en&ns=ns1+ns2
-   * set loadPath: '/locales/resources.json?lng={{lng}}&ns={{ns}}' to adapt to multiLoading
-   */
-  allowMultiLoading?: boolean;
-  /**
    * parse data after it has been fetched
    * in example use https://www.npmjs.com/package/json5
    * here it removes the letter a from the json (bad idea)

@@ -93,27 +93,25 @@ for plain browser:
   // the function might return a promise
   // returning falsy will abort the download
   //
-  // If allowMultiLoading is false, lngs and namespaces will have only one element each,
-  // If allowMultiLoading is true, lngs and namespaces can have multiple elements
+  // If not used with i18next-multiload-backend-adapter, lngs and namespaces will have only one element each,
+  // If used with i18next-multiload-backend-adapter, lngs and namespaces can have multiple elements
+  //   and also your server needs to support multiloading
+  //      /locales/resources.json?lng=de+en&ns=ns1+ns2
+  //   Adapter is needed to enable MultiLoading https://github.com/i18next/i18next-multiload-backend-adapter
+  //   Returned JSON structure in this case is
+  //   {
+  //    lang : {
+  //     namespaceA: {},
+  //     namespaceB: {},
+  //     ...etc
+  //    }
+  //   }
   loadPath: '/locales/{{lng}}/{{ns}}.json',
 
   // path to post missing resources, or a function
   // function(lng, namespace) { return customPath; }
   // the returned path will interpolate lng, ns if provided like giving a static path
   addPath: '/locales/add/{{lng}}/{{ns}}',
-
-  // your backend server supports multiloading
-  // /locales/resources.json?lng=de+en&ns=ns1+ns2
-  // Adapter is needed to enable MultiLoading https://github.com/i18next/i18next-multiload-backend-adapter
-  // Returned JSON structure in this case is
-  // {
-  //  lang : {
-  //   namespaceA: {},
-  //   namespaceB: {},
-  //   ...etc
-  //  }
-  // }
-  allowMultiLoading: false, // set loadPath: '/locales/resources.json?lng={{lng}}&ns={{ns}}' to adapt to multiLoading
 
   // parse data after it has been fetched
   // in example use https://www.npmjs.com/package/json5
