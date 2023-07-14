@@ -1,0 +1,10 @@
+{
+  "input": {
+    "placeholder": "ein Platzhalter"
+  },
+  "nav": {
+    "home": "Startseite",
+    "page1": "Erste Seite",
+    "page2": "Zweite Seite"
+  }
+}
