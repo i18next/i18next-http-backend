@@ -166,7 +166,7 @@ for plain browser:
   // adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
   queryStringParams: { v: '1.3.5' },
 
-  reloadInterval: false // can be used to reload resources in a specific interval (useful in server environments)
+  reloadInterval: false // can be used to reload resources in a specific interval (milliseconds) (useful in server environments)
 }
 ```
 
