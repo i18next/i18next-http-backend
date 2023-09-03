@@ -40,7 +40,6 @@ var getDefaults = function getDefaults() {
   return {
     loadPath: '/locales/{{lng}}/{{ns}}.json',
     addPath: '/locales/add/{{lng}}/{{ns}}',
-    allowMultiLoading: false,
     parse: function parse(data) {
       return JSON.parse(data);
     },
@@ -265,7 +264,7 @@ var addQueryString = function addQueryString(url, params) {
   return url;
 };
 var fetchIt = function fetchIt(url, fetchOptions, callback) {
-  fetchApi(url, fetchOptions).then(function (response) {
+  var resolver = function resolver(response) {
     if (!response.ok) return callback(response.statusText || 'Error', {
       status: response.status
     });
@@ -275,7 +274,12 @@ var fetchIt = function fetchIt(url, fetchOptions, callback) {
         data: data
       });
     }).catch(callback);
-  }).catch(callback);
+  };
+  if (typeof fetch === 'function') {
+    fetch(url, fetchOptions).then(resolver).catch(callback);
+  } else {
+    fetchApi(url, fetchOptions).then(resolver).catch(callback);
+  }
 };
 var omitFetchOptions = false;
 var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
