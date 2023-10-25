@@ -1,3 +1,7 @@
+### 2.3.0
+
+- update deps
+
 ### 2.2.2
 
 - hack for debug mode in react-native
