@@ -79,6 +79,23 @@ export default appWithTranslation(MyApp, nextI18nConfig);
 
 Use the `ready` property from `useTranslation` to ensure the i18next instance is ready and that your translations are loaded to avoid the user seeing bare translation keys, below is a very simplistic example of this.
 
+Also make sure you set the `partialBundledLanguages` option to true, like [here](https://github.com/i18next/i18next-http-backend/blob/master/example/next/next-i18next.config.js#L14).
+
+```js
+// ...
+const isBrowser = typeof window !== 'undefined'
+
+module.exports = {
+  backend: { /* ... */ },
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'de'],
+  },
+  partialBundledLanguages: isBrowser && true,
+  // ...
+}
+```
+
 ADVICE: I suggest you don't use this client-side only approach, but use the lazy-reload approach (below) instead!
 
 ```jsx

@@ -9,8 +9,9 @@ module.exports = {
   debug: isDev,
   backend: {
     backendOptions: [{ expirationTime: isDev ? 0 : 60 * 60 * 1000 }, {}], // 1 hour
-    backends: isBrowser ? [LocalStorageBackend, HttpBackend]: [],
+    backends: isBrowser ? [LocalStorageBackend, HttpBackend] : [],
   },
+  partialBundledLanguages: isBrowser && true,
   // react: { // used only for the lazy reload
   //   bindI18n: 'languageChanged loaded',
   //   useSuspense: false
