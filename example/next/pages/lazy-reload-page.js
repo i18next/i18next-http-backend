@@ -8,7 +8,6 @@ import { Footer } from '../components/Footer'
 import { useEffect } from 'react'
 
 const LazyReloadPage = () => {
-
   const { t, i18n } = useTranslation(['lazy-reload-page', 'footer'], { bindI18n: 'languageChanged loaded' })
   // bindI18n: loaded is needed because of the reloadResources call
   // if all pages use the reloadResources mechanism, the bindI18n option can also be defined in next-i18next.config.js
