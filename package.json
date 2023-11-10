@@ -9,7 +9,7 @@
     ".": {
       "types": {
         "require": "./cjs/index.d.ts",
-        "import": "./esm/index.d.ts"
+        "import": "./esm/index.d.mts"
       },
       "module": "./esm/index.js",
       "import": "./esm/index.js",
@@ -29,23 +29,23 @@
   "dependencies": {
     "cross-fetch": "4.0.0"
   },
-  "types": "./index.d.ts",
+  "types": "./index.d.mts",
   "devDependencies": {
     "@babel/cli": "7.23.0",
-    "@babel/core": "7.23.2",
-    "@babel/preset-env": "7.23.2",
+    "@babel/core": "7.23.3",
+    "@babel/preset-env": "7.23.3",
     "babel-plugin-add-module-exports": "1.0.4",
     "browserify": "17.0.0",
     "dtslint": "4.2.1",
-    "eslint": "8.52.0",
+    "eslint": "8.53.0",
     "eslint-config-standard": "17.1.0",
     "eslint-plugin-import": "2.29.0",
-    "eslint-plugin-n": "16.2.0",
+    "eslint-plugin-n": "16.3.1",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-require-path-exists": "1.1.9",
     "eslint-plugin-standard": "5.0.0",
     "expect.js": "0.3.1",
-    "i18next": "23.6.0",
+    "i18next": "23.7.1",
     "json-server": "0.17.4",
     "json5": "2.2.3",
     "mocha": "10.2.0",

@@ -7,7 +7,7 @@ type LoadPathOption =
 
 type AddPathOption =
   | string
-  | ((lng: string, namespace: string) => string)
+  | ((lng: string, namespace: string) => string);
 
 export interface HttpBackendOptions {
   /**
