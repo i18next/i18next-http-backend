@@ -1,3 +1,7 @@
+### 2.4.2
+
+- fix: mjs typings export
+
 ### 2.4.1
 
 - fix: separate cjs and mjs typings
