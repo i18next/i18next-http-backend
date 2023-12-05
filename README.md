@@ -22,7 +22,7 @@ If you don't like to manage your translation files manually or are simply lookin
 - *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*
 - *[this guide](https://locize.com/blog/react-i18next/) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://locize.com/blog/react-i18next/#how-look)*
 - *[this Angular blog post](https://locize.com/blog/angular-i18next/) [introducing i18next-locize-backend](https://locize.com/blog/angular-i18next/#how-look)*
-- *[the code integration part](https://www.youtube.com/watch?v=ds-yEEYP1Ks&t=423s) in this [YouTube video](https://www.youtube.com/watch?v=ds-yEEYP1Ks)*
+- *[the code integration part](https://www.youtube.com/watch?v=TFV_vhJs5DY&t=294s) in this [YouTube video](https://www.youtube.com/watch?v=TFV_vhJs5DY)*
 
 ## Troubleshooting
 
