@@ -111,6 +111,9 @@ for plain browser:
   // path to post missing resources, or a function
   // function(lng, namespace) { return customPath; }
   // the returned path will interpolate lng, ns if provided like giving a static path
+  // 
+  // note that this only works when initialized with { saveMissing: true }
+  // (see https://www.i18next.com/overview/configuration-options)
   addPath: '/locales/add/{{lng}}/{{ns}}',
 
   // parse data after it has been fetched
