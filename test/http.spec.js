@@ -165,7 +165,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
     })
   })
 
-  describe('with custom request option', () => {
+  describe('with custom request function option', () => {
     let backend, requestCall
 
     before(() => {
@@ -216,6 +216,47 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
       })
     })
   })
+
+  if (!hasXMLHttpRequest()) {
+    describe('with custom request options', () => {
+      let backend
+
+      before(() => {
+        backend = new Http(
+          {
+            interpolator: i18next.services.interpolator
+          },
+          {
+            loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+            addPath: 'http://localhost:5001/create/{{lng}}/{{ns}}',
+            requestOptions: {
+              method: 'PATCH'
+            }
+          }
+        )
+      })
+
+      describe('#read', () => {
+        it('should read data', (done) => {
+          backend.read('it', 'testns', function (err, data) {
+            expect(err).not.to.be.ok()
+            expect(data).to.eql({ via: 'patch' })
+            done()
+          })
+        })
+      })
+
+      describe('#create', () => {
+        it('should write data', (done) => {
+          backend.create('it', 'testns', 'new.key', 'new value', (dataArray, resArray) => {
+            expect(dataArray).to.eql([null])
+            expect(resArray).to.eql([ { status: 200, data: '' } ])
+            done()
+          })
+        })
+      })
+    })
+  }
 
   describe('with loadPath function returning falsy', () => {
     let backend

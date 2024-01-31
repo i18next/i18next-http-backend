@@ -1,3 +1,7 @@
+### 2.4.3
+
+- fix: overriding options
+
 ### 2.4.2
 
 - fix: mjs typings export

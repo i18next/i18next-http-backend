@@ -12,6 +12,17 @@ const server = (done) => {
     res.jsonp(req.query)
   })
 
+  js.patch('/locales/it/testns', (req, res) => {
+    res.jsonp({
+      via: 'patch'
+    })
+  })
+
+  js.patch('/create/it/testns', (req, res) => {
+    expect(req.body).not.to.eql({})
+    res.jsonp()
+  })
+
   js.get('/locales/en/test', (req, res) => {
     res.jsonp({
       key: 'passing'
