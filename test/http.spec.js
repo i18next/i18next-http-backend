@@ -12,25 +12,82 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
   describe('#read', () => {
     let backend
+    const logs = []
 
-    before(() => {
+    before(function () {
+      logs.splice(0)
       backend = new Http(
         {
           interpolator: i18next.services.interpolator
         },
         {
-          loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}'
+          loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+          alternateFetch: (url, requestInit) => {
+            logs.push([url, requestInit])
+            // not returning a promise olding actual data makes this a spy
+            return undefined
+          }
         }
       )
     })
-
-    it('should load data', (done) => {
-      backend.read('en', 'test', (err, data) => {
-        expect(err).not.to.be.ok()
-        expect(data).to.eql({ key: 'passing' })
-        done()
+    if (!hasXMLHttpRequest()) {
+      it('should load data', async () => {
+        let errO
+        let dataO
+        const done = await new Promise((resolve, reject) => {
+          backend.read('en', 'test', (err, data) => {
+            // dont check here with "except", if there is an error
+            // because the test will just "hang" with no further info
+            errO = err
+            dataO = data
+            resolve(true)
+            setTimeout(() => reject(new Error('timeout')), 1500)
+          })
+        })
+        // evaluate outside callback to get actuall error when something is wrong
+        expect(errO).to.be(null)
+        expect(dataO).to.eql({ key: 'passing' })
+        expect(done).to.be(true)
+        expect(logs).to.eql([
+          [
+            'http://localhost:5001/locales/en/test',
+            {
+              method: 'GET',
+              headers: {
+                'User-Agent': 'i18next-http-backend (node/v20.8.0; linux x64)'
+              },
+              mode: 'cors',
+              credentials: 'same-origin',
+              cache: 'default',
+              body: undefined
+            }
+          ]
+        ])
       })
-    })
+    }
+
+    if (hasXMLHttpRequest()) {
+      it('should load data', async () => {
+        let errO
+        let dataO
+        const done = await new Promise((resolve, reject) => {
+          backend.read('en', 'test', (err, data) => {
+            // dont check here with "except", if there is an error
+            // because the test will just "hang" with no further info
+            errO = err
+            dataO = data
+            resolve(true)
+            setTimeout(() => reject(new Error('timeout')), 1500)
+          })
+        })
+        // evaluate outside callback to get actuall error when something is wrong
+        expect(errO).to.be(null)
+        expect(dataO).to.eql({ key: 'passing' })
+        expect(done).to.be(true)
+        // fetch was not used
+        expect(logs).to.eql([])
+      })
+    }
 
     it('should throw error on not existing file', (done) => {
       backend.read('en', 'notexisting', (err, data) => {
