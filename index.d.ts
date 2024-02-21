@@ -9,7 +9,21 @@ type AddPathOption =
   | string
   | ((lng: string, namespace: string) => string);
 
+type FetchFunction = (input: string, init: RequestInit) => Promise<Response> | void
+
 export interface HttpBackendOptions {
+  /**
+   * Use an alternative fetch function that acts like an interecept, (usefull for low level mocks/simulations)
+   * 
+   * This option is not called if:
+   * 
+   * 1. There is an custom value set for the "request" property in this options object.
+   * 2. The backend selected xmlHttpRequest over fetch
+   * 
+   * If the function is called and it returns anything BUT a promise the fetch or xmlHttpRequest will be subsequentially called
+   * 
+   */
+  alternateFetch?: FetchFunction;
   /**
    * path where resources get loaded from, or a function
    * returning a path:
