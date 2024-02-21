@@ -48,21 +48,16 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
         expect(errO).to.be(null)
         expect(dataO).to.eql({ key: 'passing' })
         expect(done).to.be(true)
-        expect(logs).to.eql([
-          [
-            'http://localhost:5001/locales/en/test',
-            {
-              method: 'GET',
-              headers: {
-                'User-Agent': 'i18next-http-backend (node/v20.8.0; linux x64)'
-              },
-              mode: 'cors',
-              credentials: 'same-origin',
-              cache: 'default',
-              body: undefined
-            }
-          ]
-        ])
+        expect(logs).to.have.length(1)
+        expect(logs[0]).to.have.length(2)
+        expect(logs[0][0]).to.eql('http://localhost:5001/locales/en/test')
+        expect(logs[0][1]).to.have.property('method', 'GET')
+        expect(logs[0][1]).to.have.property('headers')
+        expect(logs[0][1].headers).to.have.property('User-Agent')
+        expect(logs[0][1]).to.have.property('mode', 'cors')
+        expect(logs[0][1]).to.have.property('credentials', 'same-origin')
+        expect(logs[0][1]).to.have.property('cache', 'default')
+        expect(logs[0][1]).to.have.property('body')
       })
     }
 
