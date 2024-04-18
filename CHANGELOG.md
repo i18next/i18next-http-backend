@@ -1,3 +1,7 @@
+### 2.5.1
+
+- fix: remove typeof window.document === 'undefined' check which deopt bundle optimization [137](https://github.com/i18next/i18next-http-backend/pull/137)
+
 ### 2.5.0
 
 - added fetch interceptor to the Backend Options [133](https://github.com/i18next/i18next-http-backend/pull/133)
