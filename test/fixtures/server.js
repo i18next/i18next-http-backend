@@ -6,6 +6,11 @@ const server = (done) => {
   if (js) return done(null, js)
 
   js = jsonServer.create()
+  js.use((req, res, next)=> {
+    // disable keep alive so the test server can close quickly.
+    res.setHeader('Connection', 'close')
+    next()
+  })
   js.use(jsonServer.bodyParser)
 
   js.get('/locales/en/testqs', (req, res) => {
@@ -54,7 +59,7 @@ const server = (done) => {
   js.listen(5001, () => {
     console.log('JSON Server is running')
     done(null, js)
-  })
+  }).unref()
 }
 
 export default server
