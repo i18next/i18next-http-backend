@@ -1,3 +1,7 @@
+### 2.5.2
+
+- dereference timers in node.js so that the process may exit when finished [139](https://github.com/i18next/i18next-http-backend/pull/139)
+
 ### 2.5.1
 
 - fix: remove typeof window.document === 'undefined' check which deopt bundle optimization [137](https://github.com/i18next/i18next-http-backend/pull/137)
