@@ -41,8 +41,8 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
             errO = err
             dataO = data
             resolve(true)
-            setTimeout(() => reject(new Error('timeout')), 1500)
           })
+          setTimeout(() => reject(new Error('timeout')), 1500).unref()
         })
         // evaluate outside callback to get actuall error when something is wrong
         expect(errO).to.be(null)
@@ -72,8 +72,8 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
             errO = err
             dataO = data
             resolve(true)
-            setTimeout(() => reject(new Error('timeout')), 1500)
           })
+          setTimeout(() => reject(new Error('timeout')), 1500).unref()
         })
         // evaluate outside callback to get actuall error when something is wrong
         expect(errO).to.be(null)
