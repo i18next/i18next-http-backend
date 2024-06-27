@@ -103,7 +103,7 @@ export interface HttpBackendOptions {
   requestOptions?: RequestInit | ((payload: {} | string) => RequestInit);
 }
 
-type RequestCallback = (error: any, response: RequestResponse) => void;
+type RequestCallback = (error: any | undefined | null, response: RequestResponse | undefined | null) => void;
 
 interface RequestResponse {
   status: number;
