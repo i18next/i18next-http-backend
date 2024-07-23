@@ -5,7 +5,7 @@
 [![Travis](https://img.shields.io/travis/i18next/i18next-http-backend/master.svg?style=flat-square)](https://travis-ci.org/i18next/i18next-http-backend)
 [![npm version](https://img.shields.io/npm/v/i18next-http-backend.svg?style=flat-square)](https://www.npmjs.com/package/i18next-http-backend)
 
-This is a simple i18next backend to be used in Node.js, in the browser and for Deno. It will load resources from a backend server using the XMLHttpRequest or the fetch API.
+This is a simple i18next backend to be used in Node.js, in the browser and for Deno. It will load resources from a backend server using the fetch API.
 
 Get a first idea on how it is used in [this i18next crash course video](https://youtu.be/SA_9i4TtxLQ?t=953).
 
