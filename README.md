@@ -79,6 +79,10 @@ for plain browser:
 <!-- an example can be found in example/jquery/index.html -->
 ```
 
+```js
+i18next.use(i18nextHttpBackend).init(i18nextOptions);
+```
+
 - As with all modules you can either pass the constructor function (class) to the i18next.use or a concrete instance.
 - If you don't use a module loader it will be added to `window.i18nextHttpBackend`
 
