@@ -3,11 +3,9 @@ import Http from '../index.js'
 import i18next from 'i18next'
 import JSON5 from 'json5'
 import server from './fixtures/server.js'
-import { hasXMLHttpRequest } from '../lib/utils.js'
-
 i18next.init()
 
-describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
+describe('http backend using fetch', () => {
   before(server)
 
   describe('#read', () => {
@@ -30,59 +28,35 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
         }
       )
     })
-    if (!hasXMLHttpRequest()) {
-      it('should load data', async () => {
-        let errO
-        let dataO
-        const done = await new Promise((resolve, reject) => {
-          backend.read('en', 'test', (err, data) => {
-            // dont check here with "except", if there is an error
-            // because the test will just "hang" with no further info
-            errO = err
-            dataO = data
-            resolve(true)
-          })
-          setTimeout(() => reject(new Error('timeout')), 1500).unref()
-        })
-        // evaluate outside callback to get actuall error when something is wrong
-        expect(errO).to.be(null)
-        expect(dataO).to.eql({ key: 'passing' })
-        expect(done).to.be(true)
-        expect(logs).to.have.length(1)
-        expect(logs[0]).to.have.length(2)
-        expect(logs[0][0]).to.eql('http://localhost:5001/locales/en/test')
-        expect(logs[0][1]).to.have.property('method', 'GET')
-        expect(logs[0][1]).to.have.property('headers')
-        expect(logs[0][1].headers).to.have.property('User-Agent')
-        expect(logs[0][1]).to.have.property('mode', 'cors')
-        expect(logs[0][1]).to.have.property('credentials', 'same-origin')
-        expect(logs[0][1]).to.have.property('cache', 'default')
-        expect(logs[0][1]).to.have.property('body')
-      })
-    }
 
-    if (hasXMLHttpRequest()) {
-      it('should load data', async () => {
-        let errO
-        let dataO
-        const done = await new Promise((resolve, reject) => {
-          backend.read('en', 'test', (err, data) => {
-            // dont check here with "except", if there is an error
-            // because the test will just "hang" with no further info
-            errO = err
-            dataO = data
-            resolve(true)
-          })
-          setTimeout(() => reject(new Error('timeout')), 1500).unref()
+    it('should load data', async () => {
+      let errO
+      let dataO
+      const done = await new Promise((resolve, reject) => {
+        backend.read('en', 'test', (err, data) => {
+          // dont check here with "except", if there is an error
+          // because the test will just "hang" with no further info
+          errO = err
+          dataO = data
+          resolve(true)
         })
-        // evaluate outside callback to get actuall error when something is wrong
-        expect(errO).to.be(null)
-        expect(dataO).to.eql({ key: 'passing' })
-        expect(done).to.be(true)
-        // fetch was not used
-        expect(logs).to.eql([])
+        setTimeout(() => reject(new Error('timeout')), 1500).unref()
       })
-    }
+      // evaluate outside callback to get actuall error when something is wrong
+      expect(errO).to.be(null)
+      expect(dataO).to.eql({ key: 'passing' })
+      expect(done).to.be(true)
+      expect(logs).to.have.length(1)
+      expect(logs[0]).to.have.length(2)
+      expect(logs[0][0]).to.eql('http://localhost:5001/locales/en/test')
+      expect(logs[0][1]).to.have.property('method', 'GET')
+      expect(logs[0][1]).to.have.property('headers')
+      expect(logs[0][1].headers).to.have.property('User-Agent')
+      expect(logs[0][1]).to.have.property('mode', 'cors')
+      expect(logs[0][1]).to.have.property('credentials', 'same-origin')
+      expect(logs[0][1]).to.have.property('cache', 'default')
+      expect(logs[0][1]).to.have.property('body')
+    })
 
     it('should throw error on not existing file', (done) => {
       backend.read('en', 'notexisting', (err, data) => {
@@ -269,46 +243,44 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
     })
   })
 
-  if (!hasXMLHttpRequest()) {
-    describe('with custom request options', () => {
-      let backend
+  describe('with custom request options', () => {
+    let backend
 
-      before(() => {
-        backend = new Http(
-          {
-            interpolator: i18next.services.interpolator
-          },
-          {
-            loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
-            addPath: 'http://localhost:5001/create/{{lng}}/{{ns}}',
-            requestOptions: {
-              method: 'PATCH'
-            }
+    before(() => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+          addPath: 'http://localhost:5001/create/{{lng}}/{{ns}}',
+          requestOptions: {
+            method: 'PATCH'
           }
-        )
-      })
+        }
+      )
+    })
 
-      describe('#read', () => {
-        it('should read data', (done) => {
-          backend.read('it', 'testns', function (err, data) {
-            expect(err).not.to.be.ok()
-            expect(data).to.eql({ via: 'patch' })
-            done()
-          })
-        })
-      })
-
-      describe('#create', () => {
-        it('should write data', (done) => {
-          backend.create('it', 'testns', 'new.key', 'new value', (dataArray, resArray) => {
-            expect(dataArray).to.eql([null])
-            expect(resArray).to.eql([ { status: 200, data: '' } ])
-            done()
-          })
+    describe('#read', () => {
+      it('should read data', (done) => {
+        backend.read('it', 'testns', function (err, data) {
+          expect(err).not.to.be.ok()
+          expect(data).to.eql({ via: 'patch' })
+          done()
         })
       })
     })
-  }
+
+    describe('#create', () => {
+      it('should write data', (done) => {
+        backend.create('it', 'testns', 'new.key', 'new value', (dataArray, resArray) => {
+          expect(dataArray).to.eql([null])
+          expect(resArray).to.eql([ { status: 200, data: '' } ])
+          done()
+        })
+      })
+    })
+  })
 
   describe('with loadPath function returning falsy', () => {
     let backend
