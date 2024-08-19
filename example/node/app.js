@@ -16,8 +16,19 @@ i18next.use(HttpBackend).init({
   defaultNS: 'translation',
   backend: {
     loadPath: 'http://localhost:8080/locales/{{lng}}/{{ns}}.json'
+    // loadPath: 'http://localhost:8081/locales/{{lng}}/{{ns}}.json'
   }
 }, (err, t) => {
+  // if (err) {
+  //   i18next.options.backend.loadPath = 'http://localhost:8080/locales/{{lng}}/{{ns}}.json'
+  //   i18next.services.backendConnector.backend.options.loadPath = 'http://localhost:8080/locales/{{lng}}/{{ns}}.json'
+  //   i18next.reloadResources(['en', 'de'], null, (e) => {
+  //     if (e) return console.error('after reload', e)
+  //     console.log(t('welcome'))
+  //     console.log(t('welcome', { lng: 'de' }))
+  //   })
+  //   return
+  // }
   if (err) return console.error(err)
   console.log(t('welcome'))
   console.log(t('welcome', { lng: 'de' }))

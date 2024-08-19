@@ -1,3 +1,7 @@
+### 2.6.0
+
+- fix "Failed to fetch" retry case [147](https://github.com/i18next/i18next-http-backend/issues/147)
+
 ### 2.5.2
 
 - dereference timers in node.js so that the process may exit when finished [139](https://github.com/i18next/i18next-http-backend/pull/139)
