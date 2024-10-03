@@ -131,7 +131,15 @@ var Backend = function () {
       this.options.request(this.options, url, payload, function (err, res) {
         if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + url + '; status code: ' + res.status, true);
         if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + url + '; status code: ' + res.status, false);
-        if (!res && err && err.message && err.message.toLowerCase().indexOf('failed') > -1 && (err.message.indexOf('fetch') > -1 || err.message.toLowerCase().indexOf('network') > -1)) return callback('failed loading ' + url + ': ' + err.message, true);
+        if (!res && err && err.message) {
+          var errorMessage = err.message.toLowerCase();
+          var isNetworkError = ['failed', 'fetch', 'network', 'load'].find(function (term) {
+            return errorMessage.indexOf(term) > -1;
+          });
+          if (isNetworkError) {
+            return callback('failed loading ' + url + ': ' + err.message, true);
+          }
+        }
         if (err) return callback(err, false);
         var ret, parseErr;
         try {

@@ -1,3 +1,7 @@
+### 2.6.2
+
+- improve network error detection across browsers [152](https://github.com/i18next/i18next-http-backend/pull/152)
+
 ### 2.6.1
 
 - optimize "Failed to fetch" retry case [147](https://github.com/i18next/i18next-http-backend/issues/147)
