@@ -1,6 +1,6 @@
 ### 2.7.0
 
-- fix for Deno 2 and removal of unnecessare .cjs file
+- fix for Deno 2 and removal of unnecessary .cjs file
 
 ### 2.6.2
 
