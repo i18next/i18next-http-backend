@@ -9,7 +9,8 @@ test('BackendConnector basic load', async () => {
   i18next.init()
   const connector = i18next.services.backendConnector
   connector.backend = new Http(i18next.services, {
-    loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}'
+    loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+    reloadInterval: false
   })
   const app = await server()
 

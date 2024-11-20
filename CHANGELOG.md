@@ -1,3 +1,7 @@
+### 2.7.0
+
+- fix for Deno 2 and removal of unnecessare .cjs file
+
 ### 2.6.2
 
 - improve network error detection across browsers [152](https://github.com/i18next/i18next-http-backend/pull/152)

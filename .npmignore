@@ -12,3 +12,4 @@ README.md
 tsconfig.json
 example
 .babelrc
+deno.lock

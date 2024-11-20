@@ -1,25 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.i18nextHttpBackend = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function (global){(function (){
-var fetchApi
-if (typeof fetch === 'function') {
-  if (typeof global !== 'undefined' && global.fetch) {
-    fetchApi = global.fetch
-  } else if (typeof window !== 'undefined' && window.fetch) {
-    fetchApi = window.fetch
-  } else {
-    fetchApi = fetch
-  }
-}
-
-if (typeof require !== 'undefined' && typeof window === 'undefined') {
-  var f = fetchApi || require('cross-fetch')
-  if (f.default) f = f.default
-  exports.default = f
-  module.exports = exports.default
-}
-
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"cross-fetch":5}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -220,7 +199,7 @@ var Backend = function () {
 Backend.type = 'backend';
 var _default = exports.default = Backend;
 module.exports = exports.default;
-},{"./request.js":3,"./utils.js":4}],3:[function(require,module,exports){
+},{"./request.js":2,"./utils.js":3}],2:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -229,15 +208,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _utils = require("./utils.js");
-var fetchNode = _interopRequireWildcard(require("./getFetch.js"));
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 var fetchApi;
 if (typeof fetch === 'function') {
   if (typeof global !== 'undefined' && global.fetch) {
@@ -264,8 +242,12 @@ if (typeof ActiveXObject === 'function') {
     ActiveXObjectApi = window.ActiveXObject;
   }
 }
-if (!fetchApi && fetchNode && !XmlHttpRequestApi && !ActiveXObjectApi) fetchApi = fetchNode.default || fetchNode;
 if (typeof fetchApi !== 'function') fetchApi = undefined;
+if (!fetchApi && !XmlHttpRequestApi && !ActiveXObjectApi) {
+  try {
+    fetchApi = require('cross-fetch');
+  } catch (e) {}
+}
 var addQueryString = function addQueryString(url, params) {
   if (params && _typeof(params) === 'object') {
     var queryString = '';
@@ -344,12 +326,7 @@ var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url,
     url = addQueryString(url, options.queryStringParams);
   }
   try {
-    var x;
-    if (XmlHttpRequestApi) {
-      x = new XmlHttpRequestApi();
-    } else {
-      x = new ActiveXObjectApi('MSXML2.XMLHTTP.3.0');
-    }
+    var x = XmlHttpRequestApi ? new XmlHttpRequestApi() : new ActiveXObjectApi('MSXML2.XMLHTTP.3.0');
     x.open(payload ? 'POST' : 'GET', url, 1);
     if (!options.crossDomain) {
       x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -396,7 +373,7 @@ var request = function request(options, url, payload, callback) {
 var _default = exports.default = request;
 module.exports = exports.default;
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./getFetch.js":1,"./utils.js":4}],4:[function(require,module,exports){
+},{"./utils.js":3,"cross-fetch":4}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -431,7 +408,7 @@ function makePromise(maybePromise) {
   }
   return Promise.resolve(maybePromise);
 }
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
-},{}]},{},[2])(2)
+},{}]},{},[1])(1)
 });

@@ -12,7 +12,8 @@ test('http backend', async () => {
       interpolator: i18next.services.interpolator
     },
     {
-      loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}'
+      loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+      reloadInterval: false
     }
   )
   const app = await server()
