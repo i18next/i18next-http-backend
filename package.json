@@ -72,7 +72,7 @@
   },
   "license": "MIT",
   "config": {
-    "fixcjs": "fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace(`(await Promise.resolve().then(function () {\n      return _interopRequireWildcard(require('cross-fetch'));\n    })).default`, `require('cross-fetch')`))"
+    "fixcjs": "fs.writeFileSync('cjs/request.js', fs.readFileSync('cjs/request.js').toString().replace(`Promise.resolve().then(function () {\n      return _interopRequireWildcard(require('cross-fetch'));\n    }).then(function (mod) {\n      fetchApi = mod.default;\n    }).catch(function () {});`, `fetchApi = require('cross-fetch');`))"
   },
   "scripts": {
     "lint": "eslint .",

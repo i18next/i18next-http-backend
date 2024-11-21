@@ -1,3 +1,7 @@
+### 3.0.1
+
+- try to get rid of top-level await
+
 ### 3.0.0
 
 - fix for Deno 2 and removal of unnecessary .cjs file
