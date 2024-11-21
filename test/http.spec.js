@@ -128,6 +128,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
         done()
       })
     })
+
     it('should load custom parser data', (done) => {
       backend = new Http(
         {
