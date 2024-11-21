@@ -46,6 +46,11 @@ const server = (done) => {
       key: "passing"  // keys can be without ""
     }`)
   })
+  js.get('/locales/en/testc', (req, res) => {
+    res.send(`{ // this is jsonc, comments is stripped
+      "key": "passing"
+    }`)
+  })
   js.post('/locales/missing/en/test', (req, res) => {
     expect(req.body).not.to.eql({})
     res.jsonp()

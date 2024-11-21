@@ -38,7 +38,7 @@ export interface HttpBackendOptions {
   addPath?: AddPathOption;
   /**
    * parse data after it has been fetched
-   * in example use https://www.npmjs.com/package/json5
+   * in example use https://www.npmjs.com/package/json5 or https://www.npmjs.com/package/jsonc-parser
    * here it removes the letter a from the json (bad idea)
    */
   parse?(
