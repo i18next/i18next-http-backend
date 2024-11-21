@@ -114,13 +114,13 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
   // path to post missing resources, or a function
   // function(lng, namespace) { return customPath; }
   // the returned path will interpolate lng, ns if provided like giving a static path
-  // 
+  //
   // note that this only works when initialized with { saveMissing: true }
   // (see https://www.i18next.com/overview/configuration-options)
   addPath: '/locales/add/{{lng}}/{{ns}}',
 
   // parse data after it has been fetched
-  // in example use https://www.npmjs.com/package/json5
+  // in example use https://www.npmjs.com/package/json5 or https://www.npmjs.com/package/jsonc-parser
   // here it removes the letter a from the json (bad idea)
   parse: function(data) { return data.replace(/a/g, ''); },
 

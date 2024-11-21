@@ -2,6 +2,7 @@ import expect from 'expect.js'
 import Http from '../index.js'
 import i18next from 'i18next'
 import JSON5 from 'json5'
+import { parse as parseJSONC } from 'jsonc-parser'
 import server from './fixtures/server.js'
 import { hasXMLHttpRequest } from '../lib/utils.js'
 
@@ -128,6 +129,24 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
         done()
       })
     })
+
+    it('should load jsonc data', (done) => {
+      backend = new Http(
+        {
+          interpolator: i18next.services.interpolator
+        },
+        {
+          loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
+          parse: parseJSONC
+        }
+      )
+      backend.read('en', 'testc', function (err, data) {
+        expect(err).not.to.be.ok()
+        expect(data).to.eql({ key: 'passing' })
+        done()
+      })
+    })
+
     it('should load custom parser data', (done) => {
       backend = new Http(
         {

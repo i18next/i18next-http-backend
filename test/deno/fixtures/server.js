@@ -16,6 +16,11 @@ const server = async () => {
       key: "passing"  // keys can be without ""
     }`
   })
+  app.get('/locales/en/testc', (c) => {
+    return `{ // this is jsonc, comments is stripped
+      "key": "passing"
+    }`
+  })
   app.post('/locales/missing/en/test', (c) => {
     assertNotEquals(c.request.body, {})
     return {}

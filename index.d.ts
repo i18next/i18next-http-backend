@@ -14,14 +14,14 @@ type FetchFunction = (input: string, init: RequestInit) => Promise<Response> | v
 export interface HttpBackendOptions {
   /**
    * Use an alternative fetch function that acts like an interecept, (usefull for low level mocks/simulations)
-   * 
+   *
    * This option is not called if:
-   * 
+   *
    * 1. There is an custom value set for the "request" property in this options object.
    * 2. The backend selected xmlHttpRequest over fetch
-   * 
+   *
    * If the function is called and it returns anything BUT a promise the fetch or xmlHttpRequest will be subsequentially called
-   * 
+   *
    */
   alternateFetch?: FetchFunction;
   /**
@@ -38,7 +38,7 @@ export interface HttpBackendOptions {
   addPath?: AddPathOption;
   /**
    * parse data after it has been fetched
-   * in example use https://www.npmjs.com/package/json5
+   * in example use https://www.npmjs.com/package/json5 or https://www.npmjs.com/package/jsonc-parser
    * here it removes the letter a from the json (bad idea)
    */
   parse?(
