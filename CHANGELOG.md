@@ -1,3 +1,15 @@
+### 2.7.2
+
+- optimize fetchApi selector [backported]
+
+### 2.7.1
+
+- same as 2.6.2
+
+### 2.7.0
+
+- deprecated, same as v3.0.0
+
 ### 2.6.2
 
 - improve network error detection across browsers [152](https://github.com/i18next/i18next-http-backend/pull/152)
