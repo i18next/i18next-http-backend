@@ -1,4 +1,4 @@
-### 2.7.2
+### 2.7.3
 
 - optimize fetchApi selector [backported]
 
