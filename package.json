@@ -27,7 +27,7 @@
   },
   "module": "./esm/index.js",
   "dependencies": {
-    "cross-fetch": "4.0.0"
+    "cross-fetch": "4.1.0"
   },
   "types": "./index.d.mts",
   "devDependencies": {
