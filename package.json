@@ -1,6 +1,6 @@
 {
   "name": "i18next-http-backend",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "private": false,
   "type": "module",
   "main": "./cjs/index.js",
