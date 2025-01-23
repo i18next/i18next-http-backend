@@ -1,3 +1,7 @@
+### 3.0.2
+
+- optimize fetchApi selector
+
 ### 3.0.1
 
 - try to get rid of top-level await
