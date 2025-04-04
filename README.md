@@ -42,6 +42,26 @@ i18next.init({
 })
 ```
 
+**Slow i18next initialization?**
+
+The chance is high, that your http requests fails. In that case i18next retries a couple of times before finishing the initialization.
+You have 2 options to address this:
+
+*1) The correct way:*
+Analyze your http requests and fix them. (Wrong path? Wrong server implementation? etc...)
+
+*2) Configure i18next to not retry:*
+Modify the `retryTimeout` and/or `maxRetries` to match your needs. (i.e. set `maxRetries: 1`)
+
+```js
+i18next.init({
+  // ...
+  retryTimeout: 350,
+  maxRetries: 5,
+  // ...
+})
+```
+
 # Getting started
 
 Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
