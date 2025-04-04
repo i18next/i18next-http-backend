@@ -27,7 +27,7 @@ If you don't like to manage your translation files manually or are simply lookin
 
 Make sure you set the `debug` option of i18next to `true`. This will maybe log more information in the developer console.
 
-**Seeing failed http requests, like 404?**
+### Seeing failed http requests, like 404?
 
 Are you using a [language detector](https://github.com/i18next/i18next-browser-languageDetector) plugin that detects region specific languages you are not providing? i.e. you provide `'en'` translations but you see a `'en-US'` request first?
 
@@ -42,7 +42,7 @@ i18next.init({
 })
 ```
 
-**Slow i18next initialization?**
+### Slow i18next initialization?
 
 The chance is high, that your http requests fails. In that case i18next retries a couple of times before finishing the initialization.
 You have 2 options to address this:
