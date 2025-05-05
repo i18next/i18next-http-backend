@@ -42,6 +42,8 @@ i18next.init({
 })
 ```
 
+[This article](https://www.locize.com/blog/i18next-translations-not-loaded) may also help to understand/investigate that.
+
 ### Slow i18next initialization?
 
 The chance is high, that your http requests fails. In that case i18next retries a couple of times before finishing the initialization.
