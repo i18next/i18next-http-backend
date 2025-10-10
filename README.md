@@ -153,13 +153,13 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
   // if value returned it will send a POST request
   parseLoadPayload: function(languages, namespaces) { return undefined },
 
-  // allow cross domain requests
+  // allow cross domain requests => used for XmlHttpRequest
   crossDomain: false,
 
-  // allow credentials on cross domain requests
+  // allow credentials on cross domain requests => used for XmlHttpRequest
   withCredentials: false,
 
-  // overrideMimeType sets request.overrideMimeType("application/json")
+  // overrideMimeType sets request.overrideMimeType("application/json") => used for XmlHttpRequest
   overrideMimeType: false,
 
   // custom request headers sets request.setRequestHeader(key, value)
