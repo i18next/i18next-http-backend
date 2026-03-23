@@ -86,7 +86,7 @@
     "test:fetch": "mocha test -R spec --experimental-modules",
     "test": "npm run lint && npm run build && npm run test:fetch && npm run test:xmlhttpreq && npm run test:typescript",
     "test:typescript": "tslint --project tsconfig.json && tsd",
-    "test:deno": "deno test --allow-net test/deno/*.js",
+    "test:deno": "deno test --allow-net --allow-env test/deno/*.js",
     "preversion": "npm run test && npm run build && git push",
     "postversion": "git push && git push --tags"
   },
