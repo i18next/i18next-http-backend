@@ -1,172 +1,157 @@
-# Client side loading of translations via HTTP
+# Loading translations via HTTP with next-i18next
 
-This examples shows a basic way of loading translations within a clientside rendered page. In general you should prefer static and server rendered pages where possible where you can benefit from preloading links in Next.js, however there are use cases where client side rendering and async loading of translations makes sense.
+This example shows how to use [i18next-http-backend](https://github.com/i18next/i18next-http-backend) with [next-i18next](https://github.com/i18next/next-i18next) v16 for loading translations via HTTP — in both the **Pages Router** and the **App Router** (mixed-router setup).
 
-This includes but not limited to
-* client side only rendered components that you dont want to always load translations for at build
-* Setting `fallback: true` while using incremental static regeneration - no server side methods like getStaticProps are run for the fallback page
-* You want completely client side routing with no waiting for server or static props methods to run
+Three i18next backend plugins are used:
+- [i18next-chained-backend](https://github.com/i18next/i18next-chained-backend) — chains multiple backends together
+- [i18next-http-backend](https://github.com/i18next/i18next-http-backend) — loads translations via HTTP
+- [i18next-localstorage-backend](https://github.com/i18next/i18next-localstorage-backend) — caches translations in localStorage
 
-## How does it work
+The chained backend tries localStorage first, then falls back to HTTP. If your translation responses send a `Cache-Control` header, you may not need the localStorage caching.
 
-On the server when using SSR the translations are loaded via the filesystem and then returned as page data via the `serverSideTranslations` method included in `next-i18next`. With our config we specify an alternative loading method purely for the browser environment. We're using three i18next backend plugins:
-* [i18next-chained-backend](https://github.com/i18next/i18next-chained-backend)
-* [i18next-http-backend](https://github.com/i18next/i18next-http-backend)
-* [i18next-localstorage-backend](https://github.com/i18next/i18next-localstorage-backend)
+Please read the i18next [Add or Load Translations docs](https://www.i18next.com/how-to/add-or-load-translations) and [Caching docs](https://www.i18next.com/how-to/caching) for more on backend plugins.
 
-The chained plugin allows us to chain together backend plugins so we can specify load strategies for our translations, i18next-http-backend allows you to load translations via fetch or XMLHttpRequest and finally i18next-localstorage-backend allows us to cache and then subsequently load our translations from localstorage. If your translation responses are sending a Cache-Control header, you may not need the i18next-localstorage-backend and i18next-chained-backend plugin.
+## Setup
 
-Please read the i18next [Add or Load Translations docs](https://www.i18next.com/how-to/add-or-load-translations) and [Caching docs](https://www.i18next.com/how-to/caching) in order to see how to setup and use backend plugins. The config used in this example is shown below.
+```bash
+npm install next-i18next i18next react-i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
+```
 
-This approach is also handled in [this blog post](https://locize.com/blog/next-i18next/).
+## How it works
+
+### Pages Router
+
+On the server, translations are loaded from the filesystem via `serverSideTranslations()`. On the client, the chained backend loads translations from localStorage (with HTTP fallback):
 
 ```js
+// next-i18next.config.js
 const HttpBackend = require('i18next-http-backend/cjs')
-const ChainedBackend= require('i18next-chained-backend').default
-const LocalStorageBackend = require('i18next-localstorage-backend').default
+const ChainedBackend = require('i18next-chained-backend')
+const LocalStorageBackend = require('i18next-localstorage-backend')
+
+const isBrowser = typeof window !== 'undefined'
 
 module.exports = {
   backend: {
-    backendOptions: [{ expirationTime: 60 * 60 * 1000 }, { /* loadPath: 'https:// somewhere else' */ }], // 1 hour
-    backends: typeof window !== 'undefined' ? [LocalStorageBackend, HttpBackend]: [],
+    backendOptions: [{ expirationTime: 60 * 60 * 1000 }, {}], // 1 hour
+    backends: isBrowser ? [LocalStorageBackend, HttpBackend] : [],
   },
-  // debug: true,
+  partialBundledLanguages: isBrowser && true,
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'de'],
   },
   serializeConfig: false,
-  use: typeof window !== 'undefined' ? [ChainedBackend] : [],
+  use: isBrowser ? [ChainedBackend] : [],
 }
 ```
 
-The config specifies that on the server we use the default load methods specified with `next-i18next` but on the browser we load the ChainedBackend plugin which then firstly tries to load translations from localstorage, if they dont exist there then it falls back to the HttpBackend which then will query them from our backend and then pass them back to the localStorage backend which then caches them for reuse.
-
-## Setup
-
-### 1. Installation
-
-Yarn
-```
-yarn add next-i18next react-i18next i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
-```
-
-npm
-```
-npm i --save next-i18next react-i18next i18next i18next-chained-backend i18next-http-backend i18next-localstorage-backend
-```
-
-### 2. Setup next-i18next
-
-Setup `next-i18next` as described in the [README](https://github.com/i18next/next-i18next/blob/master/README.md#2-translation-content)
-
-### 3. Pass your config as an override config to the appWithTranslation HOC
-
-This step is necessary as usually when server rendering/loading your translations `next-i18next` will load your config from the pageProps but seen as you're not using `getServerSideProps` or `getStaticProps` here you'll need another way to load your config into the I18nProvider
-
-```tsx
-import { appWithTranslation } from 'next-i18next'
-import nextI18nConfig from '../next-i18next.config'
-
-const MyApp = ({ Component, pageProps }) => (
-  <Component {...pageProps} />
-);
-
-export default appWithTranslation(MyApp, nextI18nConfig);
-```
-
-### 4. Setup your client rendered pages/components
-
-Use the `ready` property from `useTranslation` to ensure the i18next instance is ready and that your translations are loaded to avoid the user seeing bare translation keys, below is a very simplistic example of this.
-
-Also make sure you set the `partialBundledLanguages` option to true, like [here](https://github.com/i18next/i18next-http-backend/blob/master/example/next/next-i18next.config.js#L14).
+Since the config contains non-serializable values (backend classes), pass it explicitly to `appWithTranslation`:
 
 ```js
-// ...
-const isBrowser = typeof window !== 'undefined'
+// pages/_app.js
+import { appWithTranslation } from 'next-i18next/pages'
+import nextI18nConfig from '../next-i18next.config'
 
-module.exports = {
-  backend: { /* ... */ },
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'de'],
-  },
-  partialBundledLanguages: isBrowser && true,
-  // ...
-}
+const MyApp = ({ Component, pageProps }) => <Component {...pageProps} />
+export default appWithTranslation(MyApp, nextI18nConfig)
 ```
 
-ADVICE: I suggest you don't use this client-side only approach, but use the lazy-reload approach (below) instead!
+**Three usage patterns are demonstrated:**
 
-```jsx
-// getServerSideProps and getStaticProps are not used (no serverSideTranslations method)
-const ClientPage = () => {
-  const { t, ready } = useTranslation('client-page')
+1. **SSG + lazy reload** (recommended) — `getStaticProps` provides initial translations, then `reloadResources()` fetches fresh ones via HTTP:
 
-  return (
-    <>
-      <main>
-        <Text>{ready ? t('h1') : ''}</Text>
-      </main>
-      <Footer />
-    </>
-  )
-}
-
-export default ClientPage
-```
-
-This will work, but the server side rendered part will probably not include the translated texts (not really SEO friendly).
-<br />
-To fix this, use the lazy-reload approach.
-
-### Alternative usage (the preferred way)
-
-You might see a warning like this: `Expected server HTML to contain a matching text node for...`
-<br />
-Or your delivered server side rendered page, might not include the translated texts.
-
-This can be optimized by keeping the `getServerSideProps` or `getStaticProps` function and making use of the `reloadResources` functionality of i18next.
-
-This way the ready check is also not necessary, because the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.
-
-This can be prevented by keeping the `getServerSideProps` or `getStaticProps` function but making use of the [`reloadResources`](https://www.i18next.com/overview/api#reloadresources) functionality of i18next.
-
-
-```javascript
+```js
 const LazyReloadPage = () => {
-
-  const { t, i18n } = useTranslation(['lazy-reload-page', 'footer'], { bindI18n: 'languageChanged loaded' })
-  // bindI18n: loaded is needed because of the reloadResources call
-  // if all pages use the reloadResources mechanism, the bindI18n option can also be defined in next-i18next.config.js
+  const { t, i18n } = useTranslation(['lazy-reload-page', 'footer'], {
+    bindI18n: 'languageChanged loaded',
+  })
   useEffect(() => {
     i18n.reloadResources(i18n.resolvedLanguage, ['lazy-reload-page', 'footer'])
   }, [])
 
-  return (
-    <>
-      <main>
-        <Header heading={t('h1')} title={t('title')} />
-        <Link href='/'>
-          <button
-            type='button'
-          >
-            {t('back-to-home')}
-          </button>
-        </Link>
-      </main>
-      <Footer />
-    </>
-  )
+  return <h1>{t('h1')}</h1>
 }
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['lazy-reload-page', 'footer']),
+    ...(await serverSideTranslations(locale, ['lazy-reload-page', 'footer'])),
   },
 })
-
-export default LazyReloadPage
 ```
 
-This way the translations served directly by the server are used. And as soon the translations are reloaded, new translations are shown.
+2. **Pure client-side** — no `getStaticProps`, translations loaded entirely via HTTP. Use `ready` to avoid showing bare keys. Not recommended for SEO.
+
+3. **Pure SSG** — standard `getStaticProps` with `serverSideTranslations`, no client-side reloading.
+
+### App Router
+
+The App Router pages live under `/app-router/[locale]/` and use `createProxy()` with `basePath: '/app-router'` so the proxy only handles App Router routes.
+
+On the server, translations are loaded via `resourceLoader` (filesystem). On the client, `I18nProvider` is configured with the same chained backend for lazy-loading:
+
+```js
+// app/app-router/[locale]/layout.js
+import { I18nProvider } from 'next-i18next/client'
+import HttpBackend from 'i18next-http-backend'
+import ChainedBackend from 'i18next-chained-backend'
+import LocalStorageBackend from 'i18next-localstorage-backend'
+
+// In the layout, pass the chained backend to I18nProvider:
+<I18nProvider
+  language={locale}
+  resources={resources}
+  use={[ChainedBackend]}
+  i18nextOptions={{
+    backend: {
+      backends: [LocalStorageBackend, HttpBackend],
+      backendOptions: [
+        { expirationTime: isDev ? 0 : 60 * 60 * 1000 },
+        {},
+      ],
+    },
+  }}
+>
+  {children}
+</I18nProvider>
+```
+
+Client Components use `useT()` — additional namespaces are lazy-loaded via HTTP:
+
+```js
+'use client'
+import { useT } from 'next-i18next/client'
+
+export default function ClientPage() {
+  const { t } = useT('client-page')
+  return <h1>{t('h1')}</h1>
+}
+```
+
+Server Components use `getT()` as usual:
+
+```js
+import { getT } from 'next-i18next/server'
+
+export default async function Page({ params }) {
+  const { locale } = await params
+  const { t } = await getT('common', { lng: locale })
+  return <h1>{t('h1')}</h1>
+}
+```
+
+## Running the example
+
+```bash
+npm install
+npm run dev
+```
+
+- Pages Router pages: [http://localhost:3000](http://localhost:3000)
+- App Router pages: [http://localhost:3000/app-router/en](http://localhost:3000/app-router/en)
+
+## Related
+
+- [next-i18next](https://github.com/i18next/next-i18next)
+- [Blog post: next-i18next with http-backend in Next.js Pages Router](https://www.locize.com/blog/next-i18next/)
+- [Blog post: i18n in Next.js App Router](https://www.locize.com/blog/i18n-next-app-router/)

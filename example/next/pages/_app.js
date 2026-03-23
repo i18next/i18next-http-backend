@@ -1,4 +1,4 @@
-import { appWithTranslation } from 'next-i18next'
+import { appWithTranslation } from 'next-i18next/pages'
 import nextI18nConfig from '../next-i18next.config'
 
 const MyApp = ({ Component, pageProps }) => <Component {...pageProps} />

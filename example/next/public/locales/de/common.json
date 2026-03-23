@@ -4,8 +4,11 @@
   "to-second-page": "Zur zweiten Seite",
   "to-client-page": "Zur Client Seite",
   "to-lazy-reload-page": "Zur Lazy-Reload Seite",
+  "to-app-router": "Zum App Router Bereich",
+  "to-pages-router": "Zum Pages Router Bereich",
   "error-with-status": "Auf dem Server ist ein Fehler ({{statusCode}}) aufgetreten",
   "error-without-status": "Auf dem Server ist ein Fehler aufgetreten",
   "title": "Hauptseite | next-i18next",
-  "shallow-route": "zur Shallow-Route {{counter}}"
+  "shallow-route": "zur Shallow-Route {{counter}}",
+  "app-router-description": "App Router (Server Komponente)"
 }

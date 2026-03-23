@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
-import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next/pages'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
@@ -34,8 +34,8 @@ const LazyReloadPage = () => {
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['lazy-reload-page', 'footer']),
-  },
+    ...await serverSideTranslations(locale, ['lazy-reload-page', 'footer'])
+  }
 })
 
 export default LazyReloadPage

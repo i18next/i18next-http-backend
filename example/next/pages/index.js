@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { useTranslation } from 'next-i18next'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from 'next-i18next/pages'
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations'
 
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 
 const Homepage = () => {
-
   const router = useRouter()
   const { t } = useTranslation('common')
   const [counter, setCounter] = useState(1)
@@ -18,10 +17,10 @@ const Homepage = () => {
     if (router.query.counter) {
       setCounter(parseInt(router.query.counter))
     }
-  },[router.query.counter])
+  }, [router.query.counter])
 
   const updateShallowRoute = () => {
-    router.push(`/?counter=${counter + 1}`, undefined, {shallow: true})
+    router.push(`/?counter=${counter + 1}`, undefined, { shallow: true })
   }
 
   return (
@@ -58,11 +57,18 @@ const Homepage = () => {
               {t('to-lazy-reload-page')}
             </button>
           </Link>
+          <a href={`/app-router/${router.locale}`}>
+            <button
+              type='button'
+            >
+              {t('to-app-router')}
+            </button>
+          </a>
           <button
             type='button'
             onClick={updateShallowRoute}
           >
-            {t('shallow-route', {counter: counter + 1})}
+            {t('shallow-route', { counter: counter + 1 })}
           </button>
         </div>
       </main>
@@ -73,8 +79,8 @@ const Homepage = () => {
 
 export const getStaticProps = async ({ locale }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'footer']),
-  },
+    ...await serverSideTranslations(locale, ['common', 'footer'])
+  }
 })
 
 export default Homepage
