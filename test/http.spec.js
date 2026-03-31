@@ -1,12 +1,9 @@
 import expect from 'expect.js'
 import Http from '../index.js'
-import i18next from 'i18next'
 import JSON5 from 'json5'
 import { parse as parseJSONC } from 'jsonc-parser'
 import server from './fixtures/server.js'
 import { hasXMLHttpRequest } from '../lib/utils.js'
-
-i18next.init()
 
 describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
@@ -18,9 +15,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
     before(function () {
       logs.splice(0)
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
           alternateFetch: (url, requestInit) => {
@@ -115,9 +110,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     it('should load json5 data', (done) => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
           parse: JSON5.parse
@@ -132,9 +125,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     it('should load jsonc data', (done) => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
           parse: parseJSONC
@@ -149,9 +140,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     it('should load custom parser data', (done) => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
           parse: (data, lng, ns) => ({ ...JSON.parse(data), lng, ns })
@@ -177,9 +166,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     before(() => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: loadPathSpy
         }
@@ -214,9 +201,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     before(() => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: loadPathSpy
         }
@@ -241,9 +226,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     before(() => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: '/some/crazy/{{lng}}/{{ns}}/path',
           request: (options, url, payload, callback) => {
@@ -294,9 +277,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
       before(() => {
         backend = new Http(
-          {
-            interpolator: i18next.services.interpolator
-          },
+          {},
           {
             loadPath: 'http://localhost:5001/locales/{{lng}}/{{ns}}',
             addPath: 'http://localhost:5001/create/{{lng}}/{{ns}}',
@@ -341,9 +322,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     before(() => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           loadPath: loadPathSpy
         }
@@ -375,9 +354,7 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
 
     before(() => {
       backend = new Http(
-        {
-          interpolator: i18next.services.interpolator
-        },
+        {},
         {
           addPath: addPathSpy
         }

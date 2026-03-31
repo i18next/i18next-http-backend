@@ -1,3 +1,7 @@
+### 3.0.3
+
+- use own interpolation function for loadPath and addPath instead of relying on i18next's interpolator [i18next#2420](https://github.com/i18next/i18next/issues/2420)
+
 ### 3.0.2
 
 - optimize fetchApi selector

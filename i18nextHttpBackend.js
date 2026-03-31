@@ -93,7 +93,7 @@ var Backend = function () {
       loadPath = (0, _utils.makePromise)(loadPath);
       loadPath.then(function (resolvedLoadPath) {
         if (!resolvedLoadPath) return callback(null, {});
-        var url = _this2.services.interpolator.interpolate(resolvedLoadPath, {
+        var url = (0, _utils.interpolate)(resolvedLoadPath, {
           lng: languages.join('+'),
           ns: namespaces.join('+')
         });
@@ -149,7 +149,7 @@ var Backend = function () {
         if (typeof _this4.options.addPath === 'function') {
           addPath = _this4.options.addPath(lng, namespace);
         }
-        var url = _this4.services.interpolator.interpolate(addPath, {
+        var url = (0, _utils.interpolate)(addPath, {
           lng: lng,
           ns: namespace
         });
@@ -377,6 +377,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.defaults = defaults;
 exports.hasXMLHttpRequest = hasXMLHttpRequest;
+exports.interpolate = interpolate;
 exports.makePromise = makePromise;
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var arr = [];
@@ -403,6 +404,13 @@ function makePromise(maybePromise) {
     return maybePromise;
   }
   return Promise.resolve(maybePromise);
+}
+var interpolationRegexp = /\{\{(.+?)\}\}/g;
+function interpolate(str, data) {
+  return str.replace(interpolationRegexp, function (match, key) {
+    var value = data[key.trim()];
+    return value != null ? value : match;
+  });
 }
 },{}],4:[function(require,module,exports){
 
