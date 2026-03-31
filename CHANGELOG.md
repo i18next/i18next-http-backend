@@ -1,4 +1,4 @@
-### 3.0.3
+### 3.0.4
 
 - use own interpolation function for loadPath and addPath instead of relying on i18next's interpolator [i18next#2420](https://github.com/i18next/i18next/issues/2420)
 
