@@ -4,3 +4,10 @@ package-lock.json
 cjs
 esm
 deno.lock
+
+# Secrets & credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key

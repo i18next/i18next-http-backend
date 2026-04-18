@@ -11,13 +11,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        deno: [ '2.x', '1.x' ]
+        deno: [ '2.x' ]
         # os: [ubuntu-latest, windows-latest, macOS-latest]
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Deno
-        uses: denolib/setup-deno@master
+        uses: denolib/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno }}
       - run: deno --version
