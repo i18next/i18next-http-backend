@@ -1,8 +1,8 @@
 ### 3.0.5
 
-Security release — all issues found via an internal audit. GHSA advisory filed after release.
+Security release — all issues found via an internal audit. See published advisory [GHSA-q89c-q3h5-w34g](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-q89c-q3h5-w34g).
 
-- security: refuse to build request URLs when `lng` or `ns` values contain path-traversal, URL-structure (`?`, `#`, `%`, `@`, whitespace), path separators, control characters, prototype keys, or exceed 128 chars. Prevents path traversal / SSRF / URL injection via attacker-controlled language-code values. `isSafeUrlSegment` is permissive for legitimate i18next language codes (any BCP-47-like shape, underscores, hyphens, dots, `+`-joined multi-language requests) (GHSA-TBD)
+- security: refuse to build request URLs when `lng` or `ns` values contain path-traversal, URL-structure (`?`, `#`, `%`, `@`, whitespace), path separators, control characters, prototype keys, or exceed 128 chars. Prevents path traversal / SSRF / URL injection via attacker-controlled language-code values. `isSafeUrlSegment` is permissive for legitimate i18next language codes (any BCP-47-like shape, underscores, hyphens, dots, `+`-joined multi-language requests) ([GHSA-q89c-q3h5-w34g](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-q89c-q3h5-w34g))
 - security: per-instance `omitFetchOptions` — the fetch-options-stripping fallback is now scoped to a single backend instance via `options._omitFetchOptions` instead of a module-level boolean. One instance hitting a "not implemented" fetch error no longer permanently strips `requestOptions` (including `credentials`, `mode`, `cache`) from every other backend instance in the same process
 - security: strip CR/LF/NUL and other C0/C1 control characters from `lng`/`ns` / URL values before they appear in error-callback strings (CWE-117 log forging)
 - security: redact `user:password` credentials from URLs before including them in error-callback strings — prevents leaking basic-auth credentials embedded in `loadPath` / `addPath`
