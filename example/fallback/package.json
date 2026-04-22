@@ -3,7 +3,7 @@
   "dependencies": {
     "i18next": "24.0.0",
     "i18next-chained-backend": "4.6.2",
-    "i18next-http-backend": "3.0.1",
+    "i18next-http-backend": "3.0.5",
     "i18next-resources-to-backend": "1.2.1"
   },
   "devDependencies": {
