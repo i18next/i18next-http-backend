@@ -393,7 +393,9 @@ exports.defaults = defaults;
 exports.hasXMLHttpRequest = hasXMLHttpRequest;
 exports.interpolate = interpolate;
 exports.interpolateUrl = interpolateUrl;
-exports.isSafeUrlSegment = isSafeUrlSegment;
+exports.isSafeLangUrlSegment = isSafeLangUrlSegment;
+exports.isSafeNsUrlSegment = isSafeNsUrlSegment;
+exports.isSafeUrlSegment = void 0;
 exports.makePromise = makePromise;
 exports.redactUrlCredentials = redactUrlCredentials;
 exports.sanitizeLogValue = sanitizeLogValue;
@@ -417,16 +419,29 @@ function defaults(obj) {
   });
   return obj;
 }
-function isSafeUrlSegment(v) {
+function isSafeUrlSegmentBase(v) {
   if (typeof v !== 'string') return false;
   if (v.length === 0 || v.length > 128) return false;
   if (UNSAFE_KEYS.indexOf(v) > -1) return false;
   if (v.indexOf('..') > -1) return false;
-  if (v.indexOf('/') > -1 || v.indexOf('\\') > -1) return false;
+  if (v.indexOf('\\') > -1) return false;
   if (/[?#%\s@]/.test(v)) return false;
   if (/[\x00-\x1F\x7F]/.test(v)) return false;
   return true;
 }
+function isSafeLangUrlSegment(v) {
+  if (!isSafeUrlSegmentBase(v)) return false;
+  if (v.indexOf('/') > -1) return false;
+  return true;
+}
+function isSafeNsUrlSegment(v) {
+  return isSafeUrlSegmentBase(v);
+}
+var isSafeUrlSegment = exports.isSafeUrlSegment = isSafeLangUrlSegment;
+var SAFETY_CHECK_BY_KEY = {
+  lng: isSafeLangUrlSegment,
+  ns: isSafeNsUrlSegment
+};
 function sanitizeLogValue(v) {
   if (typeof v !== 'string') return v;
   return v.replace(/[\r\n\x00-\x1F\x7F]/g, ' ');
@@ -473,13 +488,14 @@ function interpolateUrl(str, data) {
     if (UNSAFE_KEYS.indexOf(k) > -1) return match;
     var value = data[k];
     if (value == null) return match;
+    var check = SAFETY_CHECK_BY_KEY[k] || isSafeLangUrlSegment;
     var segments = String(value).split('+');
     var _iterator = _createForOfIteratorHelper(segments),
       _step;
     try {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var seg = _step.value;
-        if (!isSafeUrlSegment(seg)) {
+        if (!check(seg)) {
           unsafe = true;
           return match;
         }
