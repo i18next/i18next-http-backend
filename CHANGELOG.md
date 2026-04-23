@@ -1,3 +1,7 @@
+### 3.0.6
+
+- fix: allow forward slashes in `ns` values so nested namespace names (mapping to URL layouts such as `/locales/en/a/b.json`) fetch correctly again. 3.0.5's security fix applied the same strict URL-segment check to both `lng` and `ns`, which was correct for `lng` (no BCP-47 shape contains `/`) but over-strict for `ns` — nested namespaces are a documented i18next pattern. `isSafeUrlSegment` is now split into `isSafeLangUrlSegment` (strict — still rejects `/`) and `isSafeNsUrlSegment` (loose — allows `/` but still rejects `..`, `\`, URL-structure characters, control chars, prototype keys, and oversized inputs). `isSafeUrlSegment` is kept as a backwards-compatible alias for the strict check. The 3.0.5 security fix remains in force for every concrete attack pattern from the original advisory.
+
 ### 3.0.5
 
 Security release — all issues found via an internal audit. See published advisory [GHSA-q89c-q3h5-w34g](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-q89c-q3h5-w34g).

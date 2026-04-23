@@ -2,39 +2,68 @@ import expect from 'expect.js'
 import {
   interpolate,
   interpolateUrl,
+  isSafeLangUrlSegment,
+  isSafeNsUrlSegment,
   isSafeUrlSegment,
   sanitizeLogValue,
   redactUrlCredentials
 } from '../lib/utils.js'
 
-// Security tests for fixes shipped in 3.0.5.
-// See CHANGELOG for associated GHSA advisory.
+// Security tests for fixes shipped in 3.0.5, plus 3.0.6 regression fix
+// (nested namespaces with `/` were being wrongly rejected). See CHANGELOG.
 
 describe('security', () => {
-  describe('isSafeUrlSegment', () => {
+  describe('isSafeLangUrlSegment (strict — for `lng`)', () => {
     it('accepts arbitrary language-code shapes (i18next permits any shape)', () => {
-      expect(isSafeUrlSegment('en')).to.be(true)
-      expect(isSafeUrlSegment('de-DE')).to.be(true)
-      expect(isSafeUrlSegment('en_US')).to.be(true)
-      expect(isSafeUrlSegment('zh-Hant-HK')).to.be(true)
-      expect(isSafeUrlSegment('pirate-speak')).to.be(true)
-      expect(isSafeUrlSegment('my-custom.ns')).to.be(true)
+      expect(isSafeLangUrlSegment('en')).to.be(true)
+      expect(isSafeLangUrlSegment('de-DE')).to.be(true)
+      expect(isSafeLangUrlSegment('en_US')).to.be(true)
+      expect(isSafeLangUrlSegment('zh-Hant-HK')).to.be(true)
+      expect(isSafeLangUrlSegment('pirate-speak')).to.be(true)
+      expect(isSafeLangUrlSegment('my-custom.ns')).to.be(true)
     })
 
     it('rejects path-traversal / URL-structure / control-char payloads', () => {
-      expect(isSafeUrlSegment('../etc/passwd')).to.be(false)
-      expect(isSafeUrlSegment('..')).to.be(false)
-      expect(isSafeUrlSegment('foo/bar')).to.be(false)
-      expect(isSafeUrlSegment('foo\\bar')).to.be(false)
-      expect(isSafeUrlSegment('en?admin=true')).to.be(false)
-      expect(isSafeUrlSegment('en#frag')).to.be(false)
-      expect(isSafeUrlSegment('en%2F..')).to.be(false)
-      expect(isSafeUrlSegment('en user')).to.be(false)
-      expect(isSafeUrlSegment('en@evil.com')).to.be(false)
-      expect(isSafeUrlSegment('__proto__')).to.be(false)
-      expect(isSafeUrlSegment('en\r\nX-Injected: bad')).to.be(false)
-      expect(isSafeUrlSegment('')).to.be(false)
-      expect(isSafeUrlSegment('a'.repeat(200))).to.be(false)
+      expect(isSafeLangUrlSegment('../etc/passwd')).to.be(false)
+      expect(isSafeLangUrlSegment('..')).to.be(false)
+      expect(isSafeLangUrlSegment('foo/bar')).to.be(false)
+      expect(isSafeLangUrlSegment('foo\\bar')).to.be(false)
+      expect(isSafeLangUrlSegment('en?admin=true')).to.be(false)
+      expect(isSafeLangUrlSegment('en#frag')).to.be(false)
+      expect(isSafeLangUrlSegment('en%2F..')).to.be(false)
+      expect(isSafeLangUrlSegment('en user')).to.be(false)
+      expect(isSafeLangUrlSegment('en@evil.com')).to.be(false)
+      expect(isSafeLangUrlSegment('__proto__')).to.be(false)
+      expect(isSafeLangUrlSegment('en\r\nX-Injected: bad')).to.be(false)
+      expect(isSafeLangUrlSegment('')).to.be(false)
+      expect(isSafeLangUrlSegment('a'.repeat(200))).to.be(false)
+    })
+
+    it('is still exported as `isSafeUrlSegment` for 3.0.5 backwards compat', () => {
+      expect(isSafeUrlSegment).to.be(isSafeLangUrlSegment)
+    })
+  })
+
+  describe('isSafeNsUrlSegment (loose — for `ns`, allows `/`)', () => {
+    it('accepts nested namespace names with forward slashes', () => {
+      expect(isSafeNsUrlSegment('a/b')).to.be(true)
+      expect(isSafeNsUrlSegment('foo/bar/baz')).to.be(true)
+      expect(isSafeNsUrlSegment('common')).to.be(true)
+    })
+
+    it('still rejects every concrete attack pattern from the 3.0.5 advisory', () => {
+      expect(isSafeNsUrlSegment('..')).to.be(false)
+      expect(isSafeNsUrlSegment('../etc/passwd')).to.be(false)
+      expect(isSafeNsUrlSegment('a/../b')).to.be(false)
+      expect(isSafeNsUrlSegment('foo\\bar')).to.be(false)
+      expect(isSafeNsUrlSegment('ns?admin=true')).to.be(false)
+      expect(isSafeNsUrlSegment('ns#frag')).to.be(false)
+      expect(isSafeNsUrlSegment('ns%2F..')).to.be(false)
+      expect(isSafeNsUrlSegment('ns@evil')).to.be(false)
+      expect(isSafeNsUrlSegment('__proto__')).to.be(false)
+      expect(isSafeNsUrlSegment('ns\r\n')).to.be(false)
+      expect(isSafeNsUrlSegment('')).to.be(false)
+      expect(isSafeNsUrlSegment('a'.repeat(200))).to.be(false)
     })
   })
 
@@ -73,6 +102,27 @@ describe('security', () => {
       expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en?admin=true', ns: 'x' }))
         .to.equal(null)
       expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en#frag', ns: 'x' }))
+        .to.equal(null)
+    })
+
+    it('accepts nested ns with `/` (3.0.6 regression fix)', () => {
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: 'a/b' }))
+        .to.equal('/locales/en/a/b.json')
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: 'foo/bar/baz' }))
+        .to.equal('/locales/en/foo/bar/baz.json')
+    })
+
+    it('still returns null for ns with `..` or `\\` — nested ns does not weaken the fix', () => {
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: 'a/../b' }))
+        .to.equal(null)
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: '..' }))
+        .to.equal(null)
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: 'a\\b' }))
+        .to.equal(null)
+    })
+
+    it('still rejects `/` in lng (strict)', () => {
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en/foo', ns: 'x' }))
         .to.equal(null)
     })
 
