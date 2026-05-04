@@ -1,515 +1,356 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.i18nextHttpBackend = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _utils = require("./utils.js");
-var _request = _interopRequireDefault(require("./request.js"));
-function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var getDefaults = function getDefaults() {
-  return {
-    loadPath: '/locales/{{lng}}/{{ns}}.json',
-    addPath: '/locales/add/{{lng}}/{{ns}}',
-    parse: function parse(data) {
-      return JSON.parse(data);
-    },
-    stringify: JSON.stringify,
-    parsePayload: function parsePayload(namespace, key, fallbackValue) {
-      return _defineProperty({}, key, fallbackValue || '');
-    },
-    parseLoadPayload: function parseLoadPayload(languages, namespaces) {
-      return undefined;
-    },
-    request: _request.default,
-    reloadInterval: typeof window !== 'undefined' ? false : 60 * 60 * 1000,
-    customHeaders: {},
-    queryStringParams: {},
-    crossDomain: false,
-    withCredentials: false,
-    overrideMimeType: false,
-    requestOptions: {
-      mode: 'cors',
-      credentials: 'same-origin',
-      cache: 'default'
-    }
-  };
-};
-var Backend = function () {
-  function Backend(services) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var allOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    _classCallCheck(this, Backend);
-    this.services = services;
-    this.options = options;
-    this.allOptions = allOptions;
-    this.type = 'backend';
-    this.init(services, options, allOptions);
-  }
-  return _createClass(Backend, [{
-    key: "init",
-    value: function init(services) {
-      var _this = this;
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var allOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      this.services = services;
-      this.options = _objectSpread(_objectSpread(_objectSpread({}, getDefaults()), this.options || {}), options);
-      this.allOptions = allOptions;
-      if (this.services && this.options.reloadInterval) {
-        var timer = setInterval(function () {
-          return _this.reload();
-        }, this.options.reloadInterval);
-        if (_typeof(timer) === 'object' && typeof timer.unref === 'function') timer.unref();
-      }
-    }
-  }, {
-    key: "readMulti",
-    value: function readMulti(languages, namespaces, callback) {
-      this._readAny(languages, languages, namespaces, namespaces, callback);
-    }
-  }, {
-    key: "read",
-    value: function read(language, namespace, callback) {
-      this._readAny([language], language, [namespace], namespace, callback);
-    }
-  }, {
-    key: "_readAny",
-    value: function _readAny(languages, loadUrlLanguages, namespaces, loadUrlNamespaces, callback) {
-      var _this2 = this;
-      var loadPath = this.options.loadPath;
-      if (typeof this.options.loadPath === 'function') {
-        loadPath = this.options.loadPath(languages, namespaces);
-      }
-      loadPath = (0, _utils.makePromise)(loadPath);
-      loadPath.then(function (resolvedLoadPath) {
-        if (!resolvedLoadPath) return callback(null, {});
-        var url = (0, _utils.interpolateUrl)(resolvedLoadPath, {
-          lng: languages.join('+'),
-          ns: namespaces.join('+')
-        });
-        if (url == null) {
-          var safeLngs = languages.map(_utils.sanitizeLogValue).join(', ');
-          var safeNss = namespaces.map(_utils.sanitizeLogValue).join(', ');
-          return callback(new Error('i18next-http-backend: unsafe lng/ns value — refusing to build request URL for languages=[' + safeLngs + '] namespaces=[' + safeNss + ']'), false);
-        }
-        _this2.loadUrl(url, callback, loadUrlLanguages, loadUrlNamespaces);
-      });
-    }
-  }, {
-    key: "loadUrl",
-    value: function loadUrl(url, callback, languages, namespaces) {
-      var _this3 = this;
-      var lng = typeof languages === 'string' ? [languages] : languages;
-      var ns = typeof namespaces === 'string' ? [namespaces] : namespaces;
-      var payload = this.options.parseLoadPayload(lng, ns);
-      var safeUrl = (0, _utils.sanitizeLogValue)((0, _utils.redactUrlCredentials)(url));
-      this.options.request(this.options, url, payload, function (err, res) {
-        if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback('failed loading ' + safeUrl + '; status code: ' + res.status, true);
-        if (res && res.status >= 400 && res.status < 500) return callback('failed loading ' + safeUrl + '; status code: ' + res.status, false);
-        if (!res && err && err.message) {
-          var errorMessage = err.message.toLowerCase();
-          var isNetworkError = ['failed', 'fetch', 'network', 'load'].find(function (term) {
-            return errorMessage.indexOf(term) > -1;
-          });
-          if (isNetworkError) {
-            return callback('failed loading ' + safeUrl + ': ' + (0, _utils.sanitizeLogValue)(err.message), true);
-          }
-        }
-        if (err) return callback(err, false);
-        var ret, parseErr;
-        try {
-          if (typeof res.data === 'string') {
-            ret = _this3.options.parse(res.data, languages, namespaces);
-          } else {
-            ret = res.data;
-          }
-        } catch (e) {
-          parseErr = 'failed parsing ' + safeUrl + ' to json';
-        }
-        if (parseErr) return callback(parseErr, false);
-        callback(null, ret);
-      });
-    }
-  }, {
-    key: "create",
-    value: function create(languages, namespace, key, fallbackValue, callback) {
-      var _this4 = this;
-      if (!this.options.addPath) return;
-      if (typeof languages === 'string') languages = [languages];
-      var payload = this.options.parsePayload(namespace, key, fallbackValue);
-      var finished = 0;
-      var dataArray = [];
-      var resArray = [];
-      languages.forEach(function (lng) {
-        var addPath = _this4.options.addPath;
-        if (typeof _this4.options.addPath === 'function') {
-          addPath = _this4.options.addPath(lng, namespace);
-        }
-        var url = (0, _utils.interpolateUrl)(addPath, {
-          lng: lng,
-          ns: namespace
-        });
-        if (url == null) {
-          finished += 1;
-          if (callback && finished === languages.length) callback(dataArray, resArray);
-          return;
-        }
-        _this4.options.request(_this4.options, url, payload, function (data, res) {
-          finished += 1;
-          dataArray.push(data);
-          resArray.push(res);
-          if (finished === languages.length) {
-            if (typeof callback === 'function') callback(dataArray, resArray);
-          }
-        });
-      });
-    }
-  }, {
-    key: "reload",
-    value: function reload() {
-      var _this5 = this;
-      var _this$services = this.services,
-        backendConnector = _this$services.backendConnector,
-        languageUtils = _this$services.languageUtils,
-        logger = _this$services.logger;
-      var currentLanguage = backendConnector.language;
-      if (currentLanguage && currentLanguage.toLowerCase() === 'cimode') return;
-      var toLoad = [];
-      var append = function append(lng) {
-        var lngs = languageUtils.toResolveHierarchy(lng);
-        lngs.forEach(function (l) {
-          if (toLoad.indexOf(l) < 0) toLoad.push(l);
-        });
-      };
-      append(currentLanguage);
-      if (this.allOptions.preload) this.allOptions.preload.forEach(function (l) {
-        return append(l);
-      });
-      toLoad.forEach(function (lng) {
-        _this5.allOptions.ns.forEach(function (ns) {
-          backendConnector.read(lng, ns, 'read', null, null, function (err, data) {
-            if (err) logger.warn("loading namespace ".concat(ns, " for language ").concat(lng, " failed"), err);
-            if (!err && data) logger.log("loaded namespace ".concat(ns, " for language ").concat(lng), data);
-            backendConnector.loaded("".concat(lng, "|").concat(ns), err, data);
-          });
-        });
-      });
-    }
-  }]);
-}();
-Backend.type = 'backend';
-var _default = exports.default = Backend;
-module.exports = exports.default;
-},{"./request.js":2,"./utils.js":3}],2:[function(require,module,exports){
-(function (global){(function (){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _utils = require("./utils.js");
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _interopRequireWildcard(e, t) { if ("function" == typeof WeakMap) var r = new WeakMap(), n = new WeakMap(); return (_interopRequireWildcard = function _interopRequireWildcard(e, t) { if (!t && e && e.__esModule) return e; var o, i, f = { __proto__: null, default: e }; if (null === e || "object" != _typeof(e) && "function" != typeof e) return f; if (o = t ? n : r) { if (o.has(e)) return o.get(e); o.set(e, f); } for (var _t in e) "default" !== _t && {}.hasOwnProperty.call(e, _t) && ((i = (o = Object.defineProperty) && Object.getOwnPropertyDescriptor(e, _t)) && (i.get || i.set) ? o(f, _t, i) : f[_t] = e[_t]); return f; })(e, t); }
-var fetchApi = typeof fetch === 'function' ? fetch : undefined;
-if (typeof global !== 'undefined' && global.fetch) {
-  fetchApi = global.fetch;
-} else if (typeof window !== 'undefined' && window.fetch) {
-  fetchApi = window.fetch;
-}
-var XmlHttpRequestApi;
-if ((0, _utils.hasXMLHttpRequest)()) {
-  if (typeof global !== 'undefined' && global.XMLHttpRequest) {
-    XmlHttpRequestApi = global.XMLHttpRequest;
-  } else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-    XmlHttpRequestApi = window.XMLHttpRequest;
-  }
-}
-var ActiveXObjectApi;
-if (typeof ActiveXObject === 'function') {
-  if (typeof global !== 'undefined' && global.ActiveXObject) {
-    ActiveXObjectApi = global.ActiveXObject;
-  } else if (typeof window !== 'undefined' && window.ActiveXObject) {
-    ActiveXObjectApi = window.ActiveXObject;
-  }
-}
-if (typeof fetchApi !== 'function') fetchApi = undefined;
-if (!fetchApi && !XmlHttpRequestApi && !ActiveXObjectApi) {
-  try {
-    fetchApi = require('cross-fetch');
-  } catch (e) {}
-}
-var UNSAFE_KEYS = ['__proto__', 'constructor', 'prototype'];
-var addQueryString = function addQueryString(url, params) {
-  if (params && _typeof(params) === 'object') {
-    var queryString = '';
-    for (var _i = 0, _Object$keys = Object.keys(params); _i < _Object$keys.length; _i++) {
-      var paramName = _Object$keys[_i];
-      if (UNSAFE_KEYS.indexOf(paramName) > -1) continue;
-      queryString += '&' + encodeURIComponent(paramName) + '=' + encodeURIComponent(params[paramName]);
-    }
-    if (!queryString) return url;
-    url = url + (url.indexOf('?') !== -1 ? '&' : '?') + queryString.slice(1);
-  }
-  return url;
-};
-var fetchIt = function fetchIt(url, fetchOptions, callback, altFetch) {
-  var resolver = function resolver(response) {
-    if (!response.ok) return callback(response.statusText || 'Error', {
-      status: response.status
-    });
-    response.text().then(function (data) {
-      callback(null, {
-        status: response.status,
-        data: data
-      });
-    }).catch(callback);
-  };
-  if (altFetch) {
-    var altResponse = altFetch(url, fetchOptions);
-    if (altResponse instanceof Promise) {
-      altResponse.then(resolver).catch(callback);
-      return;
-    }
-  }
-  if (typeof fetch === 'function') {
-    fetch(url, fetchOptions).then(resolver).catch(callback);
-  } else {
-    fetchApi(url, fetchOptions).then(resolver).catch(callback);
-  }
-};
-var requestWithFetch = function requestWithFetch(options, url, payload, callback) {
-  if (options.queryStringParams) {
-    url = addQueryString(url, options.queryStringParams);
-  }
-  var headers = _objectSpread({}, typeof options.customHeaders === 'function' ? options.customHeaders() : options.customHeaders);
-  if (typeof window === 'undefined' && typeof global !== 'undefined' && typeof global.process !== 'undefined' && global.process.versions && global.process.versions.node) {
-    headers['User-Agent'] = "i18next-http-backend (node/".concat(global.process.version, "; ").concat(global.process.platform, " ").concat(global.process.arch, ")");
-  }
-  if (payload) headers['Content-Type'] = 'application/json';
-  var reqOptions = typeof options.requestOptions === 'function' ? options.requestOptions(payload) : options.requestOptions;
-  var fetchOptions = _objectSpread({
-    method: payload ? 'POST' : 'GET',
-    body: payload ? options.stringify(payload) : undefined,
-    headers: headers
-  }, options._omitFetchOptions ? {} : reqOptions);
-  var altFetch = typeof options.alternateFetch === 'function' && options.alternateFetch.length >= 1 ? options.alternateFetch : undefined;
-  try {
-    fetchIt(url, fetchOptions, callback, altFetch);
-  } catch (e) {
-    if (!reqOptions || Object.keys(reqOptions).length === 0 || !e.message || e.message.indexOf('not implemented') < 0) {
-      return callback(e);
-    }
-    try {
-      Object.keys(reqOptions).forEach(function (opt) {
-        delete fetchOptions[opt];
-      });
-      fetchIt(url, fetchOptions, callback, altFetch);
-      options._omitFetchOptions = true;
-    } catch (err) {
-      callback(err);
-    }
-  }
-};
-var requestWithXmlHttpRequest = function requestWithXmlHttpRequest(options, url, payload, callback) {
-  if (payload && _typeof(payload) === 'object') {
-    payload = addQueryString('', payload).slice(1);
-  }
-  if (options.queryStringParams) {
-    url = addQueryString(url, options.queryStringParams);
-  }
-  try {
-    var x = XmlHttpRequestApi ? new XmlHttpRequestApi() : new ActiveXObjectApi('MSXML2.XMLHTTP.3.0');
-    x.open(payload ? 'POST' : 'GET', url, 1);
-    if (!options.crossDomain) {
-      x.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    }
-    x.withCredentials = !!options.withCredentials;
-    if (payload) {
-      x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
-    if (x.overrideMimeType) {
-      x.overrideMimeType('application/json');
-    }
-    var h = options.customHeaders;
-    h = typeof h === 'function' ? h() : h;
-    if (h) {
-      for (var _i2 = 0, _Object$keys2 = Object.keys(h); _i2 < _Object$keys2.length; _i2++) {
-        var i = _Object$keys2[_i2];
-        if (UNSAFE_KEYS.indexOf(i) > -1) continue;
-        x.setRequestHeader(i, h[i]);
-      }
-    }
-    x.onreadystatechange = function () {
-      x.readyState > 3 && callback(x.status >= 400 ? x.statusText : null, {
-        status: x.status,
-        data: x.responseText
-      });
-    };
-    x.send(payload);
-  } catch (e) {
-    console && console.log(e);
-  }
-};
-var request = function request(options, url, payload, callback) {
-  if (typeof payload === 'function') {
-    callback = payload;
-    payload = undefined;
-  }
-  callback = callback || function () {};
-  if (fetchApi && url.indexOf('file:') !== 0) {
-    return requestWithFetch(options, url, payload, callback);
-  }
-  if ((0, _utils.hasXMLHttpRequest)() || typeof ActiveXObject === 'function') {
-    return requestWithXmlHttpRequest(options, url, payload, callback);
-  }
-  callback(new Error('No fetch and no xhr implementation found!'));
-};
-var _default = exports.default = request;
-module.exports = exports.default;
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./utils.js":3,"cross-fetch":4}],3:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.defaults = defaults;
-exports.hasXMLHttpRequest = hasXMLHttpRequest;
-exports.interpolate = interpolate;
-exports.interpolateUrl = interpolateUrl;
-exports.isSafeLangUrlSegment = isSafeLangUrlSegment;
-exports.isSafeNsUrlSegment = isSafeNsUrlSegment;
-exports.isSafeUrlSegment = void 0;
-exports.makePromise = makePromise;
-exports.redactUrlCredentials = redactUrlCredentials;
-exports.sanitizeLogValue = sanitizeLogValue;
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var arr = [];
-var each = arr.forEach;
-var slice = arr.slice;
-var UNSAFE_KEYS = ['__proto__', 'constructor', 'prototype'];
-function defaults(obj) {
-  each.call(slice.call(arguments, 1), function (source) {
-    if (source) {
-      for (var _i = 0, _Object$keys = Object.keys(source); _i < _Object$keys.length; _i++) {
-        var prop = _Object$keys[_i];
-        if (UNSAFE_KEYS.indexOf(prop) > -1) continue;
-        if (obj[prop] === undefined) obj[prop] = source[prop];
-      }
-    }
-  });
-  return obj;
-}
-function isSafeUrlSegmentBase(v) {
-  if (typeof v !== 'string') return false;
-  if (v.length === 0 || v.length > 128) return false;
-  if (UNSAFE_KEYS.indexOf(v) > -1) return false;
-  if (v.indexOf('..') > -1) return false;
-  if (v.indexOf('\\') > -1) return false;
-  if (/[?#%\s@]/.test(v)) return false;
-  if (/[\x00-\x1F\x7F]/.test(v)) return false;
-  return true;
-}
-function isSafeLangUrlSegment(v) {
-  if (!isSafeUrlSegmentBase(v)) return false;
-  if (v.indexOf('/') > -1) return false;
-  return true;
-}
-function isSafeNsUrlSegment(v) {
-  return isSafeUrlSegmentBase(v);
-}
-var isSafeUrlSegment = exports.isSafeUrlSegment = isSafeLangUrlSegment;
-var SAFETY_CHECK_BY_KEY = {
-  lng: isSafeLangUrlSegment,
-  ns: isSafeNsUrlSegment
-};
-function sanitizeLogValue(v) {
-  if (typeof v !== 'string') return v;
-  return v.replace(/[\r\n\x00-\x1F\x7F]/g, ' ');
-}
-function redactUrlCredentials(u) {
-  if (typeof u !== 'string' || u.length === 0) return u;
-  try {
-    var parsed = new URL(u);
-    if (parsed.username || parsed.password) {
-      parsed.username = '';
-      parsed.password = '';
-      return parsed.toString();
-    }
-    return u;
-  } catch (e) {
-    return u.replace(/(\/\/)[^/@\s]+@/g, '$1');
-  }
-}
-function hasXMLHttpRequest() {
-  return typeof XMLHttpRequest === 'function' || (typeof XMLHttpRequest === "undefined" ? "undefined" : _typeof(XMLHttpRequest)) === 'object';
-}
-function isPromise(maybePromise) {
-  return !!maybePromise && typeof maybePromise.then === 'function';
-}
-function makePromise(maybePromise) {
-  if (isPromise(maybePromise)) {
-    return maybePromise;
-  }
-  return Promise.resolve(maybePromise);
-}
-var interpolationRegexp = /\{\{(.+?)\}\}/g;
-function interpolate(str, data) {
-  return str.replace(interpolationRegexp, function (match, key) {
-    var k = key.trim();
-    if (UNSAFE_KEYS.indexOf(k) > -1) return match;
-    var value = data[k];
-    return value != null ? value : match;
-  });
-}
-function interpolateUrl(str, data) {
-  var unsafe = false;
-  var result = str.replace(interpolationRegexp, function (match, key) {
-    var k = key.trim();
-    if (UNSAFE_KEYS.indexOf(k) > -1) return match;
-    var value = data[k];
-    if (value == null) return match;
-    var check = SAFETY_CHECK_BY_KEY[k] || isSafeLangUrlSegment;
-    var segments = String(value).split('+');
-    var _iterator = _createForOfIteratorHelper(segments),
-      _step;
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var seg = _step.value;
-        if (!check(seg)) {
-          unsafe = true;
-          return match;
-        }
-      }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
-    }
-    return segments.join('+');
-  });
-  return unsafe ? null : result;
-}
-},{}],4:[function(require,module,exports){
-
-},{}]},{},[1])(1)
-});
+var i18nextHttpBackend = (function() {
+	//#region lib/utils.js
+	const arr = [];
+	arr.forEach;
+	arr.slice;
+	const UNSAFE_KEYS$1 = [
+		"__proto__",
+		"constructor",
+		"prototype"
+	];
+	function isSafeUrlSegmentBase(v) {
+		if (typeof v !== "string") return false;
+		if (v.length === 0 || v.length > 128) return false;
+		if (UNSAFE_KEYS$1.indexOf(v) > -1) return false;
+		if (v.indexOf("..") > -1) return false;
+		if (v.indexOf("\\") > -1) return false;
+		if (/[?#%\s@]/.test(v)) return false;
+		if (/[\x00-\x1F\x7F]/.test(v)) return false;
+		return true;
+	}
+	function isSafeLangUrlSegment(v) {
+		if (!isSafeUrlSegmentBase(v)) return false;
+		if (v.indexOf("/") > -1) return false;
+		return true;
+	}
+	function isSafeNsUrlSegment(v) {
+		return isSafeUrlSegmentBase(v);
+	}
+	const SAFETY_CHECK_BY_KEY = {
+		lng: isSafeLangUrlSegment,
+		ns: isSafeNsUrlSegment
+	};
+	function sanitizeLogValue(v) {
+		if (typeof v !== "string") return v;
+		return v.replace(/[\r\n\x00-\x1F\x7F]/g, " ");
+	}
+	function redactUrlCredentials(u) {
+		if (typeof u !== "string" || u.length === 0) return u;
+		try {
+			const parsed = new URL(u);
+			if (parsed.username || parsed.password) {
+				parsed.username = "";
+				parsed.password = "";
+				return parsed.toString();
+			}
+			return u;
+		} catch (e) {
+			return u.replace(/(\/\/)[^/@\s]+@/g, "$1");
+		}
+	}
+	function hasXMLHttpRequest() {
+		return typeof XMLHttpRequest === "function" || typeof XMLHttpRequest === "object";
+	}
+	/**
+	* Determine whether the given `maybePromise` is a Promise.
+	*
+	* @param {*} maybePromise
+	*
+	* @returns {Boolean}
+	*/
+	function isPromise(maybePromise) {
+		return !!maybePromise && typeof maybePromise.then === "function";
+	}
+	/**
+	* Convert any value to a Promise than will resolve to this value.
+	*
+	* @param {*} maybePromise
+	*
+	* @returns {Promise}
+	*/
+	function makePromise(maybePromise) {
+		if (isPromise(maybePromise)) return maybePromise;
+		return Promise.resolve(maybePromise);
+	}
+	const interpolationRegexp = /\{\{(.+?)\}\}/g;
+	function interpolateUrl(str, data) {
+		let unsafe = false;
+		const result = str.replace(interpolationRegexp, (match, key) => {
+			const k = key.trim();
+			if (UNSAFE_KEYS$1.indexOf(k) > -1) return match;
+			const value = data[k];
+			if (value == null) return match;
+			const check = SAFETY_CHECK_BY_KEY[k] || isSafeLangUrlSegment;
+			const segments = String(value).split("+");
+			for (const seg of segments) if (!check(seg)) {
+				unsafe = true;
+				return match;
+			}
+			return segments.join("+");
+		});
+		return unsafe ? null : result;
+	}
+	//#endregion
+	//#region lib/request.js
+	const g = typeof globalThis !== "undefined" ? globalThis : typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : void 0;
+	let fetchApi;
+	if (typeof fetch === "function") fetchApi = fetch;
+	else if (g && typeof g.fetch === "function") fetchApi = g.fetch;
+	const XmlHttpRequestApi = hasXMLHttpRequest() && g ? g.XMLHttpRequest : void 0;
+	const ActiveXObjectApi = typeof ActiveXObject === "function" && g ? g.ActiveXObject : void 0;
+	const UNSAFE_KEYS = [
+		"__proto__",
+		"constructor",
+		"prototype"
+	];
+	const addQueryString = (url, params) => {
+		if (params && typeof params === "object") {
+			let queryString = "";
+			for (const paramName of Object.keys(params)) {
+				if (UNSAFE_KEYS.indexOf(paramName) > -1) continue;
+				queryString += "&" + encodeURIComponent(paramName) + "=" + encodeURIComponent(params[paramName]);
+			}
+			if (!queryString) return url;
+			url = url + (url.indexOf("?") !== -1 ? "&" : "?") + queryString.slice(1);
+		}
+		return url;
+	};
+	const fetchIt = (url, fetchOptions, callback, altFetch) => {
+		const resolver = (response) => {
+			if (!response.ok) return callback(response.statusText || "Error", { status: response.status });
+			response.text().then((data) => {
+				callback(null, {
+					status: response.status,
+					data
+				});
+			}).catch(callback);
+		};
+		if (altFetch) {
+			const altResponse = altFetch(url, fetchOptions);
+			if (altResponse instanceof Promise) {
+				altResponse.then(resolver).catch(callback);
+				return;
+			}
+		}
+		if (typeof fetch === "function") fetch(url, fetchOptions).then(resolver).catch(callback);
+		else fetchApi(url, fetchOptions).then(resolver).catch(callback);
+	};
+	const requestWithFetch = (options, url, payload, callback) => {
+		if (options.queryStringParams) url = addQueryString(url, options.queryStringParams);
+		const headers = { ...typeof options.customHeaders === "function" ? options.customHeaders() : options.customHeaders };
+		if (typeof window === "undefined" && typeof global !== "undefined" && typeof global.process !== "undefined" && global.process.versions && global.process.versions.node) headers["User-Agent"] = `i18next-http-backend (node/${global.process.version}; ${global.process.platform} ${global.process.arch})`;
+		if (payload) headers["Content-Type"] = "application/json";
+		const reqOptions = typeof options.requestOptions === "function" ? options.requestOptions(payload) : options.requestOptions;
+		const fetchOptions = {
+			method: payload ? "POST" : "GET",
+			body: payload ? options.stringify(payload) : void 0,
+			headers,
+			...options._omitFetchOptions ? {} : reqOptions
+		};
+		const altFetch = typeof options.alternateFetch === "function" && options.alternateFetch.length >= 1 ? options.alternateFetch : void 0;
+		try {
+			fetchIt(url, fetchOptions, callback, altFetch);
+		} catch (e) {
+			if (!reqOptions || Object.keys(reqOptions).length === 0 || !e.message || e.message.indexOf("not implemented") < 0) return callback(e);
+			try {
+				Object.keys(reqOptions).forEach((opt) => {
+					delete fetchOptions[opt];
+				});
+				fetchIt(url, fetchOptions, callback, altFetch);
+				options._omitFetchOptions = true;
+			} catch (err) {
+				callback(err);
+			}
+		}
+	};
+	const requestWithXmlHttpRequest = (options, url, payload, callback) => {
+		if (payload && typeof payload === "object") payload = addQueryString("", payload).slice(1);
+		if (options.queryStringParams) url = addQueryString(url, options.queryStringParams);
+		try {
+			const x = XmlHttpRequestApi ? new XmlHttpRequestApi() : new ActiveXObjectApi("MSXML2.XMLHTTP.3.0");
+			x.open(payload ? "POST" : "GET", url, 1);
+			if (!options.crossDomain) x.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			x.withCredentials = !!options.withCredentials;
+			if (payload) x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			if (x.overrideMimeType) x.overrideMimeType("application/json");
+			let h = options.customHeaders;
+			h = typeof h === "function" ? h() : h;
+			if (h) for (const i of Object.keys(h)) {
+				if (UNSAFE_KEYS.indexOf(i) > -1) continue;
+				x.setRequestHeader(i, h[i]);
+			}
+			x.onreadystatechange = () => {
+				x.readyState > 3 && callback(x.status >= 400 ? x.statusText : null, {
+					status: x.status,
+					data: x.responseText
+				});
+			};
+			x.send(payload);
+		} catch (e) {
+			console && console.log(e);
+		}
+	};
+	const request = (options, url, payload, callback) => {
+		if (typeof payload === "function") {
+			callback = payload;
+			payload = void 0;
+		}
+		callback = callback || (() => {});
+		if (fetchApi && url.indexOf("file:") !== 0) return requestWithFetch(options, url, payload, callback);
+		if (hasXMLHttpRequest() || typeof ActiveXObject === "function") return requestWithXmlHttpRequest(options, url, payload, callback);
+		callback(/* @__PURE__ */ new Error("No fetch and no xhr implementation found!"));
+	};
+	//#endregion
+	//#region lib/index.js
+	const getDefaults = () => {
+		return {
+			loadPath: "/locales/{{lng}}/{{ns}}.json",
+			addPath: "/locales/add/{{lng}}/{{ns}}",
+			parse: (data) => JSON.parse(data),
+			stringify: JSON.stringify,
+			parsePayload: (namespace, key, fallbackValue) => ({ [key]: fallbackValue || "" }),
+			parseLoadPayload: (languages, namespaces) => void 0,
+			request,
+			reloadInterval: typeof window !== "undefined" ? false : 3600 * 1e3,
+			customHeaders: {},
+			queryStringParams: {},
+			crossDomain: false,
+			withCredentials: false,
+			overrideMimeType: false,
+			requestOptions: {
+				mode: "cors",
+				credentials: "same-origin",
+				cache: "default"
+			}
+		};
+	};
+	var Backend = class {
+		constructor(services, options = {}, allOptions = {}) {
+			this.services = services;
+			this.options = options;
+			this.allOptions = allOptions;
+			this.type = "backend";
+			this.init(services, options, allOptions);
+		}
+		init(services, options = {}, allOptions = {}) {
+			this.services = services;
+			this.options = {
+				...getDefaults(),
+				...this.options || {},
+				...options
+			};
+			this.allOptions = allOptions;
+			if (this.services && this.options.reloadInterval) {
+				const timer = setInterval(() => this.reload(), this.options.reloadInterval);
+				if (typeof timer === "object" && typeof timer.unref === "function") timer.unref();
+			}
+		}
+		readMulti(languages, namespaces, callback) {
+			this._readAny(languages, languages, namespaces, namespaces, callback);
+		}
+		read(language, namespace, callback) {
+			this._readAny([language], language, [namespace], namespace, callback);
+		}
+		_readAny(languages, loadUrlLanguages, namespaces, loadUrlNamespaces, callback) {
+			let loadPath = this.options.loadPath;
+			if (typeof this.options.loadPath === "function") loadPath = this.options.loadPath(languages, namespaces);
+			loadPath = makePromise(loadPath);
+			loadPath.then((resolvedLoadPath) => {
+				if (!resolvedLoadPath) return callback(null, {});
+				const url = interpolateUrl(resolvedLoadPath, {
+					lng: languages.join("+"),
+					ns: namespaces.join("+")
+				});
+				if (url == null) {
+					const safeLngs = languages.map(sanitizeLogValue).join(", ");
+					const safeNss = namespaces.map(sanitizeLogValue).join(", ");
+					return callback(/* @__PURE__ */ new Error("i18next-http-backend: unsafe lng/ns value — refusing to build request URL for languages=[" + safeLngs + "] namespaces=[" + safeNss + "]"), false);
+				}
+				this.loadUrl(url, callback, loadUrlLanguages, loadUrlNamespaces);
+			});
+		}
+		loadUrl(url, callback, languages, namespaces) {
+			const lng = typeof languages === "string" ? [languages] : languages;
+			const ns = typeof namespaces === "string" ? [namespaces] : namespaces;
+			const payload = this.options.parseLoadPayload(lng, ns);
+			const safeUrl = sanitizeLogValue(redactUrlCredentials(url));
+			this.options.request(this.options, url, payload, (err, res) => {
+				if (res && (res.status >= 500 && res.status < 600 || !res.status)) return callback("failed loading " + safeUrl + "; status code: " + res.status, true);
+				if (res && res.status >= 400 && res.status < 500) return callback("failed loading " + safeUrl + "; status code: " + res.status, false);
+				if (!res && err && err.message) {
+					const errorMessage = err.message.toLowerCase();
+					if ([
+						"failed",
+						"fetch",
+						"network",
+						"load"
+					].find((term) => errorMessage.indexOf(term) > -1)) return callback("failed loading " + safeUrl + ": " + sanitizeLogValue(err.message), true);
+				}
+				if (err) return callback(err, false);
+				let ret, parseErr;
+				try {
+					if (typeof res.data === "string") ret = this.options.parse(res.data, languages, namespaces);
+					else ret = res.data;
+				} catch (e) {
+					parseErr = "failed parsing " + safeUrl + " to json";
+				}
+				if (parseErr) return callback(parseErr, false);
+				callback(null, ret);
+			});
+		}
+		create(languages, namespace, key, fallbackValue, callback) {
+			if (!this.options.addPath) return;
+			if (typeof languages === "string") languages = [languages];
+			const payload = this.options.parsePayload(namespace, key, fallbackValue);
+			let finished = 0;
+			const dataArray = [];
+			const resArray = [];
+			languages.forEach((lng) => {
+				let addPath = this.options.addPath;
+				if (typeof this.options.addPath === "function") addPath = this.options.addPath(lng, namespace);
+				const url = interpolateUrl(addPath, {
+					lng,
+					ns: namespace
+				});
+				if (url == null) {
+					finished += 1;
+					if (callback && finished === languages.length) callback(dataArray, resArray);
+					return;
+				}
+				this.options.request(this.options, url, payload, (data, res) => {
+					finished += 1;
+					dataArray.push(data);
+					resArray.push(res);
+					if (finished === languages.length) {
+						if (typeof callback === "function") callback(dataArray, resArray);
+					}
+				});
+			});
+		}
+		reload() {
+			const { backendConnector, languageUtils, logger } = this.services;
+			const currentLanguage = backendConnector.language;
+			if (currentLanguage && currentLanguage.toLowerCase() === "cimode") return;
+			const toLoad = [];
+			const append = (lng) => {
+				languageUtils.toResolveHierarchy(lng).forEach((l) => {
+					if (toLoad.indexOf(l) < 0) toLoad.push(l);
+				});
+			};
+			append(currentLanguage);
+			if (this.allOptions.preload) this.allOptions.preload.forEach((l) => append(l));
+			toLoad.forEach((lng) => {
+				this.allOptions.ns.forEach((ns) => {
+					backendConnector.read(lng, ns, "read", null, null, (err, data) => {
+						if (err) logger.warn(`loading namespace ${ns} for language ${lng} failed`, err);
+						if (!err && data) logger.log(`loaded namespace ${ns} for language ${lng}`, data);
+						backendConnector.loaded(`${lng}|${ns}`, err, data);
+					});
+				});
+			});
+		}
+	};
+	Backend.type = "backend";
+	//#endregion
+	return Backend;
+})();

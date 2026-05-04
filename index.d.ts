@@ -71,8 +71,9 @@ export interface HttpBackendOptions {
    */
   withCredentials?: boolean;
   /**
-   * define a custom xhr function
-   * can be used to support XDomainRequest in IE 8 and 9
+   * define a custom request function — replaces the built-in fetch/XHR call
+   * entirely. For lighter-weight overrides (e.g. test-time mocking, or
+   * supplying a fetch ponyfill on legacy runtimes), prefer `alternateFetch`.
    */
   request?(
     options: HttpBackendOptions,

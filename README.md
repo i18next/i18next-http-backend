@@ -68,12 +68,14 @@ i18next.init({
 
 Source can be loaded via [npm](https://www.npmjs.com/package/i18next-http-backend) or [downloaded](https://github.com/i18next/i18next-http-backend/blob/master/i18nextHttpBackend.min.js) from this repo.
 
-There's also the possibility to directly import it via a CDN like [jsdelivr](https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js) or [unpkg](https://unpkg.com/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js) or similar.
+There's also the possibility to directly import it via a CDN like [jsdelivr](https://cdn.jsdelivr.net/npm/i18next-http-backend@4/i18nextHttpBackend.min.js) or [unpkg](https://unpkg.com/i18next-http-backend@4/i18nextHttpBackend.min.js) or similar.
 
 ```bash
 # npm package
 $ npm install i18next-http-backend
 ```
+
+> **v4 requires native `fetch`.** Node ≥ 18, all modern browsers, Deno, and Bun ship `fetch` by default — no extra setup needed. On runtimes without native `fetch`, supply a ponyfill via `options.alternateFetch` (see below) or stay on `i18next-http-backend@3`. v4 dropped the bundled `cross-fetch` dependency that v3 used as a fallback.
 
 Wiring up:
 
@@ -96,7 +98,7 @@ i18next.use(Backend).init(i18nextOptions);
 for plain browser:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@4/i18nextHttpBackend.min.js"></script>
 <!-- an example can be found in example/jquery/index.html -->
 ```
 
@@ -179,8 +181,9 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
     cache: 'default'
   },
 
-  // define a custom request function
-  // can be used to support XDomainRequest in IE 8 and 9
+  // define a custom request function — replaces the built-in fetch/XHR call entirely.
+  // For lighter-weight overrides (e.g. test-time mocking, or supplying a fetch
+  // ponyfill on legacy runtimes), prefer `alternateFetch` (see below).
   //
   // 'options' will be this entire options object
   // 'url' will be passed the value of 'loadPath'
@@ -190,6 +193,17 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
   //            'res' should be an object with a 'status' property and a 'data' property containing a stringified object instance beeing the key:value translation pairs for the
   //            requested language and namespace, or null in case of an error.
   request: function (options, url, payload, callback) {},
+
+  // optional: provide an alternative fetch implementation (must match the
+  // standard `fetch(input, init)` signature). Useful for:
+  //   - test mocking (return a stubbed Response without monkey-patching globals)
+  //   - injecting a fetch ponyfill on runtimes without native fetch
+  //   - intercepting requests for tracing / auth header rewriting
+  // Returning anything other than a Promise causes the backend to fall through
+  // to the built-in fetch (or XHR) call — useful for selective interception.
+  // Not used if a custom `request` function is supplied, or when the backend
+  // selects XHR over fetch.
+  alternateFetch: undefined, // (url, init) => Promise<Response>,
 
   // adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
   queryStringParams: { v: '1.3.5' },
