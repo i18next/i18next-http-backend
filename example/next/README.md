@@ -153,5 +153,5 @@ npm run dev
 ## Related
 
 - [next-i18next](https://github.com/i18next/next-i18next)
-- [Blog post: next-i18next with http-backend in Next.js Pages Router](https://www.locize.com/blog/next-i18next/)
-- [Blog post: i18n in Next.js App Router](https://www.locize.com/blog/i18n-next-app-router/)
+- [Blog post: next-i18next with http-backend in Next.js Pages Router](https://www.locize.com/blog/next-i18next/?utm_source=i18next_http_backend_next_readme&utm_medium=github&utm_campaign=example_next_readme)
+- [Blog post: i18n in Next.js App Router](https://www.locize.com/blog/i18n-next-app-router/?utm_source=i18next_http_backend_next_readme&utm_medium=github&utm_campaign=example_next_readme)

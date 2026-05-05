@@ -14,13 +14,13 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 ## Advice:
 
-If you don't like to manage your translation files manually or are simply looking for a [better management solution](https://locize.com), take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend). The i18next [backed plugin](https://www.i18next.com/overview/plugins-and-utils#backends) for 🌐 [locize](https://locize.com) ☁️.
+If you don't like to manage your translation files manually or are simply looking for a [better management solution](https://www.locize.com?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme), take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend). The i18next [backed plugin](https://www.i18next.com/overview/plugins-and-utils#backends) for 🌐 [locize](https://www.locize.com?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) ☁️.
 
 *To see [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) in a working app example, check out:*
 
 - *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*
-- *[this guide](https://locize.com/blog/react-i18next/) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://locize.com/blog/react-i18next/#how-look)*
-- *[this Angular blog post](https://locize.com/blog/angular-i18next/) [introducing i18next-locize-backend](https://locize.com/blog/angular-i18next/#how-look)*
+- *[this guide](https://www.locize.com/blog/react-i18next/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) starting from the step of [replacing i18next-http-backend with i18next-locize-backend](https://www.locize.com/blog/react-i18next/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme#how-look)*
+- *[this Angular blog post](https://www.locize.com/blog/angular-i18next/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) [introducing i18next-locize-backend](https://www.locize.com/blog/angular-i18next/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme#how-look)*
 - *[the code integration part](https://www.youtube.com/watch?v=TFV_vhJs5DY&t=294s) in this [YouTube video](https://www.youtube.com/watch?v=TFV_vhJs5DY)*
 
 ## Troubleshooting
@@ -42,7 +42,7 @@ i18next.init({
 })
 ```
 
-[This article](https://www.locize.com/blog/i18next-translations-not-loaded) may also help to understand/investigate that.
+[This article](https://www.locize.com/blog/i18next-translations-not-loaded?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) may also help to understand/investigate that.
 
 ### Slow i18next initialization?
 
@@ -264,7 +264,7 @@ i18n
 <h3 align="center">Gold Sponsors</h3>
 
 <p align="center">
-  <a href="https://locize.com/" target="_blank">
+  <a href="https://www.locize.com/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme" target="_blank">
     <img src="https://raw.githubusercontent.com/i18next/i18next/master/assets/locize_sponsor_240.gif" width="240px">
   </a>
 </p>
@@ -273,10 +273,10 @@ i18n
 
 **From the creators of i18next: localization as a service - locize.com**
 
-A translation management system built around the i18next ecosystem - [locize.com](https://locize.com).
+A translation management system built around the i18next ecosystem - [locize.com](https://www.locize.com?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme).
 
-![locize](https://locize.com/img/ads/github_locize.png)
+![locize](https://www.locize.com/img/ads/github_locize.png)
 
-With using [locize](http://locize.com/?utm_source=react_i18next_readme&utm_medium=github) you directly support the future of i18next.
+With using [locize](https://www.locize.com/?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) you directly support the future of i18next.
 
 ---
