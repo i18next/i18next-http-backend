@@ -2,7 +2,7 @@
   "type": "commonjs",
   "dependencies": {
     "i18next": "24.0.0",
-    "i18next-http-backend": "3.0.1"
+    "i18next-http-backend": "3.0.5"
   },
   "devDependencies": {
     "express": "4.21.1"
