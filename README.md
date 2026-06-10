@@ -16,6 +16,8 @@ It's based on the deprecated [i18next-xhr-backend](https://github.com/i18next/i1
 
 If you don't like to manage your translation files manually or are simply looking for a [better management solution](https://www.locize.com?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme), take a look at [i18next-locize-backend](https://github.com/locize/i18next-locize-backend). The i18next [backend plugin](https://www.i18next.com/overview/plugins-and-utils#backends) for 🌐 [Locize](https://www.locize.com?utm_source=i18next_http_backend_readme&utm_medium=github&utm_campaign=readme) ☁️.
 
+Starting from an app with hardcoded strings? Run `npx i18next-cli localize` — one command that wraps strings in `t()`, extracts keys, connects to [Locize](https://www.locize.com?from=i18next-http-backend_readme__localize) and AI-translates your app. See the [launch post](https://www.locize.com/blog/i18next-cli-localize?from=i18next-http-backend_readme__localize).
+
 *To see [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) in a working app example, check out:*
 
 - *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*
