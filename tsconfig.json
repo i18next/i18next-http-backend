@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noEmit": true,
-    "baseUrl": ".",
     "paths": { "i18next-http-backend": ["./index.d.mts"] },
 
     "esModuleInterop": true,
