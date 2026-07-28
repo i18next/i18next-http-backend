@@ -1,3 +1,7 @@
+### 4.0.1
+
+- fix: allow `@` in `ns` values so scoped-package-style namespace names such as `@organization/package-name` fetch correctly again ([#191](https://github.com/i18next/i18next-http-backend/issues/191)). 3.0.6 relaxed the `ns` check for `/` but left `@` in the shared denylist. In the URL path position `@` is a plain RFC 3986 pchar with no structural meaning; it stays blocked for `lng`, where it marks the userinfo/authority boundary. Every other pattern from the 3.0.5 advisory (`..`, `\`, `%`, `?`, `#`, whitespace, control chars, prototype keys, oversized inputs) remains blocked for both keys.
+
 ### 4.0.0
 
 - BREAKING: drop `cross-fetch` dependency. `i18next-http-backend` now requires a host-provided `fetch`. This is available in Node ≥ 18 (stable since Node 21), all modern browsers, Deno, and Bun. For runtimes without native `fetch`, install a ponyfill yourself and inject it via `options.alternateFetch`, or stay on v3.x.

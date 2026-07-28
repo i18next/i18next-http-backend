@@ -44,11 +44,13 @@ describe('security', () => {
     })
   })
 
-  describe('isSafeNsUrlSegment (loose — for `ns`, allows `/`)', () => {
-    it('accepts nested namespace names with forward slashes', () => {
+  describe('isSafeNsUrlSegment (loose — for `ns`, allows `/` and `@`)', () => {
+    it('accepts nested and scoped-package-style namespace names', () => {
       expect(isSafeNsUrlSegment('a/b')).to.be(true)
       expect(isSafeNsUrlSegment('foo/bar/baz')).to.be(true)
       expect(isSafeNsUrlSegment('common')).to.be(true)
+      // https://github.com/i18next/i18next-http-backend/issues/191
+      expect(isSafeNsUrlSegment('@organization/package-name')).to.be(true)
     })
 
     it('still rejects every concrete attack pattern from the 3.0.5 advisory', () => {
@@ -59,7 +61,6 @@ describe('security', () => {
       expect(isSafeNsUrlSegment('ns?admin=true')).to.be(false)
       expect(isSafeNsUrlSegment('ns#frag')).to.be(false)
       expect(isSafeNsUrlSegment('ns%2F..')).to.be(false)
-      expect(isSafeNsUrlSegment('ns@evil')).to.be(false)
       expect(isSafeNsUrlSegment('__proto__')).to.be(false)
       expect(isSafeNsUrlSegment('ns\r\n')).to.be(false)
       expect(isSafeNsUrlSegment('')).to.be(false)

@@ -14,13 +14,13 @@ var i18nextHttpBackend = (function() {
 		if (UNSAFE_KEYS$1.indexOf(v) > -1) return false;
 		if (v.indexOf("..") > -1) return false;
 		if (v.indexOf("\\") > -1) return false;
-		if (/[?#%\s@]/.test(v)) return false;
+		if (/[?#%\s]/.test(v)) return false;
 		if (/[\x00-\x1F\x7F]/.test(v)) return false;
 		return true;
 	}
 	function isSafeLangUrlSegment(v) {
 		if (!isSafeUrlSegmentBase(v)) return false;
-		if (v.indexOf("/") > -1) return false;
+		if (v.indexOf("/") > -1 || v.indexOf("@") > -1) return false;
 		return true;
 	}
 	function isSafeNsUrlSegment(v) {
