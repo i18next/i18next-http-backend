@@ -210,9 +210,13 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
   // adds parameters to resource URL. 'example.com' -> 'example.com?v=1.3.5'
   queryStringParams: { v: '1.3.5' },
 
-  reloadInterval: false // can be used to reload resources in a specific interval (milliseconds) (useful in server environments)
+  // can be used to reload resources in a specific interval (milliseconds) (useful in server environments)
+  // default: false in the browser, 60 * 60 * 1000 (1 hour) everywhere else
+  reloadInterval: false
 }
 ```
+
+> **Server side:** the reload timer keeps the i18next instance alive for as long as the process runs. That is what you want for one long-lived instance, and a trap for anything short-lived: if you create a **new i18next instance per request or per render** (server-side rendering counts, a component that initializes i18next runs on the server too), each one leaves a live timer behind and keeps refetching forever. Nothing errors and the process still exits normally, because the timer is `unref`ed. Create the instance once per process and reuse it, or set `reloadInterval: false` on instances that are not that singleton.
 
 Options can be passed in:
 
