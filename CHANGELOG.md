@@ -1,3 +1,9 @@
+### 4.0.2
+
+Security release. See advisory [GHSA-xvq9-wjp8-hwqf](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-xvq9-wjp8-hwqf).
+
+- security: also reject `:` in `lng` and `ns` values, and `//` in `ns` values. With a `loadPath` / `addPath` template that *starts* with the placeholder (e.g. `{{lng}}/{{ns}}.json` — no origin and no leading `/`), a value such as `http:127.0.0.1:8080` was interpolated into an absolute URL and the request left the intended origin (SSRF / URL injection). The default `/locales/{{lng}}/{{ns}}.json` and every template with a leading path or origin were not affected, because a colon inside a path segment has no structural meaning there. No BCP-47 language code contains `:`, and `:` is i18next's default `nsSeparator`, so no usable namespace name does either — the tightened check has no legitimate collateral.
+
 ### 4.0.1
 
 - fix: allow `@` in `ns` values so scoped-package-style namespace names such as `@organization/package-name` fetch correctly again ([#191](https://github.com/i18next/i18next-http-backend/issues/191)). 3.0.6 relaxed the `ns` check for `/` but left `@` in the shared denylist. In the URL path position `@` is a plain RFC 3986 pchar with no structural meaning; it stays blocked for `lng`, where it marks the userinfo/authority boundary. Every other pattern from the 3.0.5 advisory (`..`, `\`, `%`, `?`, `#`, whitespace, control chars, prototype keys, oversized inputs) remains blocked for both keys.

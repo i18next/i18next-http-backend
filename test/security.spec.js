@@ -1,4 +1,5 @@
 import expect from 'expect.js'
+import Backend from '../lib/index.js'
 import {
   interpolate,
   interpolateUrl,
@@ -33,6 +34,7 @@ describe('security', () => {
       expect(isSafeLangUrlSegment('en%2F..')).to.be(false)
       expect(isSafeLangUrlSegment('en user')).to.be(false)
       expect(isSafeLangUrlSegment('en@evil.com')).to.be(false)
+      expect(isSafeLangUrlSegment('http:127.0.0.1:8080')).to.be(false)
       expect(isSafeLangUrlSegment('__proto__')).to.be(false)
       expect(isSafeLangUrlSegment('en\r\nX-Injected: bad')).to.be(false)
       expect(isSafeLangUrlSegment('')).to.be(false)
@@ -61,6 +63,9 @@ describe('security', () => {
       expect(isSafeNsUrlSegment('ns?admin=true')).to.be(false)
       expect(isSafeNsUrlSegment('ns#frag')).to.be(false)
       expect(isSafeNsUrlSegment('ns%2F..')).to.be(false)
+      expect(isSafeNsUrlSegment('http:127.0.0.1:8080/x')).to.be(false)
+      expect(isSafeNsUrlSegment('//evil.example/x')).to.be(false)
+      expect(isSafeNsUrlSegment('a//b')).to.be(false)
       expect(isSafeNsUrlSegment('__proto__')).to.be(false)
       expect(isSafeNsUrlSegment('ns\r\n')).to.be(false)
       expect(isSafeNsUrlSegment('')).to.be(false)
@@ -132,9 +137,40 @@ describe('security', () => {
         .to.equal(null)
     })
 
+    // GHSA-xvq9-wjp8-hwqf: with a template that starts with the placeholder
+    // (no origin / leading path), a `scheme:` or `//` prefix in the value
+    // turns the interpolated string into an absolute / protocol-relative URL.
+    it('returns null for scheme or protocol-relative injection when the placeholder leads the template', () => {
+      expect(interpolateUrl('{{lng}}/{{ns}}.json', { lng: 'http:127.0.0.1:8080', ns: 'common' }))
+        .to.equal(null)
+      expect(interpolateUrl('{{ns}}/{{lng}}.json', { lng: 'en', ns: 'http:127.0.0.1:8080/x' }))
+        .to.equal(null)
+      expect(interpolateUrl('{{ns}}/{{lng}}.json', { lng: 'en', ns: '//evil.example/x' }))
+        .to.equal(null)
+      expect(interpolateUrl('{{lng}}/{{ns}}.json', { lng: 'en+http:127.0.0.1:8080', ns: 'common' }))
+        .to.equal(null)
+    })
+
     it('ignores __proto__ placeholder', () => {
       expect(interpolateUrl('/{{__proto__}}/x', { __proto__: { a: 1 } }))
         .to.equal('/{{__proto__}}/x')
+    })
+  })
+
+  describe('Backend.read with a leading-placeholder loadPath (GHSA-xvq9-wjp8-hwqf)', () => {
+    it('refuses to issue the request for a scheme-injecting lng', (done) => {
+      let fetched = false
+      const backend = new Backend(null, {
+        loadPath: '{{lng}}/{{ns}}.json',
+        alternateFetch: (url) => { fetched = true; return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('{}') }) }
+      })
+      backend.read('http:127.0.0.1:8080', 'common', (err, data) => {
+        expect(fetched).to.be(false)
+        expect(err).to.be.an(Error)
+        expect(err.message).to.contain('unsafe lng/ns value')
+        expect(data).to.be(false)
+        done()
+      })
     })
   })
 
