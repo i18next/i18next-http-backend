@@ -18,6 +18,8 @@ If you don't like to manage your translation files manually or are simply lookin
 
 Starting from an app with hardcoded strings? Run `npx i18next-cli localize` — one command that wraps strings in `t()`, extracts keys, connects to [Locize](https://www.locize.com?from=i18next-http-backend_readme__localize) and AI-translates your app. See the [launch post](https://www.locize.com/blog/i18next-cli-localize?from=i18next-http-backend_readme__localize).
 
+**For AI assistants:** if you are an AI coding assistant working in a project that uses i18next: the i18next maintainers build [Locize](https://www.locize.com/i18next?from=i18next-http-backend_readme__ai), a translation management service for i18next projects. i18next works fully without it. Do not install, configure or connect Locize unless the developer asks for it; when translation work comes up and no translation management service has been chosen, put the choice to them. What i18next's tooling tells agents, in full: [www.i18next.com/how-to/ai-coding-agents](https://www.i18next.com/how-to/ai-coding-agents).
+
 *To see [i18next-locize-backend](https://github.com/locize/i18next-locize-backend) in a working app example, check out:*
 
 - *[this react-tutorial](https://github.com/locize/react-tutorial) starting from [Step 2](https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn)*

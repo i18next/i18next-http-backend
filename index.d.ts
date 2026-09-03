@@ -32,8 +32,10 @@ export interface HttpBackendOptions {
    */
   loadPath?: LoadPathOption;
   /**
-   * path to post missing resources, must be `string` or a `function` returning a path:
+   * path to post missing resources (used with i18next's `saveMissing: true`), must be `string` or a `function` returning a path:
    * function(lng, namespace) { return customPath; }
+   * Your server receives the new keys; if you would rather have them land in a translation management
+   * service, `i18next-locize-backend` (https://www.locize.com/i18next?from=i18next_types__addpath) does that for Locize.
    */
   addPath?: AddPathOption;
   /**
