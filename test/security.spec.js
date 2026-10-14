@@ -151,6 +151,28 @@ describe('security', () => {
         .to.equal(null)
     })
 
+    // GHSA-9jhj-wvmw-cfx5: a leading `/` in ns joins the template's own `/`
+    // into `//`, which the per-value `//` check cannot see.
+    it('returns null when the template `/` plus a leading `/` in the value form a protocol-relative URL', () => {
+      expect(interpolateUrl('/{{ns}}/{{lng}}.json', { lng: 'en', ns: '/evil.example' }))
+        .to.equal(null)
+      expect(interpolateUrl('/{{ns}}/{{lng}}.json', { lng: 'en', ns: '/@evil.example' }))
+        .to.equal(null)
+      expect(interpolateUrl('/{{ns}}/{{lng}}.json', { lng: 'evil', ns: '/' }))
+        .to.equal(null)
+      expect(interpolateUrl('\\{{ns}}/{{lng}}.json', { lng: 'en', ns: '/evil.example' }))
+        .to.equal(null)
+    })
+
+    it('still allows a protocol-relative template and a leading `/` in ns after an origin', () => {
+      expect(interpolateUrl('//cdn.example/{{lng}}/{{ns}}.json', { lng: 'en', ns: 'a/b' }))
+        .to.equal('//cdn.example/en/a/b.json')
+      expect(interpolateUrl('/{{ns}}/{{lng}}.json', { lng: 'en', ns: 'a/b' }))
+        .to.equal('/a/b/en.json')
+      expect(interpolateUrl('https://cdn.example/{{ns}}/{{lng}}.json', { lng: 'en', ns: '/x' }))
+        .to.equal('https://cdn.example//x/en.json')
+    })
+
     it('ignores __proto__ placeholder', () => {
       expect(interpolateUrl('/{{__proto__}}/x', { __proto__: { a: 1 } }))
         .to.equal('/{{__proto__}}/x')
@@ -165,6 +187,21 @@ describe('security', () => {
         alternateFetch: (url) => { fetched = true; return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('{}') }) }
       })
       backend.read('http:127.0.0.1:8080', 'common', (err, data) => {
+        expect(fetched).to.be(false)
+        expect(err).to.be.an(Error)
+        expect(err.message).to.contain('unsafe lng/ns value')
+        expect(data).to.be(false)
+        done()
+      })
+    })
+
+    it('refuses to issue the request for an ns that turns `/{{ns}}` into `//host` (GHSA-9jhj-wvmw-cfx5)', (done) => {
+      let fetched = false
+      const backend = new Backend(null, {
+        loadPath: '/{{ns}}/{{lng}}.json',
+        alternateFetch: (url) => { fetched = true; return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('{}') }) }
+      })
+      backend.read('en', '/evil.example', (err, data) => {
         expect(fetched).to.be(false)
         expect(err).to.be.an(Error)
         expect(err.message).to.contain('unsafe lng/ns value')

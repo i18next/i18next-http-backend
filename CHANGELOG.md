@@ -1,3 +1,9 @@
+### 4.0.3
+
+Security release. See advisory [GHSA-9jhj-wvmw-cfx5](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-9jhj-wvmw-cfx5).
+
+- security: refuse a request URL that starts with `//` (or `\`) when the `loadPath` / `addPath` template does not. With a template that puts `{{ns}}` directly after a leading `/` (e.g. `/{{ns}}/{{lng}}.json`), an `ns` value of `/evil.example` passed the per-value checks, because a single `/` is allowed for nested namespaces, but it joined the template's own `/` into `//evil.example/en.json`, a protocol-relative URL that browsers send to another origin. The 4.0.2 `//` check looked at the value only, so it missed this. The interpolated URL is now checked as a whole. The default `/locales/{{lng}}/{{ns}}.json`, templates with an origin, and protocol-relative CDN templates such as `//cdn.example/{{lng}}/{{ns}}.json` are not affected and keep working.
+
 ### 4.0.2
 
 Security release. See advisory [GHSA-xvq9-wjp8-hwqf](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-xvq9-wjp8-hwqf).

@@ -75,6 +75,7 @@ var i18nextHttpBackend = (function() {
 		return Promise.resolve(maybePromise);
 	}
 	const interpolationRegexp = /\{\{(.+?)\}\}/g;
+	const LEADING_DOUBLE_SLASH = /^[/\\]{2}/;
 	function interpolateUrl(str, data) {
 		let unsafe = false;
 		const result = str.replace(interpolationRegexp, (match, key) => {
@@ -90,7 +91,9 @@ var i18nextHttpBackend = (function() {
 			}
 			return segments.join("+");
 		});
-		return unsafe ? null : result;
+		if (unsafe) return null;
+		if (LEADING_DOUBLE_SLASH.test(result) && !LEADING_DOUBLE_SLASH.test(str)) return null;
+		return result;
 	}
 	//#endregion
 	//#region lib/request.js
