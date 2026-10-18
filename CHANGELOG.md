@@ -1,3 +1,9 @@
+### 4.0.4
+
+Security release. See advisory [GHSA-3cmx-xjww-583x](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-3cmx-xjww-583x).
+
+- security: also reject `&`, `=` and `;` in `lng` and `ns` values. With a query-shaped `loadPath` / `addPath` template such as `/locales/resources.json?lng={{lng}}&ns={{ns}}` (the multiload shape the README documents), a value like `de&ns=private&admin=true` added or overrode query parameters on the request (HTTP parameter pollution). The 3.0.5 fix only rejected `?`, which covers the path position. The default `/locales/{{lng}}/{{ns}}.json` and other path-only templates were not affected. No language code or usable namespace name contains these characters, and `+`-joined multiload values such as `de+en` keep working.
+
 ### 4.0.3
 
 Security release. See advisory [GHSA-9jhj-wvmw-cfx5](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-9jhj-wvmw-cfx5).

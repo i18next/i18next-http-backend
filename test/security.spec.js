@@ -173,6 +173,19 @@ describe('security', () => {
         .to.equal('https://cdn.example//x/en.json')
     })
 
+    // GHSA-3cmx-xjww-583x: with a query-shaped template, `&` / `=` / `;` in
+    // a value add or override query parameters.
+    it('returns null for query-parameter injection in a query-shaped template', () => {
+      const t = '/locales/resources.json?lng={{lng}}&ns={{ns}}'
+      expect(interpolateUrl(t, { lng: 'de&ns=private&admin=true', ns: 'common' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'de', ns: 'common&admin=true' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'de;admin=true', ns: 'common' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'de+en=x', ns: 'common' })).to.equal(null)
+      // the documented multiload shape keeps working
+      expect(interpolateUrl(t, { lng: 'de+en', ns: 'ns1+ns2' }))
+        .to.equal('/locales/resources.json?lng=de+en&ns=ns1+ns2')
+    })
+
     it('ignores __proto__ placeholder', () => {
       expect(interpolateUrl('/{{__proto__}}/x', { __proto__: { a: 1 } }))
         .to.equal('/{{__proto__}}/x')
