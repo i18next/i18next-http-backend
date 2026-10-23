@@ -221,6 +221,30 @@ describe(`http backend using ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}
     })
   })
 
+  describe('with loadPath function (rejected promise)', () => {
+    let backend
+
+    before(() => {
+      backend = new Http(
+        {},
+        {
+          loadPath: () => Promise.reject(new Error('no path'))
+        }
+      )
+    })
+
+    describe('#read', () => {
+      it('should pass the error to the callback', (done) => {
+        backend.read('en', 'test', (err, data) => {
+          expect(err).to.be.an(Error)
+          expect(err.message).to.be('no path')
+          expect(data).to.be(false)
+          done()
+        })
+      })
+    })
+  })
+
   describe('with custom request function option', () => {
     let backend, requestCall
 
