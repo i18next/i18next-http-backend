@@ -1,3 +1,7 @@
+### 4.0.5
+
+- fix: a `loadPath` function whose promise rejects now reports the error to i18next. The read callback was never called, so `init()` / `loadNamespaces()` never settled (a react-i18next Suspense fallback stayed up for good) and in Node the unhandled rejection ended the process. i18next now takes its usual failed-load path (`failedLoading` event, "loading namespace ... failed" log) and `init()` resolves. The error is passed on without retry, like the other non-network errors. Thanks @nk-batman21 ([#201](https://github.com/i18next/i18next-http-backend/pull/201))
+
 ### 4.0.4
 
 Security release. See advisory [GHSA-3cmx-xjww-583x](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-3cmx-xjww-583x).
