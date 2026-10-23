@@ -272,7 +272,7 @@ var i18nextHttpBackend = (function() {
 					return callback(/* @__PURE__ */ new Error("i18next-http-backend: unsafe lng/ns value — refusing to build request URL for languages=[" + safeLngs + "] namespaces=[" + safeNss + "]"), false);
 				}
 				this.loadUrl(url, callback, loadUrlLanguages, loadUrlNamespaces);
-			});
+			}, (err) => callback(err, false));
 		}
 		loadUrl(url, callback, languages, namespaces) {
 			const lng = typeof languages === "string" ? [languages] : languages;
