@@ -171,6 +171,7 @@ var i18nextHttpBackend = (function() {
 	const requestWithXmlHttpRequest = (options, url, payload, callback) => {
 		if (payload && typeof payload === "object") payload = addQueryString("", payload).slice(1);
 		if (options.queryStringParams) url = addQueryString(url, options.queryStringParams);
+		let completed = false;
 		try {
 			const x = XmlHttpRequestApi ? new XmlHttpRequestApi() : new ActiveXObjectApi("MSXML2.XMLHTTP.3.0");
 			x.open(payload ? "POST" : "GET", url, 1);
@@ -185,14 +186,18 @@ var i18nextHttpBackend = (function() {
 				x.setRequestHeader(i, h[i]);
 			}
 			x.onreadystatechange = () => {
-				x.readyState > 3 && callback(x.status >= 400 ? x.statusText : null, {
-					status: x.status,
-					data: x.responseText
-				});
+				if (x.readyState > 3) {
+					completed = true;
+					callback(x.status >= 400 ? x.statusText : null, {
+						status: x.status,
+						data: x.responseText
+					});
+				}
 			};
 			x.send(payload);
 		} catch (e) {
-			console && console.log(e);
+			if (completed) throw e;
+			callback(e);
 		}
 	};
 	const request = (options, url, payload, callback) => {
