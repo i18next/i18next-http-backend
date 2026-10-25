@@ -22,6 +22,35 @@ describe(`request ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
       expect(receivedError).to.be.an(Error)
       expect(receivedError.message).to.be('open failed')
     })
+
+    it('does not call back twice when the callback of an XMLHttpRequest completing inside send() throws', async () => {
+      const originalXHR = global.XMLHttpRequest
+      global.XMLHttpRequest = class {
+        open () {}
+        setRequestHeader () {}
+        send () {
+          this.readyState = 4
+          this.status = 200
+          this.responseText = '{}'
+          this.onreadystatechange()
+        }
+      }
+      let calls = 0
+      let thrown
+      try {
+        const { default: requestWithSyncXHR } = await import('../lib/request.js?sync-xhr')
+        requestWithSyncXHR({}, 'http://localhost:5001/locales/en/test', null, () => {
+          calls++
+          throw new Error('callback failed')
+        })
+      } catch (e) {
+        thrown = e
+      } finally {
+        global.XMLHttpRequest = originalXHR
+      }
+      expect(calls).to.be(1)
+      expect(thrown.message).to.be('callback failed')
+    })
   }
 
   describe('#missing', () => {
