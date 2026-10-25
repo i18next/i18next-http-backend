@@ -6,6 +6,24 @@ import { hasXMLHttpRequest } from '../lib/utils.js'
 describe(`request ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
   before(server)
 
+  if (hasXMLHttpRequest()) {
+    it('reports a synchronous XMLHttpRequest error to the callback', async () => {
+      const originalXHR = global.XMLHttpRequest
+      global.XMLHttpRequest = class {
+        open () { throw new Error('open failed') }
+      }
+      let receivedError
+      try {
+        const { default: requestWithFailingXHR } = await import('../lib/request.js?failing-xhr')
+        requestWithFailingXHR({}, 'http://localhost:5001/locales/en/test', null, err => { receivedError = err })
+      } finally {
+        global.XMLHttpRequest = originalXHR
+      }
+      expect(receivedError).to.be.an(Error)
+      expect(receivedError.message).to.be('open failed')
+    })
+  }
+
   describe('#missing', () => {
     it('should load data', (done) => {
       request({ stringify: JSON.stringify }, 'http://localhost:5001/locales/missing/en/test', { key: 'new' }, (err) => {
