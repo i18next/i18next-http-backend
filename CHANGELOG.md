@@ -1,3 +1,7 @@
+### 4.0.6
+
+- fix: when `XMLHttpRequest` throws synchronously (`open()` with an invalid URL, `setRequestHeader()` with an invalid `customHeaders` name, `send()`), the error is now passed to the callback. It was only logged with `console.log`, so the load never finished and i18next `init()` did not resolve. Now i18next takes its usual failed-load path. The XHR path is used when no `fetch` is available and for `file:` URLs. An XHR that completes inside `send()` (some polyfills and fake XHRs) is not called back a second time when its callback throws. Thanks @lprnmns ([#203](https://github.com/i18next/i18next-http-backend/pull/203))
+
 ### 4.0.5
 
 - fix: a `loadPath` function whose promise rejects now reports the error to i18next. The read callback was never called, so `init()` / `loadNamespaces()` never settled (a react-i18next Suspense fallback stayed up for good) and in Node the unhandled rejection ended the process. i18next now takes its usual failed-load path (`failedLoading` event, "loading namespace ... failed" log) and `init()` resolves. The error is passed on without retry, like the other non-network errors. Thanks @nk-batman21 ([#201](https://github.com/i18next/i18next-http-backend/pull/201))
