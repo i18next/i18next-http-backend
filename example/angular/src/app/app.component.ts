@@ -4,7 +4,7 @@ import { I18NEXT_SERVICE, ITranslationService } from 'angular-i18next';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  standalone: false
 })
 export class AppComponent {
   language: string = 'en';
