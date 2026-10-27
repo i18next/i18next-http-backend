@@ -70,5 +70,17 @@ describe(`request ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
         done()
       })
     })
+
+    it('should add parameters before a URL fragment', (done) => {
+      request({ queryStringParams: { version: '1.2.3' } }, 'http://localhost:5001/locales/en/testqs?existing=1#section', null, (err, ret) => {
+        try {
+          expect(err).not.to.be.ok()
+          expect(JSON.parse(ret.data)).to.eql({ existing: '1', version: '1.2.3' })
+          done()
+        } catch (e) {
+          done(e)
+        }
+      })
+    })
   })
 })
