@@ -1,3 +1,7 @@
+### Unreleased
+
+- fix: `queryStringParams` are now added before a `#fragment` in `loadPath` / `addPath`. They were appended after it, and as the fragment is never sent, the server did not get them: with `queryStringParams: { v: '1.2.3' }`, `/locales/en/ns.json?a=1#x` now requests `/locales/en/ns.json?a=1&v=1.2.3` instead of `/locales/en/ns.json?a=1`. URLs without a fragment are unchanged. Thanks @lprnmns ([#204](https://github.com/i18next/i18next-http-backend/pull/204))
+
 ### 4.0.6
 
 - fix: when `XMLHttpRequest` throws synchronously (`open()` with an invalid URL, `setRequestHeader()` with an invalid `customHeaders` name, `send()`), the error is now passed to the callback. It was only logged with `console.log`, so the load never finished and i18next `init()` did not resolve. Now i18next takes its usual failed-load path. The XHR path is used when no `fetch` is available and for `file:` URLs. An XHR that completes inside `send()` (some polyfills and fake XHRs) is not called back a second time when its callback throws. Thanks @lprnmns ([#203](https://github.com/i18next/i18next-http-backend/pull/203))
