@@ -116,7 +116,10 @@ var i18nextHttpBackend = (function() {
 				queryString += "&" + encodeURIComponent(paramName) + "=" + encodeURIComponent(params[paramName]);
 			}
 			if (!queryString) return url;
-			url = url + (url.indexOf("?") !== -1 ? "&" : "?") + queryString.slice(1);
+			const fragmentIndex = url.indexOf("#");
+			const fragment = fragmentIndex === -1 ? "" : url.slice(fragmentIndex);
+			const baseUrl = fragmentIndex === -1 ? url : url.slice(0, fragmentIndex);
+			url = baseUrl + (baseUrl.indexOf("?") !== -1 ? "&" : "?") + queryString.slice(1) + fragment;
 		}
 		return url;
 	};
