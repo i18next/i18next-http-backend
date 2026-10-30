@@ -1,4 +1,4 @@
-### Unreleased
+### 4.0.7
 
 - fix: `queryStringParams` are now added before a `#fragment` in `loadPath` / `addPath`. They were appended after it, and as the fragment is never sent, the server did not get them: with `queryStringParams: { v: '1.2.3' }`, `/locales/en/ns.json?a=1#x` now requests `/locales/en/ns.json?a=1&v=1.2.3` instead of `/locales/en/ns.json?a=1`. URLs without a fragment are unchanged. Thanks @lprnmns ([#204](https://github.com/i18next/i18next-http-backend/pull/204))
 
