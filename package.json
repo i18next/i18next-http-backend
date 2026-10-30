@@ -1,6 +1,6 @@
 {
   "name": "i18next-http-backend",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "private": false,
   "type": "module",
   "sideEffects": false,
