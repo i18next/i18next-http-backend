@@ -342,6 +342,7 @@ var i18nextHttpBackend = (function() {
 		}
 		reload() {
 			const { backendConnector, languageUtils, logger, utils } = this.services;
+			if (utils && utils.reloadResources) return utils.reloadResources();
 			const currentLanguage = backendConnector.language;
 			if (currentLanguage && currentLanguage.toLowerCase() === "cimode") return;
 			const toLoad = [];
@@ -352,7 +353,6 @@ var i18nextHttpBackend = (function() {
 			};
 			append(currentLanguage);
 			if (this.allOptions.preload) this.allOptions.preload.forEach((l) => append(l));
-			if (utils && utils.reloadResources) return utils.reloadResources(toLoad, this.allOptions.ns);
 			toLoad.forEach((lng) => {
 				this.allOptions.ns.forEach((ns) => {
 					backendConnector.read(lng, ns, "read", null, null, (err, data) => {
