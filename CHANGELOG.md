@@ -1,3 +1,8 @@
+### 4.0.8
+
+- fix: with i18next 26.7.0 or later, `create` gets its callback. i18next 26.7.0 deprecates guessing the calling convention of a backend from the number of parameters of its methods; the backend now declares it with `callbackApi`, so i18next calls `read` and `create` with a callback (and passes `create` its options), and debug mode no longer logs the deprecation notice. Older i18next versions ignore it. `create(languages, namespace, key, fallbackValue, callback)` has five parameters, the number i18next reserved for the form without a callback, so i18next passed its options object as `callback`, and with a refused `lng` or `ns` value `create` called that object (a `TypeError` that i18next swallowed).
+- `reloadInterval` reloads through `services.utils.reloadResources` with i18next 26.7.0 or later (with i18next's retries and the `loaded` event) instead of calling i18next's internal backend connector. It reloads the same languages as before: the fallback and `preload` languages. With older i18next nothing changes.
+
 ### 4.0.7
 
 - fix: `queryStringParams` are now added before a `#fragment` in `loadPath` / `addPath`. They were appended after it, and as the fragment is never sent, the server did not get them: with `queryStringParams: { v: '1.2.3' }`, `/locales/en/ns.json?a=1#x` now requests `/locales/en/ns.json?a=1&v=1.2.3` instead of `/locales/en/ns.json?a=1`. URLs without a fragment are unchanged. Thanks @lprnmns ([#204](https://github.com/i18next/i18next-http-backend/pull/204))
