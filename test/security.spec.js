@@ -186,6 +186,31 @@ describe('security', () => {
         .to.equal('/locales/resources.json?lng=de+en&ns=ns1+ns2')
     })
 
+    // GHSA-qh2f-jh77-hfwf: with a template that puts the placeholder in the
+    // host, `@` (userinfo delimiter) or `/` (end of the authority) in the
+    // value sends the request to another host.
+    it('returns null when a value changes the host of the template', () => {
+      const t = 'https://{{ns}}.cdn.example.com/{{lng}}.json'
+      expect(interpolateUrl(t, { lng: 'en', ns: '@evil.example/x' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'en', ns: 'evil.example/x' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'en', ns: 'evil.example@x' })).to.equal(null)
+      expect(interpolateUrl(t, { lng: 'en', ns: 'common+@evil.example/x' })).to.equal(null)
+      expect(interpolateUrl('//{{ns}}.cdn.example.com/{{lng}}.json', { lng: 'en', ns: '@evil.example/x' })).to.equal(null)
+    })
+
+    it('still allows plain values in the host and `@` / `/` in the path', () => {
+      expect(interpolateUrl('https://{{ns}}.cdn.example.com/{{lng}}.json', { lng: 'en', ns: 'common' }))
+        .to.equal('https://common.cdn.example.com/en.json')
+      expect(interpolateUrl('https://{{lng}}.cdn.example.com/{{ns}}.json', { lng: 'de-CH', ns: '@org/pkg' }))
+        .to.equal('https://de-CH.cdn.example.com/@org/pkg.json')
+      expect(interpolateUrl('https://cdn.example.com/{{lng}}/{{ns}}.json', { lng: 'en', ns: '@org/pkg' }))
+        .to.equal('https://cdn.example.com/en/@org/pkg.json')
+      expect(interpolateUrl('/locales/{{lng}}/{{ns}}.json', { lng: 'en', ns: '@org/pkg' }))
+        .to.equal('/locales/en/@org/pkg.json')
+      expect(interpolateUrl('{{ns}}/{{lng}}.json', { lng: 'en', ns: '@org/pkg' }))
+        .to.equal('@org/pkg/en.json')
+    })
+
     it('ignores __proto__ placeholder', () => {
       expect(interpolateUrl('/{{__proto__}}/x', { __proto__: { a: 1 } }))
         .to.equal('/{{__proto__}}/x')
@@ -219,6 +244,49 @@ describe('security', () => {
         expect(err).to.be.an(Error)
         expect(err.message).to.contain('unsafe lng/ns value')
         expect(data).to.be(false)
+        done()
+      })
+    })
+  })
+
+  describe('Backend with {{ns}} in the host of loadPath / addPath (GHSA-qh2f-jh77-hfwf)', () => {
+    const requestInto = (urls) => (options, url, payload, callback) => {
+      urls.push(url)
+      callback(null, { status: 200, data: '{}' })
+    }
+
+    it('read refuses an ns that moves the request to another host, for string and function loadPath', (done) => {
+      const urls = []
+      const options = { request: requestInto(urls) }
+      const backend = new Backend(null, { ...options, loadPath: 'https://{{ns}}.cdn.example.com/{{lng}}.json' })
+      const fnBackend = new Backend(null, { ...options, loadPath: () => 'https://{{ns}}.cdn.example.com/{{lng}}.json' })
+      backend.read('en', '@evil.example/x', (err, data) => {
+        expect(err.message).to.contain('unsafe lng/ns value')
+        expect(data).to.be(false)
+        fnBackend.read('en', 'evil.example/x', (err, data) => {
+          expect(err.message).to.contain('unsafe lng/ns value')
+          expect(data).to.be(false)
+          expect(urls).to.eql([])
+          done()
+        })
+      })
+    })
+
+    it('create refuses it too', (done) => {
+      const urls = []
+      const backend = new Backend(null, { addPath: 'https://{{ns}}.cdn.example.com/add/{{lng}}', request: requestInto(urls) })
+      backend.create(['en'], '@evil.example/x', 'key', 'value', () => {
+        expect(urls).to.eql([])
+        done()
+      })
+    })
+
+    it('still loads a scoped namespace from the path', (done) => {
+      const urls = []
+      const backend = new Backend(null, { loadPath: 'https://cdn.example.com/{{lng}}/{{ns}}.json', request: requestInto(urls) })
+      backend.read('en', '@org/pkg', (err) => {
+        expect(err).to.be(null)
+        expect(urls).to.eql(['https://cdn.example.com/en/@org/pkg.json'])
         done()
       })
     })

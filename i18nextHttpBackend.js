@@ -75,10 +75,10 @@ var i18nextHttpBackend = (function() {
 		return Promise.resolve(maybePromise);
 	}
 	const interpolationRegexp = /\{\{(.+?)\}\}/g;
-	const LEADING_DOUBLE_SLASH = /^[/\\]{2}/;
+	const URL_SCHEME_AND_AUTHORITY = /^([^:/\\?#]+:)?([/\\]{2}[^/\\?#]*)?/;
 	function interpolateUrl(str, data) {
 		let unsafe = false;
-		const result = str.replace(interpolationRegexp, (match, key) => {
+		const fill = (encode) => str.replace(interpolationRegexp, (match, key) => {
 			const k = key.trim();
 			if (UNSAFE_KEYS$1.indexOf(k) > -1) return match;
 			const value = data[k];
@@ -89,10 +89,12 @@ var i18nextHttpBackend = (function() {
 				unsafe = true;
 				return match;
 			}
-			return segments.join("+");
+			return encode(segments.join("+"));
 		});
+		const result = fill((v) => v);
 		if (unsafe) return null;
-		if (LEADING_DOUBLE_SLASH.test(result) && !LEADING_DOUBLE_SLASH.test(str)) return null;
+		const asData = fill(encodeURIComponent);
+		if (result.match(URL_SCHEME_AND_AUTHORITY)[0] !== asData.match(URL_SCHEME_AND_AUTHORITY)[0]) return null;
 		return result;
 	}
 	//#endregion

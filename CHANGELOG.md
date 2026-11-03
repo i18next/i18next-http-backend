@@ -1,3 +1,9 @@
+### 4.0.10
+
+Security release. See advisory [GHSA-qh2f-jh77-hfwf](https://github.com/i18next/i18next-http-backend/security/advisories/GHSA-qh2f-jh77-hfwf).
+
+- security: refuse a request URL whose scheme or authority (host, port, userinfo) differs from what the `loadPath` / `addPath` template gives when the `lng` and `ns` values are plain data. With a template that puts `{{ns}}` in the host, e.g. `https://{{ns}}.cdn.example.com/{{lng}}.json`, an `ns` value of `@evil.example/x` (`@` ends the userinfo, since 4.0.1) or `evil.example/x` (`/` ends the host, since 3.0.6) sent the request, with its `customHeaders`, to `evil.example`. `/` and `@` stay allowed in `ns` for nested and scoped namespaces such as `@org/pkg`, and they keep working in the path. The check runs for `read` and `create`, and for `loadPath` / `addPath` functions that return a template. It includes the 4.0.3 check for a leading `//`, which it replaces. The default `/locales/{{lng}}/{{ns}}.json` and other templates with the placeholders in the path were not affected. A value in the host may now only contain letters, digits and `-._~!*'()`.
+
 ### 4.0.9
 
 - fix: with i18next 26.7.1 or later, `reloadInterval` reloads everything i18next loaded or tried to load through the backend: the current languages and the languages loaded for clones (one per request on a server), and it retries the bundles that failed. 4.0.8 passed the fallback and `preload` languages to i18next's `reloadResources()`, which skipped a bundle that had failed to load, so a language missing after an outage at startup stayed missing (the backend's own reload before 4.0.8 read it again). With older i18next nothing changes.
