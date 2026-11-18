@@ -53,6 +53,28 @@ describe(`request ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
     })
   }
 
+  if (!hasXMLHttpRequest()) {
+    it('does not call back twice when the callback of a fetch response throws', async () => {
+      const listeners = process.listeners('unhandledRejection')
+      process.removeAllListeners('unhandledRejection')
+      let calls = 0
+      let unhandled
+      try {
+        const rejection = new Promise((resolve) => process.once('unhandledRejection', resolve))
+        const alternateFetch = (url) => Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('{}') })
+        request({ alternateFetch }, 'http://localhost:5001/locales/en/test', null, () => {
+          calls++
+          throw new Error('callback failed')
+        })
+        unhandled = await rejection
+      } finally {
+        listeners.forEach((l) => process.on('unhandledRejection', l))
+      }
+      expect(calls).to.be(1)
+      expect(unhandled.message).to.be('callback failed')
+    })
+  }
+
   describe('#missing', () => {
     it('should load data', (done) => {
       request({ stringify: JSON.stringify }, 'http://localhost:5001/locales/missing/en/test', { key: 'new' }, (err) => {
