@@ -73,6 +73,14 @@ describe(`request ${hasXMLHttpRequest() ? 'XMLHttpRequest' : 'fetch'}`, () => {
       expect(calls).to.be(1)
       expect(unhandled.message).to.be('callback failed')
     })
+
+    it('calls back with an error thrown while reading the fetch response', (done) => {
+      const alternateFetch = (url) => Promise.resolve({ ok: true, status: 200 }) // no text()
+      request({ alternateFetch }, 'http://localhost:5001/locales/en/test', null, (err) => {
+        expect(err).to.be.a(TypeError)
+        done()
+      })
+    })
   }
 
   describe('#missing', () => {
