@@ -125,7 +125,13 @@ var i18nextHttpBackend = (function() {
 		}
 		return url;
 	};
-	const fetchIt = (url, fetchOptions, callback, altFetch) => {
+	const fetchIt = (url, fetchOptions, cb, altFetch) => {
+		let completed = false;
+		const callback = (err, res) => {
+			if (completed) throw err;
+			completed = true;
+			cb(err, res);
+		};
 		const resolver = (response) => {
 			if (!response.ok) return callback(response.statusText || "Error", { status: response.status });
 			response.text().then((data) => {
