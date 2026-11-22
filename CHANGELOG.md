@@ -1,4 +1,4 @@
-### Unreleased
+### 4.1.1
 
 - fix(types): `create` declares its optional fifth parameter, the callback it calls with the errors and the responses of the requests to `addPath`. i18next 27.2.4 passes it to backends that set `callbackApi: true`.
 
