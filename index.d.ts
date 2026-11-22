@@ -135,7 +135,8 @@ export default class I18NextHttpBackend
     languages: string[],
     namespace: string,
     key: string,
-    fallbackValue: string
+    fallbackValue: string,
+    callback?: (errors: any[], responses: (RequestResponse | undefined | null)[]) => void
   ): void;
   type: "backend";
   services: any;

@@ -1,3 +1,7 @@
+### Unreleased
+
+- fix(types): `create` declares its optional fifth parameter, the callback it calls with the errors and the responses of the requests to `addPath`. i18next 27.2.4 passes it to backends that set `callbackApi: true`.
+
 ### 4.1.0
 
 - fix: when the callback of a `fetch` request throws (for example an i18next `loaded` listener or the callback of `init` or `loadNamespaces`), it is no longer called a second time with that error. i18next counted the read twice, marked the namespace that had loaded fine as failed, and read it again when the message looked like a network error. The error is now thrown on, as on the XHR path: an unhandled rejection, which ends a Node.js process unless you handle `unhandledRejection`. An error thrown while reading the response (an `alternateFetch` response without `text()`) still goes to the callback. i18next 27.2.0 made the same change in its backend connector. Thanks @SudeepGowda55 ([#207](https://github.com/i18next/i18next-http-backend/pull/207))
