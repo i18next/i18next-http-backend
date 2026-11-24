@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.22.5",
-    "i18next": "21.8.2",
+    "i18next": "26.3.4",
     "i18next-browser-languagedetector": "6.1.4",
     "i18next-http-backend": "4.0.2",
     "i18next-vue": "2.0.0-beta.0",
