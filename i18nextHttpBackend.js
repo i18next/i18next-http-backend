@@ -245,6 +245,15 @@ var i18nextHttpBackend = (function() {
 			}
 		};
 	};
+	function startReloadTimer(ref, ms) {
+		const interval = setInterval(() => {
+			const backend = ref.deref();
+			if (backend) backend.reload();
+			else clearInterval(interval);
+		}, ms);
+		if (typeof interval === "object" && typeof interval.unref === "function") interval.unref();
+		return interval;
+	}
 	var Backend = class {
 		constructor(services, options = {}, allOptions = {}) {
 			this.services = services;
@@ -261,10 +270,9 @@ var i18nextHttpBackend = (function() {
 				...options
 			};
 			this.allOptions = allOptions;
-			if (this.services && this.options.reloadInterval) {
-				const timer = setInterval(() => this.reload(), this.options.reloadInterval);
-				if (typeof timer === "object" && typeof timer.unref === "function") timer.unref();
-			}
+			if (this.interval) clearInterval(this.interval);
+			this.interval = void 0;
+			if (this.services && this.options.reloadInterval) this.interval = startReloadTimer(typeof WeakRef === "function" ? new WeakRef(this) : { deref: () => this }, this.options.reloadInterval);
 		}
 		readMulti(languages, namespaces, callback) {
 			this._readAny(languages, languages, namespaces, namespaces, callback);

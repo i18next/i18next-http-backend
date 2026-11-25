@@ -1,3 +1,7 @@
+### 4.1.2
+
+- fix: with `reloadInterval` (on by default on a server), the timer kept its backend and the i18next instance behind it in memory for good, so a server creating an i18next instance per request (instead of one instance and clones) kept every one of them, and reloaded all of them every hour. The timer now holds the backend through a `WeakRef` and stops at its first tick after the instance is gone. A second `init()` of the same backend replaces its timer instead of adding one.
+
 ### 4.1.1
 
 - fix(types): `create` declares its optional fifth parameter, the callback it calls with the errors and the responses of the requests to `addPath`. i18next 27.2.4 passes it to backends that set `callbackApi: true`.

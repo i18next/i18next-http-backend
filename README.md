@@ -218,7 +218,7 @@ i18next.use(i18nextHttpBackend).init(i18nextOptions);
 }
 ```
 
-> **Server side:** the reload timer keeps the i18next instance alive for as long as the process runs. That is what you want for one long-lived instance, and a trap for anything short-lived: if you create a **new i18next instance per request or per render** (server-side rendering counts, a component that initializes i18next runs on the server too), each one leaves a live timer behind and keeps refetching forever. Nothing errors and the process still exits normally, because the timer is `unref`ed. Create the instance once per process and reuse it, or set `reloadInterval: false` on instances that are not that singleton.
+> **Server side:** if you create a **new i18next instance per request or per render** (server-side rendering counts, a component that initializes i18next runs on the server too), each one loads your namespaces on its own first. Since 4.1.2 the reload timer no longer keeps such an instance alive: it stops once the instance is gone (on runtimes with `WeakRef`, which every current one has); before, each instance stayed in memory and kept refetching for as long as the process ran. Create the instance once per process and reuse it (with `cloneInstance()` per request if you need a request-specific language), or set `reloadInterval: false` on instances that are not that singleton.
 
 Options can be passed in:
 
